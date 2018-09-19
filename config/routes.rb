@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       resources :suppliers
       resources :products
       resources :price_specs
+      resources :wants
     end
   end
   root 'tests#hello'
