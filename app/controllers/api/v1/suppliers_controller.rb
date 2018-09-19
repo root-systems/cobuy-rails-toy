@@ -34,7 +34,7 @@ module Api::V1
     private
 
     def supplier_params
-      params.permit(:name)
+      params.permit(:name, :group_id)
     end
 
     def set_supplier

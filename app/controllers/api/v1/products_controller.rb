@@ -34,7 +34,7 @@ module Api::V1
     private
 
     def product_params
-      params.permit(:name)
+      params.permit(:name, :description, :image, :supplier_id)
     end
 
     def set_product

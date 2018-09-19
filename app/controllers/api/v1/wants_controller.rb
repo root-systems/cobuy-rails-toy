@@ -34,7 +34,7 @@ module Api::V1
     private
 
     def want_params
-      params.permit(:name)
+      params.permit(:user_id, :product_id, :order_id, :price_spec_id, :product_name, :quantity)
     end
 
     def set_want

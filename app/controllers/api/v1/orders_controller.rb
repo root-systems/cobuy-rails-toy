@@ -34,7 +34,7 @@ module Api::V1
     private
 
     def order_params
-      params.permit(:name)
+      params.permit(:name, :group_id, :supplier_id)
     end
 
     def set_order
