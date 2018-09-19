@@ -34,7 +34,7 @@ module Api::V1
     private
 
     def price_spec_params
-      params.permit(:name)
+      params.permit(:price, :minimum, :currency, :product_id)
     end
 
     def set_price_spec
