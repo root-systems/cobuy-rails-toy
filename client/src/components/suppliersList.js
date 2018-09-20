@@ -20,13 +20,13 @@ const innerContainerStyle = {
 }
 
 const SuppliersList = (props) => {
-  const { suppliers } = props
+  const { suppliers, doUpdateHash } = props
   if (isEmpty(suppliers)) return null
   const renderSupplier = (supplier) => {
     return (
       <Card key={supplier.id} style={innerContainerStyle}>
         <CardActionArea
-          // href={`${supplier.supplier_status_url}`}
+          onClick={() => { doUpdateHash(`suppliers/${supplier.id}`) }}
         >
           <CardContent>
             <Typography variant='headline'>

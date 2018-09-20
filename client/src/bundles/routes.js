@@ -9,6 +9,7 @@ import AcceptInvitation from '../pages/acceptInvitation'
 import CreateInvitation from '../pages/createInvitation'
 import CreateSupplier from '../pages/createSupplier'
 import MySuppliers from '../pages/mySuppliers'
+import SupplierProfile from '../pages/supplierProfile'
 
 const routes = {
   '': {
@@ -27,7 +28,7 @@ const routes = {
     component: Order,
     protected: true
   },
-  'my-orders': {
+  'orders': {
     component: MyOrders,
     protected: true
   },
@@ -47,8 +48,12 @@ const routes = {
     component: CreateSupplier,
     protected: true
   },
-  'my-suppliers': {
+  'suppliers': {
     component: MySuppliers,
+    protected: true
+  },
+  'suppliers/:supplierId': {
+    component: SupplierProfile,
     protected: true
   },
   '*': {
