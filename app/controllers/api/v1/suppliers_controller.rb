@@ -15,7 +15,7 @@ module Api::V1
 
     # POST /suppliers
     def create
-      @supplier.create!(supplier_params)
+      @supplier = Supplier.create!(supplier_params)
       render :json => @supplier
     end
 

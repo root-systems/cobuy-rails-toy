@@ -21,43 +21,45 @@ const headerStyle = {
   textAlign: 'center'
 }
 
-const CreateInvitationForm = (props) => {
+const CreateSupplierForm = (props) => {
   const {
-    doCreateInvitation,
-    doUpdateInvitationEmailField,
-    invitationEmailField
+    doCreateSupplier,
+    doUpdateSupplierNameField,
+    supplierNameField,
+    currentUser
   } = props
 
-  const handleEmailChange = (e) => {
-    return doUpdateInvitationEmailField(e.target.value)
+  const handleNameChange = (e) => {
+    return doUpdateSupplierNameField(e.target.value)
   }
 
   const handleSubmit = () => {
     const formData = {
-      email: invitationEmailField
+      name: supplierNameField,
+      group_id: currentUser.group_id
     }
-    return doCreateInvitation(formData)
+    return doCreateSupplier(formData)
   }
 
   return (
     <div style={containerStyle}>
-      <h1 style={headerStyle}>Create Invitation</h1>
+      <h1 style={headerStyle}>Create Supplier</h1>
       <form style={formStyle}>
         <TextField
-          label={'Email'}
+          label={'Name'}
           type='email'
-          value={invitationEmailField}
-          onChange={handleEmailChange}
+          value={supplierNameField}
+          onChange={handleNameChange}
         />
         <Button
           variant='outlined'
           style={buttonStyle}
           type='button'
           onClick={handleSubmit}
-        >Invite</Button>
+        >Complete Signup</Button>
       </form>
     </div>
   )
 }
 
-export default CreateInvitationForm
+export default CreateSupplierForm

@@ -5,6 +5,7 @@ import ordersBundle from './orders'
 import notificationsBundle from './notifications'
 import myProfileBundle from './myProfile'
 import invitationsBundle from './invitations'
+import suppliersBundle from './suppliers'
 
 import routes from './routes'
 
@@ -16,6 +17,7 @@ export default composeBundles(
   notificationsBundle,
   myProfileBundle,
   invitationsBundle,
+  suppliersBundle,
   createUrlBundle(),
   debugBundle,
   extraArgs,
