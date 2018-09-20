@@ -15,7 +15,7 @@ const bundle = createAsyncResourceBundle({
       uid: credentials.uid,
       expiry: credentials.expiry
     }
-    return apiFetch(`/users/${currentUserId}`, {
+    return apiFetch(`api/v1/users/${currentUserId}`, {
       headers: sanitizedCredentials
     })
       .then(response => {
@@ -31,9 +31,7 @@ const bundle = createAsyncResourceBundle({
 
 const initialState = {
   phoneField: '',
-  businessNameField: '',
   shippingAddressField: '',
-  billingAddressField: '',
   nameField: '',
   // needed by createAsyncResourceBundle
   data: null,
@@ -53,10 +51,8 @@ bundle.reducer = (state = initialState, action) => {
       ...state,
       data: action.payload.user,
       phoneField: action.payload.user.phone,
-      businessNameField: action.payload.user.business_name,
       nameField: action.payload.user.name,
-      shippingAddressField: action.payload.user.shipping_address,
-      billingAddressField: action.payload.user.billing_address
+      shippingAddressField: action.payload.user.shipping_address
     }
   }
   if (action.type === 'MYPROFILE_FETCH_FINISHED') {
@@ -64,10 +60,8 @@ bundle.reducer = (state = initialState, action) => {
       ...state,
       data: action.payload,
       phoneField: action.payload.phone,
-      businessNameField: action.payload.business_name,
       nameField: action.payload.name,
-      shippingAddressField: action.payload.shipping_address,
-      billingAddressField: action.payload.billing_address
+      shippingAddressField: action.payload.shipping_address
     }
   }
   if (action.type === 'SIGN_OUT_SUCCESS') {
@@ -75,10 +69,8 @@ bundle.reducer = (state = initialState, action) => {
       ...state,
       data: {},
       phoneField: null,
-      businessNameField: null,
       nameField: null,
-      shippingAddressField: null,
-      billingAddressField: null
+      shippingAddressField: null
     }
   }
   if (action.type === 'UPDATE_MY_PROFILE_SUCCESS') {
@@ -86,10 +78,8 @@ bundle.reducer = (state = initialState, action) => {
       ...state,
       data: action.payload,
       phoneField: action.payload.phone,
-      businessNameField: action.payload.business_name,
       nameField: action.payload.name,
-      shippingAddressField: action.payload.shipping_address,
-      billingAddressField: action.payload.billing_address
+      shippingAddressField: action.payload.shipping_address
     }
   }
   if (action.type === 'UPDATE_PHONE_FIELD') {
@@ -98,22 +88,10 @@ bundle.reducer = (state = initialState, action) => {
       phoneField: action.payload
     }
   }
-  if (action.type === 'UPDATE_BUSINESS_NAME_FIELD') {
-    return {
-      ...state,
-      businessNameField: action.payload
-    }
-  }
   if (action.type === 'UPDATE_SHIPPING_ADDRESS_FIELD') {
     return {
       ...state,
       shippingAddressField: action.payload
-    }
-  }
-  if (action.type === 'UPDATE_BILLING_ADDRESS_FIELD') {
-    return {
-      ...state,
-      billingAddressField: action.payload
     }
   }
   if (action.type === 'UPDATE_NAME_FIELD') {
@@ -128,21 +106,13 @@ bundle.reducer = (state = initialState, action) => {
 bundle.selectCurrentUser = state => state.myProfile.data
 bundle.selectNameField = state => state.myProfile.nameField
 bundle.selectPhoneField = state => state.myProfile.phoneField
-bundle.selectBusinessNameField = state => state.myProfile.businessNameField
 bundle.selectShippingAddressField = state => state.myProfile.shippingAddressField
-bundle.selectBillingAddressField = state => state.myProfile.billingAddressField
 
 bundle.doUpdateNameField = (name) => ({ dispatch }) => {
   dispatch({ type: 'UPDATE_NAME_FIELD', payload: name })
 }
 bundle.doUpdatePhoneField = (phone) => ({ dispatch }) => {
   dispatch({ type: 'UPDATE_PHONE_FIELD', payload: phone })
-}
-bundle.doUpdateBusinessNameField = (businessName) => ({ dispatch }) => {
-  dispatch({ type: 'UPDATE_BUSINESS_NAME_FIELD', payload: businessName })
-}
-bundle.doUpdateBillingAddressField = (billingAddress) => ({ dispatch }) => {
-  dispatch({ type: 'UPDATE_BILLING_ADDRESS_FIELD', payload: billingAddress })
 }
 bundle.doUpdateShippingAddressField = (shippingAddress) => ({ dispatch }) => {
   dispatch({ type: 'UPDATE_SHIPPING_ADDRESS_FIELD', payload: shippingAddress })
@@ -158,7 +128,7 @@ bundle.doUpdateMyProfile = (profileData) => ({ dispatch, apiFetch, getState }) =
     expiry: credentials.expiry
   }
   dispatch({ type: 'UPDATE_MY_PROFILE_START' })
-  apiFetch(`/users/${credentials.currentUserId}`, {
+  apiFetch(`api/v1/users/${credentials.currentUserId}`, {
     method: 'PATCH',
     body: JSON.stringify(profileData),
     headers: sanitizedCredentials

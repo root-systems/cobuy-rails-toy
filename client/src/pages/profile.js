@@ -7,13 +7,9 @@ const Profile = ({
   currentUser,
   doUpdatePhoneField,
   doUpdateNameField,
-  doUpdateBusinessNameField,
   doUpdateShippingAddressField,
-  doUpdateBillingAddressField,
   nameField,
   phoneField,
-  businessNameField,
-  billingAddressField,
   shippingAddressField,
   doUpdateMyProfile
  }) => {
@@ -22,13 +18,9 @@ const Profile = ({
       currentUser={currentUser}
       doUpdatePhoneField={doUpdatePhoneField}
       doUpdateNameField={doUpdateNameField}
-      doUpdateBusinessNameField={doUpdateBusinessNameField}
       doUpdateShippingAddressField={doUpdateShippingAddressField}
-      doUpdateBillingAddressField={doUpdateBillingAddressField}
       nameField={nameField}
       phoneField={phoneField}
-      businessNameField={businessNameField}
-      billingAddressField={billingAddressField}
       shippingAddressField={shippingAddressField}
       doUpdateMyProfile={doUpdateMyProfile}
     />
@@ -39,13 +31,9 @@ export default connect(
   'selectCurrentUser',
   'doUpdatePhoneField',
   'doUpdateNameField',
-  'doUpdateBusinessNameField',
   'doUpdateShippingAddressField',
-  'doUpdateBillingAddressField',
   'selectPhoneField',
   'selectNameField',
-  'selectBusinessNameField',
-  'selectBillingAddressField',
   'selectShippingAddressField',
   'doUpdateMyProfile',
   Profile

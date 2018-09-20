@@ -32,22 +32,12 @@ const ProfileForm = (props) => {
     doUpdatePhoneField,
     nameField,
     phoneField,
-    businessNameField,
-    billingAddressField,
     shippingAddressField,
     doUpdateMyProfile
   } = props
 
   const handleNameChange = (e) => {
     return doUpdateNameField(e.target.value)
-  }
-
-  const handleBusinessNameChange = (e) => {
-    return doUpdateBusinessNameField(e.target.value)
-  }
-
-  const handleBillingAddressChange = (e) => {
-    return doUpdateBillingAddressField(e.target.value)
   }
 
   const handleShippingAddressChange = (e) => {
@@ -60,9 +50,7 @@ const ProfileForm = (props) => {
   const handleSubmit = () => {
     const sanitizedProfileData = {
       name: nameField,
-      business_name: businessNameField,
       shipping_address: shippingAddressField,
-      billing_address: billingAddressField,
       phone: phoneField
     }
     return doUpdateMyProfile(sanitizedProfileData)
@@ -85,22 +73,10 @@ const ProfileForm = (props) => {
           onChange={handleShippingAddressChange}
         />
         <TextField
-          label={'Billing Address'}
-          type='text'
-          value={billingAddressField}
-          onChange={handleBillingAddressChange}
-        />
-        <TextField
           label={'Contact Phone'}
           type='number'
           value={phoneField}
           onChange={handlePhoneChange}
-        />
-        <TextField
-          label={'Business Name'}
-          type='text'
-          value={businessNameField}
-          onChange={handleBusinessNameChange}
         />
         <Button
           variant='outlined'
