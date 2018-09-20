@@ -156,8 +156,6 @@ bundle.reactOrdersFetch = createSelector(
   'selectOrdersShouldUpdate',
   'selectIsSignedIn',
   (shouldUpdate, isSignedIn) => {
-    console.log('shouldUpdate', shouldUpdate)
-    console.log('isSignedIn', isSignedIn)
     if (shouldUpdate && isSignedIn) {
       return { actionCreator: 'doFetchOrders' }
     }
