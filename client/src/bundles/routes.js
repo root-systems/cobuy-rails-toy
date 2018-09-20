@@ -6,6 +6,7 @@ import Order from '../pages/order'
 import MyOrders from '../pages/myOrders'
 import Profile from '../pages/profile'
 import AcceptInvitation from '../pages/acceptInvitation'
+import CreateInvitation from '../pages/createInvitation'
 
 const routes = {
   '': {
@@ -34,6 +35,10 @@ const routes = {
   },
   'accept-invitation': {
     component: AcceptInvitation,
+    protected: true
+  },
+  'create-invitation': {
+    component: CreateInvitation,
     protected: true
   },
   '*': {

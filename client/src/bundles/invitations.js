@@ -94,13 +94,22 @@ const actionCreators = {
       })
   },
   doCreateInvitation: (formData) => ({ dispatch, apiFetch, getState }) => {
+    const credentials = getState().accounts.credentials
+    const sanitizedCredentials = {
+      'access-token': credentials.accessToken,
+      'token-type': credentials.tokenType,
+      client: credentials.client,
+      uid: credentials.uid,
+      expiry: credentials.expiry
+    }
     dispatch({ type: 'CREATE_INVITATION_START' })
     apiFetch('admin/invitation', {
     // GK: TODO: i don't understand why the path below doesn't work, while the one above does
     // i also don't understand why devise-invitable created two sets of routes
     // apiFetch('api/v1/auth/invitation', {
       method: 'POST',
-      body: JSON.stringify({ email: 'test@test.com' })
+      body: JSON.stringify({ email: 'test@test.com' }),
+      headers: sanitizedCredentials
     })
       .then(response => {
         if (!response.ok) {
