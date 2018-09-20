@@ -27,7 +27,7 @@ const routes = {
     component: Order,
     protected: true
   },
-  'my-orders': {
+  'orders': {
     component: MyOrders,
     protected: true
   },
@@ -47,7 +47,7 @@ const routes = {
     component: CreateSupplier,
     protected: true
   },
-  'my-suppliers': {
+  'suppliers': {
     component: MySuppliers,
     protected: true
   },
