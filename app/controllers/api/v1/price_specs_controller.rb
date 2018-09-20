@@ -15,7 +15,7 @@ module Api::V1
 
     # POST /price_specs
     def create
-      @price_spec.create!(price_spec_params)
+      @price_spec = PriceSpec.create!(price_spec_params)
       render :json => @price_spec
     end
 

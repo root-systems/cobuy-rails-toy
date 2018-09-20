@@ -15,7 +15,7 @@ module Api::V1
 
     # POST /groups
     def create
-      @group.create!(group_params)
+      @group = Group.create!(group_params)
       render :json => @group
     end
 

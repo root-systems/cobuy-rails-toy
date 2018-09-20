@@ -15,7 +15,7 @@ module Api::V1
 
     # POST /wants
     def create
-      @want.create!(want_params)
+      @want = Want.create!(want_params)
       render :json => @want
     end
 
