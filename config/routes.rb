@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       resources :price_specs
       resources :wants
       resources :orders
+      resources :users
     end
   end
   root 'tests#hello'
