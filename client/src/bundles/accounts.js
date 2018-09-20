@@ -81,7 +81,7 @@ const actionCreators = {
   },
   doSignIn: (signInData) => ({ dispatch, apiFetch }) => {
     dispatch({ type: 'SIGN_IN_START' })
-    apiFetch('/authentication/sign_in', {
+    apiFetch('api/v1/auth/sign_in', {
       method: 'POST',
       body: JSON.stringify(signInData)
     })

@@ -16,7 +16,7 @@ export default {
             headers,
             ...omit(config, 'headers')
           }
-          return fetch(`https://f11ffdc5.ngrok.io${urlPath}`, mergedConfig)
+          return fetch(`http://localhost:3001/${urlPath}`, mergedConfig)
         }
         return fetchResource()
       }
