@@ -120,7 +120,7 @@ const actionCreators = {
       expiry: credentials.expiry
     }
     dispatch({ type: 'SIGN_OUT_START' })
-    apiFetch('/authentication/sign_out', {
+    apiFetch('api/v1/auth/sign_out', {
       method: 'DELETE',
       headers: sanitizedCredentials
     })
