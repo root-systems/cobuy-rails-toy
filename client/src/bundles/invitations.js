@@ -49,7 +49,10 @@ const actionCreators = {
   },
   doAcceptInvitation: (formData) => ({ dispatch, apiFetch, getState }) => {
     dispatch({ type: 'ACCEPT_INVITATION_START' })
-    apiFetch('/api/v1/auth/invitation', {
+    apiFetch('admin/invitation', {
+    // GK: TODO: i don't understand why the path below doesn't work, while the one above does
+    // i also don't understand why devise-invitable created two sets of routes
+    // apiFetch('api/v1/auth/invitation', {
       method: 'PATCH',
       body: JSON.stringify(formData)
     })
