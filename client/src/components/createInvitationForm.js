@@ -23,23 +23,20 @@ const headerStyle = {
 
 const CreateInvitationForm = (props) => {
   const {
-    doCreateInvitation
+    doCreateInvitation,
+    doUpdateInvitationEmailField,
+    invitationEmailField
   } = props
 
-  const handlePasswordChange = (e) => {
-    // return doUpdateInvitationPasswordField(e.target.value)
+  const handleEmailChange = (e) => {
+    return doUpdateInvitationEmailField(e.target.value)
   }
 
   const handleSubmit = () => {
-    // const formData = {
-    //   user: {
-    //     password: invitationPasswordField,
-    //     password_confirmation: invitationPasswordConfirmationField,
-    //     invitation_token: invitationToken
-    //   }
-    // }
-    // console.log('invitation form data', formData)
-    return doCreateInvitation()
+    const formData = {
+      email: invitationEmailField
+    }
+    return doCreateInvitation(formData)
   }
 
   return (
@@ -49,8 +46,8 @@ const CreateInvitationForm = (props) => {
         <TextField
           label={'Email'}
           type='email'
-          // value={invitationPasswordField}
-          // onChange={handlePasswordChange}
+          value={invitationEmailField}
+          onChange={handleEmailChange}
         />
         <Button
           variant='outlined'

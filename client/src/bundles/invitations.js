@@ -10,7 +10,7 @@ const initialState = {
   invitationPasswordField: '',
   invitationPasswordConfirmationField: '',
   isCreatingInvitation: false,
-  invitationEmail: ''
+  invitationEmailField: ''
 }
 
 const reducer = (state = initialState, action) => {
@@ -50,6 +50,12 @@ const reducer = (state = initialState, action) => {
       invitationPasswordConfirmationField: action.payload
     }
   }
+  if (action.type === 'UPDATE_INVITATION_EMAIL_FIELD') {
+    return {
+      ...state,
+      invitationEmailField: action.payload
+    }
+  }
   return state
 }
 
@@ -57,6 +63,7 @@ const selectors = {
   selectIsAcceptingInvitation: (state) => state.invitations.isAcceptingInvitation,
   selectInvitationPasswordField: (state) => state.invitations.invitationPasswordField,
   selectInvitationPasswordConfirmationField: (state) => state.invitations.invitationPasswordConfirmationField,
+  selectInvitationEmailField: (state) => state.invitations.invitationEmailField,
   selectInvitationToken: createSelector(
     'selectHashObject',
     (hashObject) => {
@@ -72,6 +79,9 @@ const actionCreators = {
   },
   doUpdateInvitationPasswordConfirmationField: (passwordConfirmation) => ({ dispatch }) => {
     dispatch({ type: 'UPDATE_INVITATION_PASSWORD_CONFIRMATION_FIELD', payload: passwordConfirmation })
+  },
+  doUpdateInvitationEmailField: (email) => ({ dispatch }) => {
+    dispatch({ type: 'UPDATE_INVITATION_EMAIL_FIELD', payload: email })
   },
   doAcceptInvitation: (formData) => ({ dispatch, apiFetch, getState }) => {
     dispatch({ type: 'ACCEPT_INVITATION_START' })
@@ -102,9 +112,7 @@ const actionCreators = {
     dispatch({ type: 'CREATE_INVITATION_START' })
     apiFetch('api/v1/auth/invitation', {
       method: 'POST',
-      body: JSON.stringify({
-        email: 'test@test.com'
-      }),
+      body: JSON.stringify(formData),
       headers: sanitizedCredentials
     })
       .then(response => {
