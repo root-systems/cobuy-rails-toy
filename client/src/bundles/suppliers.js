@@ -1,6 +1,6 @@
 import { createAsyncResourceBundle, createSelector } from 'redux-bundler'
 import cuid from 'cuid'
-import { omit, concat } from 'lodash'
+import { omit, concat, isNil, find } from 'lodash'
 import ms from 'milliseconds'
 
 const bundle = createAsyncResourceBundle({
@@ -54,6 +54,18 @@ bundle.reducer = (state = initialState, action) => {
 
 bundle.selectSuppliers = state => state.suppliers.data
 bundle.selectSupplierNameField = state => state.suppliers.nameField
+bundle.selectThisSupplier = createSelector(
+  'selectHash',
+  'selectSuppliers',
+  (urlHash, suppliers) => {
+    const urlHashArray = urlHash.split('/')
+    const path = urlHashArray[0]
+    if (path !== 'suppliers' || isNil(suppliers)) return null
+    const supplierId = urlHashArray[1]
+    const supplier = find(suppliers, { 'id': Number(supplierId) })
+    return supplier
+  }
+)
 
 bundle.doUpdateSupplierNameField = (name) => ({ dispatch }) => {
   dispatch({ type: 'UPDATE_SUPPLIER_NAME_FIELD', payload: name })
