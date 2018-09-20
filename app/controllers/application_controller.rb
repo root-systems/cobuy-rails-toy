@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit :sign_up, keys: added_attrs
     devise_parameter_sanitizer.permit :account_update, keys: added_attrs
     devise_parameter_sanitizer.permit :accept_invitation, keys: [:email]
-    devise_parameter_sanitizer.permit :invite, keys: [:shop]
+    devise_parameter_sanitizer.permit :invite, keys: [:group_id]
   end
 
   def after_sign_in_path_for(resource)
@@ -15,7 +15,7 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_out_path_for(resource)
-    new_admin_user_session_path
+    new_user_session_path
   end
 
   def after_invite_path_for(resource)
