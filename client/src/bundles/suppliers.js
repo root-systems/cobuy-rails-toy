@@ -52,6 +52,7 @@ bundle.reducer = (state = initialState, action) => {
   return baseReducer(state, action)
 }
 
+bundle.selectSuppliers = state => state.suppliers.data
 bundle.selectSupplierNameField = state => state.suppliers.nameField
 
 bundle.doUpdateSupplierNameField = (name) => ({ dispatch }) => {
