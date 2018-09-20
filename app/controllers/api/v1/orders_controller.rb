@@ -15,7 +15,7 @@ module Api::V1
 
     # POST /orders
     def create
-      @order.create!(order_params)
+      @order = Order.create!(order_params)
       render :json => @order
     end
 

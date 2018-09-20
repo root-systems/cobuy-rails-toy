@@ -15,7 +15,7 @@ module Api::V1
 
     # POST /products
     def create
-      @product.create!(product_params)
+      @product = Product.create!(product_params)
       render :json => @product
     end
 

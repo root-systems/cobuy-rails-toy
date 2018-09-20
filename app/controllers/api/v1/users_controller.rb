@@ -15,7 +15,7 @@ module Api::V1
 
     # POST /users
     def create
-      @user.create!(user_params)
+      @user = User.create!(user_params)
       render :json => @user
     end
 
