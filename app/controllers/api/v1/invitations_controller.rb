@@ -6,9 +6,8 @@ module Api::V1
     before_action :resource_from_invitation_token, only: [:edit, :update]
 
     def create
-      u = User.invite!(invite_params, current_user)
-      binding.pry
-      render json: { success: ['User created.'] }, status: :created
+      User.invite!(invite_params, current_user)
+      render json: { success: ['User invited.'] }, status: :created
     end
 
     # def edit
@@ -28,7 +27,8 @@ module Api::V1
     private
 
     def invite_params
-      params.permit(user: [:email, :invitation_token, :provider, :skip_invitation])
+      params.permit(:email, :invitation_token, :provider, :skip_invitation)
+      # params.permit(user: [:email, :invitation_token, :provider, :skip_invitation])
     end
 
     def accept_invitation_params

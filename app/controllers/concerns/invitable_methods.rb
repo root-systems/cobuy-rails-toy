@@ -6,7 +6,6 @@ module InvitableMethods
   end
 
   def authenticate_user!
-    binding.pry
     return if current_user
     render json: {
       errors: ['Authorized users only.']
