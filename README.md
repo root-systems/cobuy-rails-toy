@@ -1,11 +1,13 @@
 # START
 
-- bundle install
-- rails db:create
-- rails db:migrate
-- rails db:seed
-- npm i
-- rake dev:start
+- `bundle install`
+- `rails db:create`
+- `rails db:migrate`
+- `rails db:seed`
+- `cd client`
+- `npm i`
+- `cd ..`
+- `rake dev:start`
 
 # WHERE
 
