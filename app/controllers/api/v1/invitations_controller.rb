@@ -6,29 +6,39 @@ module Api::V1
     before_action :resource_from_invitation_token, only: [:edit, :update]
 
     def create
-      User.invite!(invite_params, current_user)
-      render json: { success: ['User invited.'] }, status: :created
+      @user = User.invite!(invite_params, current_user)
+      @user.group_id = current_user.group_id
+      @user.save
+      if @user.errors.empty?
+        render json: { success: ['User invited.'] }, status: :created
+      else
+        render json: { errors: @user.errors.full_messages },
+               status: :unprocessable_entity
+      end
     end
 
-    # def edit
-    #   redirect_to "#{client_api_url}?invitation_token=#{params[:invitation_token]}"
-    # end
-    #
-    # def update
-    #   user = User.accept_invitation!(accept_invitation_params)
-    #   if @user.errors.empty?
-    #     render json: { success: ['User updated.'] }, status: :accepted
-    #   else
-    #     render json: { errors: user.errors.full_messages },
-    #            status: :unprocessable_entity
-    #   end
-    # end
+    def update
+      @user = User.accept_invitation!(accept_invitation_params)
+      if @user.errors.empty?
+        render json: @user, status: :accepted
+      else
+        render json: { errors: @user.errors.full_messages },
+               status: :unprocessable_entity
+      end
+    end
+
+    protected
+    def resource_from_invitation_token
+      unless params[:invitation_token] && User.find_by_invitation_token(params[:invitation_token], true)
+        render json: { errors: user.errors.full_messages },
+               status: :unprocessable_entity
+      end
+    end
 
     private
 
     def invite_params
       params.permit(:email, :invitation_token, :provider, :skip_invitation)
-      # params.permit(user: [:email, :invitation_token, :provider, :skip_invitation])
     end
 
     def accept_invitation_params

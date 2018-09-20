@@ -60,8 +60,8 @@ const selectors = {
   selectInvitationToken: createSelector(
     'selectHashObject',
     (hashObject) => {
-      if (isNil(hashObject['invitation'])) return null
-      return hashObject['invitation'].replace('?token=', '')
+      if (isNil(hashObject['accept-invitation'])) return null
+      return hashObject['accept-invitation'].replace('?token=', '')
     }
   )
 }
@@ -75,9 +75,7 @@ const actionCreators = {
   },
   doAcceptInvitation: (formData) => ({ dispatch, apiFetch, getState }) => {
     dispatch({ type: 'ACCEPT_INVITATION_START' })
-    // GK: TODO: stop using the normal invitations controller for accepting invitations
-    // instead use the new api invitations controller
-    apiFetch('admin/invitation', {
+    apiFetch('api/v1/auth/invitation', {
       method: 'PATCH',
       body: JSON.stringify(formData)
     })
