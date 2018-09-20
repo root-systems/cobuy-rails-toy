@@ -3,7 +3,8 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
   namespace :api do
     namespace :v1 do
-      mount_devise_token_auth_for 'User', at: 'auth'
+      mount_devise_token_auth_for 'User', at: 'auth', skip: [:invitations]
+      devise_for :users, path: "auth", only: [:invitations], controllers: { invitations: 'api/v1/invitations' }
       resources :groups
       resources :suppliers
       resources :products

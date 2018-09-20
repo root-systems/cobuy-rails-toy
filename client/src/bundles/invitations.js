@@ -103,10 +103,10 @@ const actionCreators = {
       expiry: credentials.expiry
     }
     dispatch({ type: 'CREATE_INVITATION_START' })
-    apiFetch('admin/invitation', {
+    // apiFetch('admin/invitation', {
     // GK: TODO: i don't understand why the path below doesn't work, while the one above does
     // i also don't understand why devise-invitable created two sets of routes
-    // apiFetch('api/v1/auth/invitation', {
+    apiFetch('api/v1/auth/invitation', {
       method: 'POST',
       body: JSON.stringify({ email: 'test@test.com' }),
       headers: sanitizedCredentials
