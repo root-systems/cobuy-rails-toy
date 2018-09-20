@@ -18,6 +18,12 @@ class Devise::InvitationsController < DeviseController
   # POST /resource/invitation
   def create
     @group_id = current_user.group_id
+
+    if request.format == 'json'
+      render :json => { "hi": "hello" }
+      # self.resource = resource_class.new
+    end
+
     self.resource = invite_resource
     resource_invited = resource.errors.empty?
 
