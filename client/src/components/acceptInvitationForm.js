@@ -41,13 +41,10 @@ const AcceptInvitationForm = (props) => {
 
   const handleSubmit = () => {
     const formData = {
-      user: {
-        password: invitationPasswordField,
-        password_confirmation: invitationPasswordConfirmationField,
-        invitation_token: invitationToken
-      }
+      password: invitationPasswordField,
+      password_confirmation: invitationPasswordConfirmationField,
+      invitation_token: invitationToken
     }
-    console.log('invitation form data', formData)
     return doAcceptInvitation(formData)
   }
 

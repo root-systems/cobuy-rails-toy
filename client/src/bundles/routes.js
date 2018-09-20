@@ -5,7 +5,8 @@ import SignIn from '../pages/signIn'
 import Order from '../pages/order'
 import MyOrders from '../pages/myOrders'
 import Profile from '../pages/profile'
-import Invitation from '../pages/invitation'
+import AcceptInvitation from '../pages/acceptInvitation'
+import CreateInvitation from '../pages/createInvitation'
 
 const routes = {
   '': {
@@ -32,8 +33,12 @@ const routes = {
     component: Profile,
     protected: true
   },
-  'invitation': {
-    component: Invitation,
+  'accept-invitation': {
+    component: AcceptInvitation,
+    protected: true
+  },
+  'create-invitation': {
+    component: CreateInvitation,
     protected: true
   },
   '*': {

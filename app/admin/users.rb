@@ -1,6 +1,10 @@
 ActiveAdmin.register User do
   permit_params :email, :password, :password_confirmation
 
+  action_item do
+    link_to "Invite New User", new_user_invitation_path
+  end
+
   index do
     selectable_column
     id_column
