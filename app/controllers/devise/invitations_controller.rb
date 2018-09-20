@@ -51,16 +51,6 @@ class Devise::InvitationsController < DeviseController
     self.resource = accept_resource
     invitation_accepted = resource.errors.empty?
 
-    if request.format == 'json'
-      if invitation_accepted
-        return respond_with_navigational(resource, status: :success) {
-           render json: resource
-        }
-      else
-        return respond_with_navigational(resource)
-      end
-    end
-
     yield resource if block_given?
 
     if invitation_accepted
