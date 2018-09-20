@@ -8,7 +8,9 @@ const name = 'invitations'
 const initialState = {
   isAcceptingInvitation: false,
   invitationPasswordField: '',
-  invitationPasswordConfirmationField: ''
+  invitationPasswordConfirmationField: '',
+  isCreatingInvitation: false,
+  invitationEmail: ''
 }
 
 const reducer = (state = initialState, action) => {
@@ -16,6 +18,30 @@ const reducer = (state = initialState, action) => {
     return {
       ...state,
       invitationPasswordField: action.payload
+    }
+  }
+  if (action.type === 'ACCEPT_INVITATION_START') {
+    return {
+      ...state,
+      isAcceptingInvitation: true
+    }
+  }
+  if (action.type === 'ACCEPT_INVITATION_SUCCESS') {
+    return {
+      ...state,
+      isAcceptingInvitation: false
+    }
+  }
+  if (action.type === 'CREATE_INVITATION_START') {
+    return {
+      ...state,
+      isCreatingInvitation: true
+    }
+  }
+  if (action.type === 'CREATE_INVITATION_SUCCESS') {
+    return {
+      ...state,
+      isCreatingInvitation: false
     }
   }
   if (action.type === 'UPDATE_INVITATION_PASSWORD_CONFIRMATION_FIELD') {
@@ -65,6 +91,26 @@ const actionCreators = {
       })
       .catch((error) => {
         dispatch({ type: 'ACCEPT_INVITATION_ERROR', payload: error })
+      })
+  },
+  doCreateInvitation: (formData) => ({ dispatch, apiFetch, getState }) => {
+    dispatch({ type: 'CREATE_INVITATION_START' })
+    apiFetch('admin/invitation', {
+    // GK: TODO: i don't understand why the path below doesn't work, while the one above does
+    // i also don't understand why devise-invitable created two sets of routes
+    // apiFetch('api/v1/auth/invitation', {
+      method: 'POST',
+      body: JSON.stringify({ email: 'test@test.com' })
+    })
+      .then(response => {
+        if (!response.ok) {
+          return Promise.reject(new Error(`${response.status} ${response.statusText}`))
+        }
+        dispatch({ type: 'CREATE_INVITATION_SUCCESS', payload: 'Success! Invitation sent.' })
+        dispatch({ actionCreator: 'doUpdateHash', args: ['#'] })
+      })
+      .catch((error) => {
+        dispatch({ type: 'CREATE_INVITATION_ERROR', payload: error })
       })
   }
 }

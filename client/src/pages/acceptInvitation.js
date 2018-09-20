@@ -3,7 +3,7 @@ import { connect } from 'redux-bundler-react'
 
 import AcceptInvitationForm from '../components/acceptInvitationForm'
 
-const Invitation = ({
+const AcceptInvitation = ({
   invitationToken,
   doAcceptInvitation,
   doUpdateInvitationPasswordField,
@@ -30,5 +30,5 @@ export default connect(
   'doUpdateInvitationPasswordConfirmationField',
   'selectInvitationPasswordField',
   'selectInvitationPasswordConfirmationField',
-  Invitation
+  AcceptInvitation
 )
