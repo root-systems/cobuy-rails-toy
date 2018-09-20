@@ -1,4 +1,4 @@
-# START
+# HOW
 
 - `bundle install`
 - `rails db:create`
@@ -16,3 +16,7 @@
 - Dummy login available after seed:
   - u: admin@example.com
   - p: password
+
+# WHEN
+
+- https://github.com/root-systems/cobuy-rails-toy/projects/1
