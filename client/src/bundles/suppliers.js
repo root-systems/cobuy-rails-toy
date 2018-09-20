@@ -87,4 +87,15 @@ bundle.doCreateSupplier = (formData) => ({ dispatch, apiFetch, getState }) => {
     })
 }
 
+bundle.reactSuppliersFetch = createSelector(
+  'selectSuppliersShouldUpdate',
+  'selectIsSignedIn',
+  (shouldUpdate, isSignedIn) => {
+    if (shouldUpdate && isSignedIn) {
+      return { actionCreator: 'doFetchSuppliers' }
+    }
+    return false
+  }
+)
+
 export default bundle
