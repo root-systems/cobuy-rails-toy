@@ -49,7 +49,7 @@ const actionCreators = {
   },
   doAcceptInvitation: (formData) => ({ dispatch, apiFetch, getState }) => {
     dispatch({ type: 'ACCEPT_INVITATION_START' })
-    apiFetch('/authentication/invitation', {
+    apiFetch('/api/v1/auth/invitation', {
       method: 'PATCH',
       body: JSON.stringify(formData)
     })
