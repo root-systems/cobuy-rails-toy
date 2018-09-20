@@ -45,7 +45,6 @@ const AcceptInvitationForm = (props) => {
       password_confirmation: invitationPasswordConfirmationField,
       invitation_token: invitationToken
     }
-    console.log('invitation form data', formData)
     return doAcceptInvitation(formData)
   }
 
