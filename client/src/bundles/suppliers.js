@@ -69,6 +69,26 @@ bundle.reducer = (state = initialState, action) => {
       isCreatingSupplier: false
     }
   }
+  if (action.type === 'UPDATE_SUPPLIER_START') {
+    return {
+      ...state,
+      isUpdatingSupplier: true
+    }
+  }
+  if (action.type === 'UPDATE_SUPPLIER_SUCCESS') {
+    return {
+      ...state,
+      isUpdatingSupplier: false,
+      data: concat(state.data, action.payload),
+      nameField: ''
+    }
+  }
+  if (action.type === 'UPDATE_SUPPLIER_ERROR') {
+    return {
+      ...state,
+      isUpdatingSupplier: false
+    }
+  }
 
   return baseReducer(state, action)
 }
