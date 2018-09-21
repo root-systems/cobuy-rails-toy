@@ -29,6 +29,7 @@ const bundle = createAsyncResourceBundle({
 
 const initialState = {
   nameField: '',
+  isCreatingSupplier: false,
   // needed by createAsyncResourceBundle
   data: null,
   errorTimes: [],
@@ -46,6 +47,25 @@ bundle.reducer = (state = initialState, action) => {
     return {
       ...state,
       nameField: action.payload
+    }
+  }
+  if (action.type === 'CREATE_SUPPLIER_START') {
+    return {
+      ...state,
+      isCreatingSupplier: true
+    }
+  }
+  if (action.type === 'CREATE_SUPPLIER_SUCCESS') {
+    return {
+      ...state,
+      isCreatingSupplier: false,
+      data: concat(state.data, action.payload)
+    }
+  }
+  if (action.type === 'CREATE_SUPPLIER_ERROR') {
+    return {
+      ...state,
+      isCreatingSupplier: false
     }
   }
 
