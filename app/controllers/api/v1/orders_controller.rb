@@ -4,7 +4,7 @@ module Api::V1
 
     # GET /orders
     def index
-      @orders = Order.all
+      @orders = Order.where(group_id: current_user.group_id)
       render :json => @orders
     end
 

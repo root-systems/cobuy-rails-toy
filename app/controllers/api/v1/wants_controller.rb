@@ -4,7 +4,7 @@ module Api::V1
 
     # GET /wants
     def index
-      @wants = Want.all
+      @wants = Want.where(user_id: current_user.id)
       render :json => @wants
     end
 
