@@ -22,7 +22,7 @@ module Api::V1
     # PUT /groups/:id
     def update
       @group.update(group_params)
-      head :no_content
+      render :json => @group
     end
 
     # DELETE /groups/:id

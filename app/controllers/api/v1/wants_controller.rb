@@ -22,7 +22,7 @@ module Api::V1
     # PUT /wants/:id
     def update
       @want.update(want_params)
-      head :no_content
+      render :json => @want
     end
 
     # DELETE /wants/:id
