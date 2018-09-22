@@ -17,7 +17,7 @@ module Api::V1
     def create
       @supplier = Supplier.create!(supplier_params)
       if @supplier.errors.empty?
-        render json: @supplier, status: :accepted
+        render json: @supplier, status: :ok
       else
         render json: { errors: @supplier.errors.full_messages },
                status: :unprocessable_entity
@@ -28,7 +28,7 @@ module Api::V1
     def update
       @supplier.update(supplier_params)
       if @supplier.errors.empty?
-        render json: @supplier, status: :accepted
+        render json: @supplier, status: :ok
       else
         render json: { errors: @supplier.errors.full_messages },
                status: :unprocessable_entity

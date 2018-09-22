@@ -17,7 +17,7 @@ module Api::V1
     def create
       @product = Product.create!(product_params)
       if @product.errors.empty?
-        render json: @product, status: :accepted
+        render json: @product, status: :ok
       else
         render json: { errors: @product.errors.full_messages },
                status: :unprocessable_entity
@@ -28,7 +28,7 @@ module Api::V1
     def update
       @product.update(product_params)
       if @product.errors.empty?
-        render json: @product, status: :accepted
+        render json: @product, status: :ok
       else
         render json: { errors: @product.errors.full_messages },
                status: :unprocessable_entity

@@ -17,7 +17,7 @@ module Api::V1
     def create
       @order = Order.create!(order_params)
       if @order.errors.empty?
-        render json: @order, status: :accepted
+        render json: @order, status: :ok
       else
         render json: { errors: @order.errors.full_messages },
                status: :unprocessable_entity
@@ -28,7 +28,7 @@ module Api::V1
     def update
       @order.update(order_params)
       if @order.errors.empty?
-        render json: @order, status: :accepted
+        render json: @order, status: :ok
       else
         render json: { errors: @order.errors.full_messages },
                status: :unprocessable_entity

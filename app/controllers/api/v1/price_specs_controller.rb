@@ -17,7 +17,7 @@ module Api::V1
     def create
       @price_spec = PriceSpec.create!(price_spec_params)
       if @price_spec.errors.empty?
-        render json: @price_spec, status: :accepted
+        render json: @price_spec, status: :ok
       else
         render json: { errors: @price_spec.errors.full_messages },
                status: :unprocessable_entity
@@ -28,7 +28,7 @@ module Api::V1
     def update
       @price_spec.update(price_spec_params)
       if @price_spec.errors.empty?
-        render json: @price_spec, status: :accepted
+        render json: @price_spec, status: :ok
       else
         render json: { errors: @price_spec.errors.full_messages },
                status: :unprocessable_entity

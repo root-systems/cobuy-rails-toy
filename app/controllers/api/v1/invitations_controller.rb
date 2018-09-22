@@ -10,7 +10,7 @@ module Api::V1
       @user.group_id = current_user.group_id
       @user.save
       if @user.errors.empty?
-        render json: { success: ['User invited.'] }, status: :created
+        render json: { success: ['User invited.'] }, status: :ok
       else
         render json: { errors: @user.errors.full_messages },
                status: :unprocessable_entity
@@ -20,7 +20,7 @@ module Api::V1
     def update
       @user = User.accept_invitation!(accept_invitation_params)
       if @user.errors.empty?
-        render json: @user, status: :accepted
+        render json: @user, status: :ok
       else
         render json: { errors: @user.errors.full_messages },
                status: :unprocessable_entity

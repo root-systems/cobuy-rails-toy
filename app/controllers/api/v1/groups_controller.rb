@@ -17,7 +17,7 @@ module Api::V1
     def create
       @group = Group.create!(group_params)
       if @group.errors.empty?
-        render json: @group, status: :accepted
+        render json: @group, status: :ok
       else
         render json: { errors: @group.errors.full_messages },
                status: :unprocessable_entity
@@ -28,7 +28,7 @@ module Api::V1
     def update
       @group.update(group_params)
       if @group.errors.empty?
-        render json: @group, status: :accepted
+        render json: @group, status: :ok
       else
         render json: { errors: @group.errors.full_messages },
                status: :unprocessable_entity

@@ -17,7 +17,7 @@ module Api::V1
     def create
       @user = User.create!(user_params)
       if @user.errors.empty?
-        render json: @user, status: :accepted
+        render json: @user, status: :ok
       else
         render json: { errors: @user.errors.full_messages },
                status: :unprocessable_entity
@@ -28,7 +28,7 @@ module Api::V1
     def update
       @user.update(user_params)
       if @user.errors.empty?
-        render json: @user, status: :accepted
+        render json: @user, status: :ok
       else
         render json: { errors: @user.errors.full_messages },
                status: :unprocessable_entity
