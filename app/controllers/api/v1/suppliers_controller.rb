@@ -16,13 +16,23 @@ module Api::V1
     # POST /suppliers
     def create
       @supplier = Supplier.create!(supplier_params)
-      render :json => @supplier
+      if @supplier.errors.empty?
+        render json: @supplier, status: :ok
+      else
+        render json: { errors: @supplier.errors.full_messages },
+               status: :unprocessable_entity
+      end
     end
 
     # PUT /suppliers/:id
     def update
       @supplier.update(supplier_params)
-      render :json => @supplier
+      if @supplier.errors.empty?
+        render json: @supplier, status: :ok
+      else
+        render json: { errors: @supplier.errors.full_messages },
+               status: :unprocessable_entity
+      end
     end
 
     # DELETE /suppliers/:id

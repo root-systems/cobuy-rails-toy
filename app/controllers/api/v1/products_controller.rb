@@ -16,13 +16,23 @@ module Api::V1
     # POST /products
     def create
       @product = Product.create!(product_params)
-      render :json => @product
+      if @product.errors.empty?
+        render json: @product, status: :ok
+      else
+        render json: { errors: @product.errors.full_messages },
+               status: :unprocessable_entity
+      end
     end
 
     # PUT /products/:id
     def update
       @product.update(product_params)
-      render :json => @product
+      if @product.errors.empty?
+        render json: @product, status: :ok
+      else
+        render json: { errors: @product.errors.full_messages },
+               status: :unprocessable_entity
+      end
     end
 
     # DELETE /products/:id

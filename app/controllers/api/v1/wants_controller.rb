@@ -16,13 +16,23 @@ module Api::V1
     # POST /wants
     def create
       @want = Want.create!(want_params)
-      render :json => @want
+      if @want.errors.empty?
+        render json: @want, status: :ok
+      else
+        render json: { errors: @want.errors.full_messages },
+               status: :unprocessable_entity
+      end
     end
 
     # PUT /wants/:id
     def update
       @want.update(want_params)
-      render :json => @want
+      if @want.errors.empty?
+        render json: @want, status: :ok
+      else
+        render json: { errors: @want.errors.full_messages },
+               status: :unprocessable_entity
+      end
     end
 
     # DELETE /wants/:id
