@@ -1,6 +1,6 @@
 import { createAsyncResourceBundle, createSelector } from 'redux-bundler'
 import cuid from 'cuid'
-import { omit, concat, isNil, find } from 'lodash'
+import { omit, concat, isNil, find, filter } from 'lodash'
 import ms from 'milliseconds'
 
 const bundle = createAsyncResourceBundle({
@@ -79,8 +79,7 @@ bundle.reducer = (state = initialState, action) => {
     return {
       ...state,
       isUpdatingSupplier: false,
-      data: concat(state.data, action.payload),
-      nameField: ''
+      data: concat(filter(state.data, (supplier) => { return supplier.id !== action.payload.id }), action.payload)
     }
   }
   if (action.type === 'UPDATE_SUPPLIER_ERROR') {
@@ -165,6 +164,7 @@ bundle.doUpdateSupplier = (formData) => ({ dispatch, apiFetch, getState }) => {
     })
     .then((data) => {
       dispatch({ type: 'UPDATE_SUPPLIER_SUCCESS', payload: data })
+      dispatch({ actionCreator: 'doUpdateHash', args: ['suppliers'] })
     })
     .catch((error) => {
       dispatch({ type: 'UPDATE_SUPPLIER_ERROR', payload: error })
