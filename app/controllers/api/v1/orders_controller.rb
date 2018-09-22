@@ -16,13 +16,23 @@ module Api::V1
     # POST /orders
     def create
       @order = Order.create!(order_params)
-      render :json => @order
+      if @order.errors.empty?
+        render json: @order, status: :accepted
+      else
+        render json: { errors: @order.errors.full_messages },
+               status: :unprocessable_entity
+      end
     end
 
     # PUT /orders/:id
     def update
       @order.update(order_params)
-      render :json => @order
+      if @order.errors.empty?
+        render json: @order, status: :accepted
+      else
+        render json: { errors: @order.errors.full_messages },
+               status: :unprocessable_entity
+      end
     end
 
     # DELETE /orders/:id

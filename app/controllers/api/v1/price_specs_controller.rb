@@ -16,13 +16,23 @@ module Api::V1
     # POST /price_specs
     def create
       @price_spec = PriceSpec.create!(price_spec_params)
-      render :json => @price_spec
+      if @price_spec.errors.empty?
+        render json: @price_spec, status: :accepted
+      else
+        render json: { errors: @price_spec.errors.full_messages },
+               status: :unprocessable_entity
+      end
     end
 
     # PUT /price_specs/:id
     def update
       @price_spec.update(price_spec_params)
-      render :json => @price_spec
+      if @price_spec.errors.empty?
+        render json: @price_spec, status: :accepted
+      else
+        render json: { errors: @price_spec.errors.full_messages },
+               status: :unprocessable_entity
+      end
     end
 
     # DELETE /price_specs/:id

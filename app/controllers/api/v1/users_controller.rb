@@ -16,13 +16,23 @@ module Api::V1
     # POST /users
     def create
       @user = User.create!(user_params)
-      render :json => @user
+      if @user.errors.empty?
+        render json: @user, status: :accepted
+      else
+        render json: { errors: @user.errors.full_messages },
+               status: :unprocessable_entity
+      end
     end
 
     # PUT /users/:id
     def update
       @user.update(user_params)
-      render :json => @user
+      if @user.errors.empty?
+        render json: @user, status: :accepted
+      else
+        render json: { errors: @user.errors.full_messages },
+               status: :unprocessable_entity
+      end
     end
 
     # DELETE /users/:id

@@ -16,13 +16,23 @@ module Api::V1
     # POST /groups
     def create
       @group = Group.create!(group_params)
-      render :json => @group
+      if @group.errors.empty?
+        render json: @group, status: :accepted
+      else
+        render json: { errors: @group.errors.full_messages },
+               status: :unprocessable_entity
+      end
     end
 
     # PUT /groups/:id
     def update
       @group.update(group_params)
-      render :json => @group
+      if @group.errors.empty?
+        render json: @group, status: :accepted
+      else
+        render json: { errors: @group.errors.full_messages },
+               status: :unprocessable_entity
+      end
     end
 
     # DELETE /groups/:id
