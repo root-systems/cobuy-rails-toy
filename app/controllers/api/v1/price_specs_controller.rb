@@ -22,7 +22,7 @@ module Api::V1
     # PUT /price_specs/:id
     def update
       @price_spec.update(price_spec_params)
-      head :no_content
+      render :json => @price_spec
     end
 
     # DELETE /price_specs/:id

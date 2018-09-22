@@ -29,6 +29,7 @@ const bundle = createAsyncResourceBundle({
 
 const initialState = {
   nameField: '',
+  isCreatingSupplier: false,
   // needed by createAsyncResourceBundle
   data: null,
   errorTimes: [],
@@ -46,6 +47,46 @@ bundle.reducer = (state = initialState, action) => {
     return {
       ...state,
       nameField: action.payload
+    }
+  }
+  if (action.type === 'CREATE_SUPPLIER_START') {
+    return {
+      ...state,
+      isCreatingSupplier: true
+    }
+  }
+  if (action.type === 'CREATE_SUPPLIER_SUCCESS') {
+    return {
+      ...state,
+      isCreatingSupplier: false,
+      data: concat(state.data, action.payload),
+      nameField: ''
+    }
+  }
+  if (action.type === 'CREATE_SUPPLIER_ERROR') {
+    return {
+      ...state,
+      isCreatingSupplier: false
+    }
+  }
+  if (action.type === 'UPDATE_SUPPLIER_START') {
+    return {
+      ...state,
+      isUpdatingSupplier: true
+    }
+  }
+  if (action.type === 'UPDATE_SUPPLIER_SUCCESS') {
+    return {
+      ...state,
+      isUpdatingSupplier: false,
+      data: concat(state.data, action.payload),
+      nameField: ''
+    }
+  }
+  if (action.type === 'UPDATE_SUPPLIER_ERROR') {
+    return {
+      ...state,
+      isUpdatingSupplier: false
     }
   }
 
@@ -94,9 +135,39 @@ bundle.doCreateSupplier = (formData) => ({ dispatch, apiFetch, getState }) => {
     })
     .then((data) => {
       dispatch({ type: 'CREATE_SUPPLIER_SUCCESS', payload: data })
+      dispatch({ actionCreator: 'doUpdateHash', args: ['suppliers'] })
     })
     .catch((error) => {
       dispatch({ type: 'CREATE_SUPPLIER_ERROR', payload: error })
+    })
+}
+
+bundle.doUpdateSupplier = (formData) => ({ dispatch, apiFetch, getState }) => {
+  const credentials = getState().accounts.credentials
+  const sanitizedCredentials = {
+    'access-token': credentials.accessToken,
+    'token-type': credentials.tokenType,
+    client: credentials.client,
+    uid: credentials.uid,
+    expiry: credentials.expiry
+  }
+  dispatch({ type: 'UPDATE_SUPPLIER_START' })
+  apiFetch(`api/v1/suppliers/${formData.id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(omit(formData, ['id'])),
+    headers: sanitizedCredentials
+  })
+    .then(response => {
+      if (!response.ok) {
+        return Promise.reject(new Error(`${response.status} ${response.statusText}`))
+      }
+      return response.json()
+    })
+    .then((data) => {
+      dispatch({ type: 'UPDATE_SUPPLIER_SUCCESS', payload: data })
+    })
+    .catch((error) => {
+      dispatch({ type: 'UPDATE_SUPPLIER_ERROR', payload: error })
     })
 }
 

@@ -1,6 +1,8 @@
 import React from 'react'
 import { Button, TextField } from '@material-ui/core'
 
+import SupplierForm from './supplierForm'
+
 const containerStyle = {
   display: 'flex',
   flexDirection: 'column'
@@ -44,20 +46,12 @@ const CreateSupplierForm = (props) => {
   return (
     <div style={containerStyle}>
       <h1 style={headerStyle}>Create Supplier</h1>
-      <form style={formStyle}>
-        <TextField
-          label={'Name'}
-          type='email'
-          value={supplierNameField}
-          onChange={handleNameChange}
-        />
-        <Button
-          variant='outlined'
-          style={buttonStyle}
-          type='button'
-          onClick={handleSubmit}
-        >Complete Signup</Button>
-      </form>
+      <SupplierForm
+        submitAction={doCreateSupplier}
+        handleNameChange={handleNameChange}
+        handleSubmit={handleSubmit}
+        currentUser={currentUser}
+      />
     </div>
   )
 }

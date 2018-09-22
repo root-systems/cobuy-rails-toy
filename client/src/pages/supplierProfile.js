@@ -1,20 +1,32 @@
 import React from 'react'
 import { connect } from 'redux-bundler-react'
+import { isNil } from 'lodash'
 
-import SupplierShowProfile from '../components/supplierShowProfile'
+import EditSupplierForm from '../components/editSupplierForm'
 
 const SupplierProfile = ({
   thisSupplier,
-  currentUser
+  doUpdateSupplier,
+  supplierNameField,
+  currentUser,
+  doUpdateSupplierNameField
  }) => {
+  if (isNil(thisSupplier)) return null
   return (
-    <SupplierShowProfile
+    <EditSupplierForm
       thisSupplier={thisSupplier}
+      doUpdateSupplier={doUpdateSupplier}
+      supplierNameField={supplierNameField}
+      doUpdateSupplierNameField={doUpdateSupplierNameField}
     />
   )
 }
 
 export default connect(
   'selectThisSupplier',
+  'doUpdateSupplier',
+  'selectSupplierNameField',
+  'selectCurrentUser',
+  'doUpdateSupplierNameField',
   SupplierProfile
 )
