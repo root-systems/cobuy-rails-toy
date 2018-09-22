@@ -152,9 +152,9 @@ bundle.doUpdateSupplier = (formData) => ({ dispatch, apiFetch, getState }) => {
     expiry: credentials.expiry
   }
   dispatch({ type: 'UPDATE_SUPPLIER_START' })
-  apiFetch('api/v1/suppliers', {
-    method: 'POST',
-    body: JSON.stringify(formData),
+  apiFetch(`api/v1/suppliers/${formData.id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(omit(formData, ['id'])),
     headers: sanitizedCredentials
   })
     .then(response => {

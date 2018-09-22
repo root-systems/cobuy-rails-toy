@@ -23,23 +23,10 @@ const headerStyle = {
 
 const SupplierForm = (props) => {
   const {
-    submitAction,
-    nameChangeAction,
-    nameFieldValue,
-    currentUser
+    handleSubmit,
+    handleNameChange,
+    nameFieldValue
   } = props
-
-  const handleNameChange = (e) => {
-    return nameChangeAction(e.target.value)
-  }
-
-  const handleSubmit = () => {
-    const formData = {
-      name: nameFieldValue,
-      group_id: currentUser.group_id
-    }
-    return submitAction(formData)
-  }
 
   return (
     <div style={containerStyle}>
@@ -55,7 +42,7 @@ const SupplierForm = (props) => {
           style={buttonStyle}
           type='button'
           onClick={handleSubmit}
-        >Complete Signup</Button>
+        >Save</Button>
       </form>
     </div>
   )

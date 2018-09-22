@@ -31,13 +31,25 @@ const CreateSupplierForm = (props) => {
     currentUser
   } = props
 
+  const handleNameChange = (e) => {
+    return doUpdateSupplierNameField(e.target.value)
+  }
+
+  const handleSubmit = () => {
+    const formData = {
+      name: supplierNameField,
+      group_id: currentUser.group_id
+    }
+    return doCreateSupplier(formData)
+  }
+
   return (
     <div style={containerStyle}>
       <h1 style={headerStyle}>Create Supplier</h1>
       <SupplierForm
         submitAction={doCreateSupplier}
-        nameChangeAction={doUpdateSupplierNameField}
-        nameFieldValue={supplierNameField}
+        handleNameChange={handleNameChange}
+        handleSubmit={handleSubmit}
         currentUser={currentUser}
       />
     </div>
