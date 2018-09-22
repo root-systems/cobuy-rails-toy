@@ -4,7 +4,7 @@ module Api::V1
 
     # GET /suppliers
     def index
-      @suppliers = Supplier.all
+      @suppliers = Supplier.where(group_id: current_user.group_id)
       render :json => @suppliers
     end
 
