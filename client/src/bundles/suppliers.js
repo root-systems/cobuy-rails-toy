@@ -164,6 +164,7 @@ bundle.doUpdateSupplier = (formData) => ({ dispatch, apiFetch, getState }) => {
     })
     .then((data) => {
       dispatch({ type: 'UPDATE_SUPPLIER_SUCCESS', payload: data })
+      dispatch({ actionCreator: 'doUpdateHash', args: ['suppliers'] })
     })
     .catch((error) => {
       dispatch({ type: 'UPDATE_SUPPLIER_ERROR', payload: error })
