@@ -28,7 +28,11 @@ const bundle = createAsyncResourceBundle({
 })
 
 const initialState = {
-  newProducts: {},
+  newProduct: {
+    name: '',
+    description: '',
+    unit: ''
+  },
   // needed by createAsyncResourceBundle
   data: null,
   errorTimes: [],
@@ -42,31 +46,13 @@ const initialState = {
 
 const baseReducer = bundle.reducer
 bundle.reducer = (state = initialState, action) => {
-  if (action.type === 'ADD_NEW_PRODUCT') {
-    const nextId = cuid()
-    return {
-      ...state,
-      newProducts: {
-        ...state.newProducts,
-        [nextId]: {
-          name: '',
-          description: '',
-          unit: ''
-        }
-      }
-    }
-  }
 
   if (action.type === 'UPDATE_NEW_PRODUCT_NAME') {
     return {
       ...state,
-      newProducts: {
-        ...state.newProducts,
-        [action.payload.newProductKey]: {
-          name: action.payload.name,
-          description: state.newProducts[action.payload.newProductKey].description,
-          unit: state.newProducts[action.payload.newProductKey].unit
-        }
+      newProduct: {
+        ...state.newProduct,
+        name: action.payload
       }
     }
   }
@@ -74,13 +60,9 @@ bundle.reducer = (state = initialState, action) => {
   if (action.type === 'UPDATE_NEW_PRODUCT_DESCRIPTION') {
     return {
       ...state,
-      newProducts: {
-        ...state.newProducts,
-        [action.payload.newProductKey]: {
-          name: state.newProducts[action.payload.newProductKey].name,
-          description: action.payload.description,
-          unit: state.newProducts[action.payload.newProductKey].unit
-        }
+      newProduct: {
+        ...state.newProduct,
+        description: action.payload
       }
     }
   }
@@ -88,29 +70,22 @@ bundle.reducer = (state = initialState, action) => {
   if (action.type === 'UPDATE_NEW_PRODUCT_UNIT') {
     return {
       ...state,
-      newProducts: {
-        ...state.newProducts,
-        [action.payload.newProductKey]: {
-          name: state.newProducts[action.payload.newProductKey].name,
-          description: state.newProducts[action.payload.newProductKey].description,
-          unit: action.payload.unit
-        }
+      newProduct: {
+        ...state.newProduct,
+        unit: action.payload
       }
-    }
-  }
-
-  if (action.type === 'REMOVE_NEW_PRODUCT') {
-    return {
-      ...state,
-      newProducts: omit(state.newProducts, action.payload)
     }
   }
 
   if (action.type === 'CREATE_PRODUCT_SUCCESS') {
     return {
       ...state,
-      newProducts: omit(state.newProducts, action.payload.newProductKey),
-      data: concat(state.data, action.payload.data)
+      newProduct: {
+        name: '',
+        description: '',
+        unit: ''
+      },
+      data: concat(state.data, action.payload)
     }
   }
 
@@ -122,7 +97,7 @@ bundle.reducer = (state = initialState, action) => {
 }
 
 bundle.selectProducts = state => state.products.data
-bundle.selectNewProducts = state => state.products.newProducts
+bundle.selectNewProduct = state => state.products.newProduct
 bundle.selectThisSupplierProducts = createSelector(
   'selectThisSupplierId',
   'selectProducts',
@@ -132,29 +107,21 @@ bundle.selectThisSupplierProducts = createSelector(
   }
 )
 
-bundle.doAddNewProduct = () => ({ dispatch }) => {
-  dispatch({ type: 'ADD_NEW_PRODUCT' })
+bundle.doUpdateNewProductName = (name) => ({ dispatch }) => {
+  dispatch({ type: 'UPDATE_NEW_PRODUCT_NAME', payload: name })
 }
 
-bundle.doRemoveNewProduct = (newProductKey) => ({ dispatch }) => {
-  dispatch({ type: 'REMOVE_NEW_PRODUCT', payload: newProductKey })
+bundle.doUpdateNewProductDescription = (description) => ({ dispatch }) => {
+  dispatch({ type: 'UPDATE_NEW_PRODUCT_DESCRIPTION', payload: description })
 }
 
-bundle.doUpdateNewProductName = (newProductKeyAndValue) => ({ dispatch }) => {
-  dispatch({ type: 'UPDATE_NEW_PRODUCT_NAME', payload: newProductKeyAndValue })
-}
-
-bundle.doUpdateNewProductDescription = (newProductKeyAndValue) => ({ dispatch }) => {
-  dispatch({ type: 'UPDATE_NEW_PRODUCT_DESCRIPTION', payload: newProductKeyAndValue })
-}
-
-bundle.doUpdateNewProductUnit = (newProductKeyAndValue) => ({ dispatch }) => {
-  dispatch({ type: 'UPDATE_NEW_PRODUCT_UNIT', payload: newProductKeyAndValue })
+bundle.doUpdateNewProductUnit = (unit) => ({ dispatch }) => {
+  dispatch({ type: 'UPDATE_NEW_PRODUCT_UNIT', payload: unit })
 }
 
 bundle.doCreateProduct = (formData) => ({ dispatch, apiFetch, getState }) => {
   const credentials = getState().accounts.credentials
-  const newProductKey = formData.newProductKey
+  const supplierId = formData.supplier_id
   const sanitizedCredentials = {
     'access-token': credentials.accessToken,
     'token-type': credentials.tokenType,
@@ -177,10 +144,9 @@ bundle.doCreateProduct = (formData) => ({ dispatch, apiFetch, getState }) => {
     .then((data) => {
       dispatch({
         type: 'CREATE_PRODUCT_SUCCESS',
-        payload: {
-          data,
-          newProductKey
-        } })
+        payload: data
+      })
+      dispatch({ actionCreator: 'doUpdateHash', args: [`suppliers/${supplierId}/products`] })
     })
     .catch((error) => {
       dispatch({ type: 'CREATE_PRODUCT_ERROR', payload: error })
