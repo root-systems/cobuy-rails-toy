@@ -13,7 +13,8 @@ const reducer = (state = initialState, action) => {
     action.type === 'CREATE_ORDER_ERROR' ||
     action.type === 'UPDATE_PROFILE_ERROR' ||
     action.type === 'ACCEPT_INVITATION_ERROR' ||
-    action.type === 'ACCEPT_INVITATION_SUCCESS'
+    action.type === 'ACCEPT_INVITATION_SUCCESS' ||
+    action.type === 'SIGN_UP_ERROR'
   ) {
     const nextId = cuid()
     return {

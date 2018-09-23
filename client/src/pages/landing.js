@@ -22,8 +22,9 @@ const navStyle = {
 const Landing = (props) => {
   const { isSignedIn, doSignOut, notifications, doRemoveErrorNotification, route, routeInfo, pathname, doUpdateHash } = props
   const isAcceptingInvitation = routeInfo.pattern === 'accept-invitation'
+  const isSigningUp = routeInfo.pattern === 'sign-up'
   const Page = route.component
-  if (isAcceptingInvitation) {
+  if (isAcceptingInvitation || isSigningUp) {
     return (
       <div style={containerStyle}>
         <NotificationCard notifications={notifications} doRemoveErrorNotification={doRemoveErrorNotification} />
@@ -49,7 +50,7 @@ const Landing = (props) => {
               </div>
               <Page {...props} />
             </div>
-          : <SignIn />
+          : <SignIn doUpdateHash={doUpdateHash} />
         }
       </div>
     )

@@ -8,7 +8,8 @@ const SignIn = ({
   doUpdateSignInPasswordField,
   signInEmailField,
   signInPasswordField,
-  doSignIn
+  doSignIn,
+  doUpdateHash
  }) => {
   return (
     <SignInForm
@@ -17,6 +18,7 @@ const SignIn = ({
       signInEmailField={signInEmailField}
       signInPasswordField={signInPasswordField}
       doSignIn={doSignIn}
+      doUpdateHash={doUpdateHash}
     />
   )
 }

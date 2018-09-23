@@ -11,6 +11,7 @@ import CreateSupplier from '../pages/createSupplier'
 import MySuppliers from '../pages/mySuppliers'
 import SupplierProfile from '../pages/supplierProfile'
 import MyGroup from '../pages/myGroup'
+import SignUp from '../pages/signUp'
 
 const routes = {
   '': {
@@ -23,6 +24,10 @@ const routes = {
   },
   'sign-in': {
     component: SignIn,
+    protected: false
+  },
+  'sign-up': {
+    component: SignUp,
     protected: false
   },
   'order': {
