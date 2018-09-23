@@ -4,7 +4,8 @@ module Api::V1
 
     # GET /products
     def index
-      @products = Product.all
+      related_supplier_ids = Supplier.where(group_id: current_user.group_id).map(&:id)
+      @products = Product.where(supplier_id: related_supplier_ids)
       render :json => @products
     end
 
