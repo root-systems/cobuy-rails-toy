@@ -10,6 +10,7 @@ import CreateInvitation from '../pages/createInvitation'
 import CreateSupplier from '../pages/createSupplier'
 import MySuppliers from '../pages/mySuppliers'
 import SupplierProfile from '../pages/supplierProfile'
+import MyGroup from '../pages/myGroup'
 
 const routes = {
   '': {
@@ -54,6 +55,10 @@ const routes = {
   },
   'suppliers/:supplierId': {
     component: SupplierProfile,
+    protected: true
+  },
+  'my-group': {
+    component: MyGroup,
     protected: true
   },
   '*': {

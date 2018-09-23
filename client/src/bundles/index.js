@@ -6,6 +6,7 @@ import notificationsBundle from './notifications'
 import myProfileBundle from './myProfile'
 import invitationsBundle from './invitations'
 import suppliersBundle from './suppliers'
+import groupsBundle from './groups'
 
 import routes from './routes'
 
@@ -18,6 +19,7 @@ export default composeBundles(
   myProfileBundle,
   invitationsBundle,
   suppliersBundle,
+  groupsBundle,
   createUrlBundle(),
   debugBundle,
   extraArgs,
