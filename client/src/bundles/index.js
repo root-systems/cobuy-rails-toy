@@ -7,6 +7,7 @@ import myProfileBundle from './myProfile'
 import invitationsBundle from './invitations'
 import suppliersBundle from './suppliers'
 import groupsBundle from './groups'
+import productsBundle from './products'
 
 import routes from './routes'
 
@@ -20,6 +21,7 @@ export default composeBundles(
   invitationsBundle,
   suppliersBundle,
   groupsBundle,
+  productsBundle,
   createUrlBundle(),
   debugBundle,
   extraArgs,

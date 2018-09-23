@@ -164,7 +164,7 @@ bundle.doUpdateGroup = (formData) => ({ dispatch, apiFetch, getState }) => {
     })
 }
 
-bundle.reactSuppliersFetch = createSelector(
+bundle.reactGroupsFetch = createSelector(
   'selectGroupsShouldUpdate',
   'selectIsSignedIn',
   'selectCurrentUser',

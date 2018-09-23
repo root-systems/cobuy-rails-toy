@@ -9,7 +9,8 @@ const SupplierProfile = ({
   doUpdateSupplier,
   supplierNameField,
   currentUser,
-  doUpdateSupplierNameField
+  doUpdateSupplierNameField,
+  doUpdateHash
  }) => {
   if (isNil(thisSupplier)) return null
   return (
@@ -18,6 +19,7 @@ const SupplierProfile = ({
       doUpdateSupplier={doUpdateSupplier}
       supplierNameField={supplierNameField}
       doUpdateSupplierNameField={doUpdateSupplierNameField}
+      doUpdateHash={doUpdateHash}
     />
   )
 }
@@ -28,5 +30,6 @@ export default connect(
   'selectSupplierNameField',
   'selectCurrentUser',
   'doUpdateSupplierNameField',
+  'doUpdateHash',
   SupplierProfile
 )

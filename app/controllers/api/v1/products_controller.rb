@@ -4,7 +4,8 @@ module Api::V1
 
     # GET /products
     def index
-      @products = Product.all
+      related_supplier_ids = Supplier.where(group_id: current_user.group_id).map(&:id)
+      @products = Product.where(supplier_id: related_supplier_ids)
       render :json => @products
     end
 
@@ -44,7 +45,7 @@ module Api::V1
     private
 
     def product_params
-      params.permit(:name, :description, :image, :supplier_id, :price_specs => [:price, :minimum, :currency, :product_id])
+      params.permit(:name, :description, :image, :supplier_id, :unit, :price_specs => [:price, :minimum, :currency, :product_id])
     end
 
     def set_product

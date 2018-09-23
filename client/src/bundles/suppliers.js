@@ -99,15 +99,22 @@ bundle.reducer = (state = initialState, action) => {
 
 bundle.selectSuppliers = state => state.suppliers.data
 bundle.selectSupplierNameField = state => state.suppliers.nameField
-bundle.selectThisSupplier = createSelector(
+bundle.selectThisSupplierId = createSelector(
   'selectHash',
-  'selectSuppliers',
-  (urlHash, suppliers) => {
+  (urlHash) => {
     const urlHashArray = urlHash.split('/')
     const path = urlHashArray[0]
-    if (path !== 'suppliers' || isNil(suppliers)) return null
+    if (path !== 'suppliers') return null
     const supplierId = urlHashArray[1]
-    const supplier = find(suppliers, { 'id': Number(supplierId) })
+    return Number(supplierId)
+  }
+)
+bundle.selectThisSupplier = createSelector(
+  'selectThisSupplierId',
+  'selectSuppliers',
+  (supplierId, suppliers) => {
+    if (isNil(supplierId) || isNil(suppliers)) return null
+    const supplier = find(suppliers, { 'id': supplierId })
     return supplier
   }
 )
