@@ -27,8 +27,7 @@ const CreateGroupForm = (props) => {
   const {
     doCreateGroup,
     doUpdateGroupNameField,
-    groupNameField,
-    currentUser
+    groupNameField
   } = props
 
   const handleNameChange = (e) => {
@@ -37,8 +36,7 @@ const CreateGroupForm = (props) => {
 
   const handleSubmit = () => {
     const formData = {
-      name: groupNameField,
-      creator_id: currentUser.id
+      name: groupNameField
     }
     return doCreateGroup(formData)
   }
@@ -47,10 +45,9 @@ const CreateGroupForm = (props) => {
     <div style={containerStyle}>
       <h1 style={headerStyle}>Create Group</h1>
       <GroupForm
-        submitAction={doCreateGroup}
         handleNameChange={handleNameChange}
         handleSubmit={handleSubmit}
-        currentUser={currentUser}
+        nameFieldValue={groupNameField}
       />
     </div>
   )

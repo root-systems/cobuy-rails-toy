@@ -15,8 +15,11 @@ module Api::V1
 
     # POST /groups
     def create
-      @group = Group.create!(group_params)
+      # @group = Group.create!(group_params)
+      @group = Group.create_and_update_creator(group_params, current_user)
       if @group.errors.empty?
+        current_user.group = @group
+        current_user.save!
         render json: @group, status: :ok
       else
         render json: { errors: @group.errors.full_messages },

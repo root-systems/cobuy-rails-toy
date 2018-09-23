@@ -60,7 +60,7 @@ bundle.reducer = (state = initialState, action) => {
     return {
       ...state,
       isCreatingGroup: false,
-      data: concat(state.data, action.payload),
+      data: action.payload,
       nameField: ''
     }
   }
@@ -80,7 +80,7 @@ bundle.reducer = (state = initialState, action) => {
     return {
       ...state,
       isUpdatingGroup: false,
-      data: concat(filter(state.data, (group) => { return group.id !== action.payload.id }), action.payload)
+      data: action.payload
     }
   }
   if (action.type === 'UPDATE_GROUP_ERROR') {
@@ -88,6 +88,10 @@ bundle.reducer = (state = initialState, action) => {
       ...state,
       isUpdatingGroup: false
     }
+  }
+
+  if (action.type === 'SIGN_OUT_SUCCESS') {
+    return initialState
   }
 
   return baseReducer(state, action)
@@ -165,6 +169,7 @@ bundle.reactSuppliersFetch = createSelector(
   'selectIsSignedIn',
   'selectCurrentUser',
   (shouldUpdate, isSignedIn, currentUser) => {
+    if (isNil(currentUser)) return false
     if (shouldUpdate && isSignedIn && !isNil(currentUser.group_id)) {
       return { actionCreator: 'doFetchGroups' }
     }

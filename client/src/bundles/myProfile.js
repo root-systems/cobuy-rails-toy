@@ -100,6 +100,14 @@ bundle.reducer = (state = initialState, action) => {
       nameField: action.payload
     }
   }
+  if (action.type === 'CREATE_GROUP_SUCCESS') {
+    return {
+      ...state,
+      data: {
+        group_id: action.payload.id
+      }
+    }
+  }
   return baseReducer(state, action)
 }
 

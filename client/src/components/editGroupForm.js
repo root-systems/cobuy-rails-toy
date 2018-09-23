@@ -68,7 +68,6 @@ class EditGroupForm extends React.Component {
       doUpdateGroup,
       doUpdateGroupNameField,
       groupNameField,
-      currentUser,
       group
     } = this.props
 
@@ -88,10 +87,9 @@ class EditGroupForm extends React.Component {
       <div style={containerStyle}>
         <h1 style={headerStyle}>Edit Group</h1>
         <GroupForm
-          submitAction={doUpdateGroup}
           handleNameChange={handleNameChange}
           handleSubmit={handleSubmit}
-          currentUser={currentUser}
+          nameFieldValue={groupNameField}
         />
       </div>
     )

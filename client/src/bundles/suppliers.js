@@ -90,6 +90,10 @@ bundle.reducer = (state = initialState, action) => {
     }
   }
 
+  if (action.type === 'SIGN_OUT_SUCCESS') {
+    return initialState
+  }
+
   return baseReducer(state, action)
 }
 
