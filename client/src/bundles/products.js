@@ -57,6 +57,55 @@ bundle.reducer = (state = initialState, action) => {
     }
   }
 
+  if (action.type === 'UPDATE_NEW_PRODUCT_NAME') {
+    return {
+      ...state,
+      newProducts: {
+        ...state.newProducts,
+        [action.payload.newProductKey]: {
+          name: action.payload.name,
+          description: state.newProducts[action.payload.newProductKey].description,
+          unit: state.newProducts[action.payload.newProductKey].unit
+        }
+      }
+    }
+  }
+
+  if (action.type === 'UPDATE_NEW_PRODUCT_DESCRIPTION') {
+    return {
+      ...state,
+      newProducts: {
+        ...state.newProducts,
+        [action.payload.newProductKey]: {
+          name: state.newProducts[action.payload.newProductKey].name,
+          description: action.payload.description,
+          unit: state.newProducts[action.payload.newProductKey].unit
+        }
+      }
+    }
+  }
+
+  if (action.type === 'UPDATE_NEW_PRODUCT_UNIT') {
+    return {
+      ...state,
+      newProducts: {
+        ...state.newProducts,
+        [action.payload.newProductKey]: {
+          name: state.newProducts[action.payload.newProductKey].name,
+          description: state.newProducts[action.payload.newProductKey].description,
+          unit: action.payload.unit
+        }
+      }
+    }
+  }
+
+  if (action.type === 'REMOVE_NEW_PRODUCT') {
+    return {
+      ...state,
+      newProducts: omit(state.newProducts, action.payload)
+    }
+  }
+
   if (action.type === 'SIGN_OUT_SUCCESS') {
     return initialState
   }
@@ -77,6 +126,22 @@ bundle.selectThisSupplierProducts = createSelector(
 
 bundle.doAddNewProduct = () => ({ dispatch }) => {
   dispatch({ type: 'ADD_NEW_PRODUCT' })
+}
+
+bundle.doRemoveNewProduct = (newProductKey) => ({ dispatch }) => {
+  dispatch({ type: 'REMOVE_NEW_PRODUCT', payload: newProductKey })
+}
+
+bundle.doUpdateNewProductName = (newProductKeyAndValue) => ({ dispatch }) => {
+  dispatch({ type: 'UPDATE_NEW_PRODUCT_NAME', payload: newProductKeyAndValue })
+}
+
+bundle.doUpdateNewProductDescription = (newProductKeyAndValue) => ({ dispatch }) => {
+  dispatch({ type: 'UPDATE_NEW_PRODUCT_DESCRIPTION', payload: newProductKeyAndValue })
+}
+
+bundle.doUpdateNewProductUnit = (newProductKeyAndValue) => ({ dispatch }) => {
+  dispatch({ type: 'UPDATE_NEW_PRODUCT_UNIT', payload: newProductKeyAndValue })
 }
 
 bundle.reactProductsFetch = createSelector(

@@ -5,19 +5,37 @@ import { isNil } from 'lodash'
 import ProductsList from '../components/productsList'
 
 const SupplierProducts = ({
-  products,
-  thisSupplier
+  thisSupplierProducts,
+  thisSupplier,
+  newProducts,
+  doAddNewProduct,
+  doRemoveNewProduct,
+  doUpdateNewProductName,
+  doUpdateNewProductDescription,
+  doUpdateNewProductUnit
 }) => {
   return (
     <ProductsList
-      products={products}
+      products={thisSupplierProducts}
       supplier={thisSupplier}
+      newProducts={newProducts}
+      doAddNewProduct={doAddNewProduct}
+      doRemoveNewProduct={doRemoveNewProduct}
+      doUpdateNewProductName={doUpdateNewProductName}
+      doUpdateNewProductDescription={doUpdateNewProductDescription}
+      doUpdateNewProductUnit={doUpdateNewProductUnit}
     />
   )
 }
 
 export default connect(
-  'doSelectThisSupplierProducts',
+  'selectThisSupplierProducts',
   'selectThisSupplier',
+  'selectNewProducts',
+  'doAddNewProduct',
+  'doRemoveNewProduct',
+  'doUpdateNewProductName',
+  'doUpdateNewProductDescription',
+  'doUpdateNewProductUnit',
   SupplierProducts
 )
