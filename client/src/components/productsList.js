@@ -117,24 +117,24 @@ const NewProducts = (props) => {
     return (
       <FormGroup style={lineItemContainerStyle} key={newProductKey}>
         <FormControl>
-          <InputLabel>Name</InputLabel>
           <TextField
+            label={'Name'}
             type='text'
             value={newProduct.name}
             onChange={handleNewProductNameChange(newProductKey)}
           />
         </FormControl>
         <FormControl>
-          <InputLabel>Description</InputLabel>
           <TextField
+            label={'Description'}
             type='text'
             value={newProduct.description}
             onChange={handleNewProductDescriptionChange(newProductKey)}
           />
         </FormControl>
         <FormControl>
-          <InputLabel>Base Unit</InputLabel>
           <TextField
+            label={'Base Unit'}
             type='text'
             value={newProduct.unit}
             onChange={handleNewProductUnitChange(newProductKey)}
