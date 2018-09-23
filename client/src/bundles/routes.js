@@ -12,6 +12,7 @@ import MySuppliers from '../pages/mySuppliers'
 import SupplierProfile from '../pages/supplierProfile'
 import MyGroup from '../pages/myGroup'
 import SignUp from '../pages/signUp'
+import SupplierProducts from '../pages/supplierProducts'
 
 const routes = {
   '': {
@@ -64,6 +65,10 @@ const routes = {
   },
   'my-group': {
     component: MyGroup,
+    protected: true
+  },
+  'suppliers/:supplierId/products': {
+    component: SupplierProducts,
     protected: true
   },
   '*': {

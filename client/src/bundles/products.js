@@ -95,6 +95,14 @@ bundle.reducer = (state = initialState, action) => {
 }
 
 bundle.selectProducts = state => state.products.data
+bundle.selectThisSupplierProducts = createSelector(
+  'selectThisSupplierId',
+  'selectProducts',
+  (supplierId, products) => {
+    if (!isNil(supplierId) || isNil(products)) return null
+    return filter(products, (product) => { return supplierId === product.supplier_id })
+  }
+)
 
 // bundle.doCreateSupplier = (formData) => ({ dispatch, apiFetch, getState }) => {
 //   const credentials = getState().accounts.credentials

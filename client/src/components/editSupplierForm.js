@@ -12,6 +12,10 @@ const headerStyle = {
   textAlign: 'center'
 }
 
+const buttonStyle = {
+  marginTop: 20
+}
+
 class EditSupplierForm extends React.Component {
   componentDidMount () {
     const { doUpdateSupplierNameField, thisSupplier } = this.props
@@ -24,7 +28,8 @@ class EditSupplierForm extends React.Component {
       supplierNameField,
       doUpdateSupplier,
       currentUser,
-      doUpdateSupplierNameField
+      doUpdateSupplierNameField,
+      doUpdateHash
     } = this.props
     if (!thisSupplier) return null
 
@@ -48,6 +53,12 @@ class EditSupplierForm extends React.Component {
           handleSubmit={handleSubmit}
           handleNameChange={handleNameChange}
         />
+        <Button
+          variant='outlined'
+          style={buttonStyle}
+          type='button'
+          onClick={() => { doUpdateHash(`suppliers/${thisSupplier.id}/products`) }}
+        >View/Edit Products</Button>
       </div>
     )
   }

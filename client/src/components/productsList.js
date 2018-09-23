@@ -21,14 +21,13 @@ const innerContainerStyle = {
 
 const ProductsList = (props) => {
   const { products } = props
-  if (isEmpty(products)) return null
   const renderProduct = (product) => {
     return (
       <Card key={product.id} style={innerContainerStyle}>
         <CardActionArea>
           <CardContent>
             <Typography variant='headline'>
-              {`Products ${product.name}`}
+              ${product.name}
             </Typography>
           </CardContent>
         </CardActionArea>
@@ -36,6 +35,7 @@ const ProductsList = (props) => {
     )
   }
   const renderProducts = (products) => {
+    if (isEmpty(products)) return null
     return products.map(renderProduct)
   }
   return (
