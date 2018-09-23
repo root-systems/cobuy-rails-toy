@@ -27,7 +27,8 @@ const SignInForm = (props) => {
     doUpdateSignInPasswordField,
     doSignIn,
     signInEmailField,
-    signInPasswordField
+    signInPasswordField,
+    doUpdateHash
   } = props
 
   const handleSignInEmailChange = (e) => {
@@ -64,6 +65,7 @@ const SignInForm = (props) => {
         />
         <Button variant='outlined' style={buttonStyle} type='button' onClick={handleSubmit}>Sign In</Button>
       </form>
+      <Button variant='outlined' style={buttonStyle} type='button' onClick={() => { doUpdateHash('sign-up') }}>Or Sign Up Here</Button>
     </div>
   )
 }
