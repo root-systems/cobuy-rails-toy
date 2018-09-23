@@ -179,8 +179,9 @@ bundle.doUpdateSupplier = (formData) => ({ dispatch, apiFetch, getState }) => {
 bundle.reactSuppliersFetch = createSelector(
   'selectSuppliersShouldUpdate',
   'selectIsSignedIn',
-  (shouldUpdate, isSignedIn) => {
-    if (shouldUpdate && isSignedIn) {
+  'selectGroup',
+  (shouldUpdate, isSignedIn, group) => {
+    if (shouldUpdate && isSignedIn && !isNil(group)) {
       return { actionCreator: 'doFetchSuppliers' }
     }
     return false
