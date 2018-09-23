@@ -156,12 +156,12 @@ bundle.selectProducts = state => state.products.data
 //     })
 // }
 
-bundle.reactSuppliersFetch = createSelector(
+bundle.reactProductsFetch = createSelector(
   'selectProductsShouldUpdate',
   'selectIsSignedIn',
   'selectGroup',
   (shouldUpdate, isSignedIn, group) => {
-    console.log('reactSuppliersFetch', shouldUpdate, isSignedIn, group)
+    console.log('reactProductsFetch', shouldUpdate, isSignedIn, group)
     if (shouldUpdate && isSignedIn && !isNil(group)) {
       return { actionCreator: 'doFetchProducts' }
     }
