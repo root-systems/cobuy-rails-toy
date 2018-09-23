@@ -27,6 +27,18 @@ const reducer = (state = initialState, action) => {
       }
     }
   }
+  if (action.type === 'SIGN_UP_SUCCESS') {
+    const nextId = cuid()
+    return {
+      ...state,
+      notifications: {
+        ...state.notifications,
+        [nextId]: {
+          message: 'Sign up successful! Welcome aboard.'
+        }
+      }
+    }
+  }
   if (action.type === 'REMOVE_ERROR_NOTIFICATION') {
     return {
       ...state,
