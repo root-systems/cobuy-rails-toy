@@ -12,7 +12,8 @@ const SupplierProducts = ({
   doRemoveNewProduct,
   doUpdateNewProductName,
   doUpdateNewProductDescription,
-  doUpdateNewProductUnit
+  doUpdateNewProductUnit,
+  doCreateProduct
 }) => {
   return (
     <ProductsList
@@ -24,6 +25,7 @@ const SupplierProducts = ({
       doUpdateNewProductName={doUpdateNewProductName}
       doUpdateNewProductDescription={doUpdateNewProductDescription}
       doUpdateNewProductUnit={doUpdateNewProductUnit}
+      doCreateProduct={doCreateProduct}
     />
   )
 }
@@ -37,5 +39,6 @@ export default connect(
   'doUpdateNewProductName',
   'doUpdateNewProductDescription',
   'doUpdateNewProductUnit',
+  'doCreateProduct',
   SupplierProducts
 )

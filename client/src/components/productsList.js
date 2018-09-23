@@ -47,7 +47,8 @@ const ProductsList = (props) => {
     doRemoveNewProduct,
     doUpdateNewProductName,
     doUpdateNewProductDescription,
-    doUpdateNewProductUnit
+    doUpdateNewProductUnit,
+    doCreateProduct
   } = props
   if (isNil(supplier)) return null
   const renderProduct = (product) => {
@@ -56,7 +57,7 @@ const ProductsList = (props) => {
         <CardActionArea>
           <CardContent>
             <Typography variant='headline'>
-              ${product.name}
+              {product.name}
             </Typography>
           </CardContent>
         </CardActionArea>
@@ -69,8 +70,7 @@ const ProductsList = (props) => {
   }
   return (
     <div style={containerStyle}>
-      <h1>{supplier.name} Products</h1>
-      {renderProducts(products)}
+      <h1>{supplier.name}</h1>
       <NewProducts
         newProducts={newProducts}
         doAddNewProduct={doAddNewProduct}
@@ -78,7 +78,11 @@ const ProductsList = (props) => {
         doUpdateNewProductName={doUpdateNewProductName}
         doUpdateNewProductDescription={doUpdateNewProductDescription}
         doUpdateNewProductUnit={doUpdateNewProductUnit}
+        doCreateProduct={doCreateProduct}
+        supplier={supplier}
       />
+      <h3>Current Products</h3>
+      {renderProducts(products)}
     </div>
   )
 }
@@ -90,7 +94,9 @@ const NewProducts = (props) => {
     doRemoveNewProduct,
     doUpdateNewProductName,
     doUpdateNewProductDescription,
-    doUpdateNewProductUnit
+    doUpdateNewProductUnit,
+    doCreateProduct,
+    supplier
   } = props
 
   const handleNewProductNameChange = newProductKey => event => {
@@ -106,6 +112,16 @@ const NewProducts = (props) => {
   const handleNewProductUnitChange = newProductKey => event => {
     const unit = event.target.value
     doUpdateNewProductUnit({ newProductKey, unit })
+  }
+
+  const handleSaveNewProduct = newProductKey => {
+    const newProduct = newProducts[newProductKey]
+    const formData = {
+      ...newProduct,
+      supplier_id: supplier.id,
+      newProductKey: newProductKey
+    }
+    doCreateProduct(formData)
   }
 
   const renderNewProducts = (newProductsObject) => {
@@ -141,21 +157,24 @@ const NewProducts = (props) => {
           />
         </FormControl>
         <Button style={removeButtonStyle} variant='outlined' type='button' onClick={() => { doRemoveNewProduct(newProductKey) }}>Remove</Button>
+        <Button style={removeButtonStyle} variant='outlined' type='button' onClick={() => { handleSaveNewProduct(newProductKey) }}>Save</Button>
       </FormGroup>
     )
   }
   return (
     <div>
+      {
+        !isEmpty(newProducts) ? <h3>New Products</h3> : null
+      }
+      <form style={formStyle}>
+        {renderNewProducts(newProducts)}
+      </form>
       <Button
         variant='outlined'
         style={buttonStyle}
         type='button'
         onClick={() => { doAddNewProduct() }}
       >Add new product</Button>
-      <h3>New Products</h3>
-      <form style={formStyle}>
-        {renderNewProducts(newProducts)}
-      </form>
     </div>
   )
 }

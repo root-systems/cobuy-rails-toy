@@ -106,6 +106,14 @@ bundle.reducer = (state = initialState, action) => {
     }
   }
 
+  if (action.type === 'CREATE_PRODUCT_SUCCESS') {
+    return {
+      ...state,
+      newProducts: omit(state.newProducts, action.payload.newProductKey),
+      data: concat(state.data, action.payload.data)
+    }
+  }
+
   if (action.type === 'SIGN_OUT_SUCCESS') {
     return initialState
   }
@@ -119,7 +127,7 @@ bundle.selectThisSupplierProducts = createSelector(
   'selectThisSupplierId',
   'selectProducts',
   (supplierId, products) => {
-    if (!isNil(supplierId) || isNil(products)) return null
+    if (isNil(supplierId) || isNil(products)) return null
     return filter(products, (product) => { return supplierId === product.supplier_id })
   }
 )
@@ -142,6 +150,41 @@ bundle.doUpdateNewProductDescription = (newProductKeyAndValue) => ({ dispatch })
 
 bundle.doUpdateNewProductUnit = (newProductKeyAndValue) => ({ dispatch }) => {
   dispatch({ type: 'UPDATE_NEW_PRODUCT_UNIT', payload: newProductKeyAndValue })
+}
+
+bundle.doCreateProduct = (formData) => ({ dispatch, apiFetch, getState }) => {
+  const credentials = getState().accounts.credentials
+  const newProductKey = formData.newProductKey
+  const sanitizedCredentials = {
+    'access-token': credentials.accessToken,
+    'token-type': credentials.tokenType,
+    client: credentials.client,
+    uid: credentials.uid,
+    expiry: credentials.expiry
+  }
+  dispatch({ type: 'CREATE_PRODUCT_START' })
+  apiFetch('api/v1/products', {
+    method: 'POST',
+    body: JSON.stringify(formData),
+    headers: sanitizedCredentials
+  })
+    .then(response => {
+      if (!response.ok) {
+        return Promise.reject(new Error(`${response.status} ${response.statusText}`))
+      }
+      return response.json()
+    })
+    .then((data) => {
+      dispatch({
+        type: 'CREATE_PRODUCT_SUCCESS',
+        payload: {
+          data,
+          newProductKey
+        } })
+    })
+    .catch((error) => {
+      dispatch({ type: 'CREATE_PRODUCT_ERROR', payload: error })
+    })
 }
 
 bundle.reactProductsFetch = createSelector(

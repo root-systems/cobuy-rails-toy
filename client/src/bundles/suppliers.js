@@ -106,7 +106,7 @@ bundle.selectThisSupplierId = createSelector(
     const path = urlHashArray[0]
     if (path !== 'suppliers') return null
     const supplierId = urlHashArray[1]
-    return supplierId
+    return Number(supplierId)
   }
 )
 bundle.selectThisSupplier = createSelector(
@@ -114,7 +114,7 @@ bundle.selectThisSupplier = createSelector(
   'selectSuppliers',
   (supplierId, suppliers) => {
     if (isNil(supplierId) || isNil(suppliers)) return null
-    const supplier = find(suppliers, { 'id': Number(supplierId) })
+    const supplier = find(suppliers, { 'id': supplierId })
     return supplier
   }
 )
