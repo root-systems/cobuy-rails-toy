@@ -15,7 +15,9 @@ module Api::V1
 
     # POST /suppliers
     def create
-      @supplier = Supplier.create!(supplier_params)
+      @supplier = Supplier.new(supplier_params)
+      @supplier.group_id = current_user.group_id
+      @supplier.save!
       if @supplier.errors.empty?
         render json: @supplier, status: :ok
       else
