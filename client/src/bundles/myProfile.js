@@ -46,7 +46,7 @@ const initialState = {
 
 const baseReducer = bundle.reducer
 bundle.reducer = (state = initialState, action) => {
-  if (action.type === 'SIGN_IN_SUCCESS') {
+  if (action.type === 'SIGN_IN_SUCCESS' || action.type === 'SIGN_UP_SUCCESS') {
     return {
       ...state,
       data: action.payload.user,
@@ -98,6 +98,14 @@ bundle.reducer = (state = initialState, action) => {
     return {
       ...state,
       nameField: action.payload
+    }
+  }
+  if (action.type === 'CREATE_GROUP_SUCCESS') {
+    return {
+      ...state,
+      data: {
+        group_id: action.payload.id
+      }
     }
   }
   return baseReducer(state, action)
