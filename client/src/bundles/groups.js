@@ -163,8 +163,9 @@ bundle.doUpdateGroup = (formData) => ({ dispatch, apiFetch, getState }) => {
 bundle.reactSuppliersFetch = createSelector(
   'selectGroupsShouldUpdate',
   'selectIsSignedIn',
-  (shouldUpdate, isSignedIn) => {
-    if (shouldUpdate && isSignedIn) {
+  'selectCurrentUser',
+  (shouldUpdate, isSignedIn, currentUser) => {
+    if (shouldUpdate && isSignedIn && !isNil(currentUser.group_id)) {
       return { actionCreator: 'doFetchGroups' }
     }
     return false
