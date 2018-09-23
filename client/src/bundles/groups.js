@@ -4,7 +4,7 @@ import { omit, concat, isNil, find, filter } from 'lodash'
 import ms from 'milliseconds'
 
 const bundle = createAsyncResourceBundle({
-  name: 'suppliers',
+  name: 'groups',
   getPromise: async ({ apiFetch, getState }) => {
     const credentials = getState().accounts.credentials
     const sanitizedCredentials = {
@@ -14,7 +14,7 @@ const bundle = createAsyncResourceBundle({
       uid: credentials.uid,
       expiry: credentials.expiry
     }
-    return apiFetch(`api/v1/suppliers`, {
+    return apiFetch(`api/v1/groups`, {
       headers: sanitizedCredentials
     })
       .then(response => response.json())
@@ -29,8 +29,8 @@ const bundle = createAsyncResourceBundle({
 
 const initialState = {
   nameField: '',
-  isCreatingSupplier: false,
-  isUpdatingSupplier: false,
+  isCreatingGroup: false,
+  isUpdatingGroup: false,
   // needed by createAsyncResourceBundle
   data: null,
   errorTimes: [],
@@ -44,75 +44,63 @@ const initialState = {
 
 const baseReducer = bundle.reducer
 bundle.reducer = (state = initialState, action) => {
-  if (action.type === 'UPDATE_SUPPLIER_NAME_FIELD') {
+  if (action.type === 'UPDATE_GROUP_NAME_FIELD') {
     return {
       ...state,
       nameField: action.payload
     }
   }
-  if (action.type === 'CREATE_SUPPLIER_START') {
+  if (action.type === 'CREATE_GROUP_START') {
     return {
       ...state,
-      isCreatingSupplier: true
+      isCreatingGroup: true
     }
   }
-  if (action.type === 'CREATE_SUPPLIER_SUCCESS') {
+  if (action.type === 'CREATE_GROUP_SUCCESS') {
     return {
       ...state,
-      isCreatingSupplier: false,
+      isCreatingGroup: false,
       data: concat(state.data, action.payload),
       nameField: ''
     }
   }
-  if (action.type === 'CREATE_SUPPLIER_ERROR') {
+  if (action.type === 'CREATE_GROUP_ERROR') {
     return {
       ...state,
-      isCreatingSupplier: false
+      isCreatingGroup: false
     }
   }
-  if (action.type === 'UPDATE_SUPPLIER_START') {
+  if (action.type === 'UPDATE_GROUP_START') {
     return {
       ...state,
-      isUpdatingSupplier: true
+      isUpdatingGroup: true
     }
   }
-  if (action.type === 'UPDATE_SUPPLIER_SUCCESS') {
+  if (action.type === 'UPDATE_GROUP_SUCCESS') {
     return {
       ...state,
-      isUpdatingSupplier: false,
-      data: concat(filter(state.data, (supplier) => { return supplier.id !== action.payload.id }), action.payload)
+      isUpdatingGroup: false,
+      data: concat(filter(state.data, (group) => { return group.id !== action.payload.id }), action.payload)
     }
   }
-  if (action.type === 'UPDATE_SUPPLIER_ERROR') {
+  if (action.type === 'UPDATE_GROUP_ERROR') {
     return {
       ...state,
-      isUpdatingSupplier: false
+      isUpdatingGroup: false
     }
   }
 
   return baseReducer(state, action)
 }
 
-bundle.selectSuppliers = state => state.suppliers.data
-bundle.selectSupplierNameField = state => state.suppliers.nameField
-bundle.selectThisSupplier = createSelector(
-  'selectHash',
-  'selectSuppliers',
-  (urlHash, suppliers) => {
-    const urlHashArray = urlHash.split('/')
-    const path = urlHashArray[0]
-    if (path !== 'suppliers' || isNil(suppliers)) return null
-    const supplierId = urlHashArray[1]
-    const supplier = find(suppliers, { 'id': Number(supplierId) })
-    return supplier
-  }
-)
+bundle.selectGroup = state => state.groups.data
+bundle.selectGroupNameField = state => state.groups.nameField
 
-bundle.doUpdateSupplierNameField = (name) => ({ dispatch }) => {
-  dispatch({ type: 'UPDATE_SUPPLIER_NAME_FIELD', payload: name })
+bundle.doUpdateGroupNameField = (name) => ({ dispatch }) => {
+  dispatch({ type: 'UPDATE_GROUP_NAME_FIELD', payload: name })
 }
 
-bundle.doCreateSupplier = (formData) => ({ dispatch, apiFetch, getState }) => {
+bundle.doCreateGroup = (formData) => ({ dispatch, apiFetch, getState }) => {
   const credentials = getState().accounts.credentials
   const sanitizedCredentials = {
     'access-token': credentials.accessToken,
@@ -121,8 +109,8 @@ bundle.doCreateSupplier = (formData) => ({ dispatch, apiFetch, getState }) => {
     uid: credentials.uid,
     expiry: credentials.expiry
   }
-  dispatch({ type: 'CREATE_SUPPLIER_START' })
-  apiFetch('api/v1/suppliers', {
+  dispatch({ type: 'CREATE_GROUP_START' })
+  apiFetch('api/v1/groups', {
     method: 'POST',
     body: JSON.stringify(formData),
     headers: sanitizedCredentials
@@ -134,15 +122,15 @@ bundle.doCreateSupplier = (formData) => ({ dispatch, apiFetch, getState }) => {
       return response.json()
     })
     .then((data) => {
-      dispatch({ type: 'CREATE_SUPPLIER_SUCCESS', payload: data })
-      dispatch({ actionCreator: 'doUpdateHash', args: ['suppliers'] })
+      dispatch({ type: 'CREATE_GROUP_SUCCESS', payload: data })
+      dispatch({ actionCreator: 'doUpdateHash', args: ['my-group'] })
     })
     .catch((error) => {
-      dispatch({ type: 'CREATE_SUPPLIER_ERROR', payload: error })
+      dispatch({ type: 'CREATE_GROUP_ERROR', payload: error })
     })
 }
 
-bundle.doUpdateSupplier = (formData) => ({ dispatch, apiFetch, getState }) => {
+bundle.doUpdateGroup = (formData) => ({ dispatch, apiFetch, getState }) => {
   const credentials = getState().accounts.credentials
   const sanitizedCredentials = {
     'access-token': credentials.accessToken,
@@ -151,8 +139,8 @@ bundle.doUpdateSupplier = (formData) => ({ dispatch, apiFetch, getState }) => {
     uid: credentials.uid,
     expiry: credentials.expiry
   }
-  dispatch({ type: 'UPDATE_SUPPLIER_START' })
-  apiFetch(`api/v1/suppliers/${formData.id}`, {
+  dispatch({ type: 'UPDATE_GROUP_START' })
+  apiFetch(`api/v1/groups/${formData.id}`, {
     method: 'PATCH',
     body: JSON.stringify(omit(formData, ['id'])),
     headers: sanitizedCredentials
@@ -164,20 +152,20 @@ bundle.doUpdateSupplier = (formData) => ({ dispatch, apiFetch, getState }) => {
       return response.json()
     })
     .then((data) => {
-      dispatch({ type: 'UPDATE_SUPPLIER_SUCCESS', payload: data })
-      dispatch({ actionCreator: 'doUpdateHash', args: ['suppliers'] })
+      dispatch({ type: 'UPDATE_GROUP_SUCCESS', payload: data })
+      dispatch({ actionCreator: 'doUpdateHash', args: ['my-group'] })
     })
     .catch((error) => {
-      dispatch({ type: 'UPDATE_SUPPLIER_ERROR', payload: error })
+      dispatch({ type: 'UPDATE_GROUP_ERROR', payload: error })
     })
 }
 
 bundle.reactSuppliersFetch = createSelector(
-  'selectSuppliersShouldUpdate',
+  'selectGroupsShouldUpdate',
   'selectIsSignedIn',
   (shouldUpdate, isSignedIn) => {
     if (shouldUpdate && isSignedIn) {
-      return { actionCreator: 'doFetchSuppliers' }
+      return { actionCreator: 'doFetchGroups' }
     }
     return false
   }

@@ -4,8 +4,8 @@ module Api::V1
 
     # GET /groups
     def index
-      @groups = Group.where(id: current_user.group_id)
-      render :json => @groups
+      @group = Group.where(id: current_user.group_id).first || nil
+      render :json => @group
     end
 
     # GET /groups/:id

@@ -41,6 +41,7 @@ const Landing = (props) => {
                 <Button onClick={() => { doUpdateHash('order') }}>Create Order</Button>
                 <Button onClick={() => { doUpdateHash('orders') }}>My Orders</Button>
                 <Button onClick={() => { doUpdateHash('my-profile') }}>My Profile</Button>
+                <Button onClick={() => { doUpdateHash('my-group') }}>My Group</Button>
                 <Button onClick={() => { doUpdateHash('suppliers') }}>My Suppliers</Button>
                 <Button onClick={() => { doUpdateHash('create-invitation') }}>Create Invitation</Button>
                 <Button onClick={() => { doUpdateHash('create-supplier') }}>Create Supplier</Button>
