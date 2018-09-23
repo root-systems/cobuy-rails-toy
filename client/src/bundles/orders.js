@@ -152,15 +152,15 @@ bundle.doCreateOrder = ({ lineItems }) => ({ dispatch, apiFetch, getState }) => 
     })
 }
 
-bundle.reactOrdersFetch = createSelector(
-  'selectOrdersShouldUpdate',
-  'selectIsSignedIn',
-  (shouldUpdate, isSignedIn) => {
-    if (shouldUpdate && isSignedIn) {
-      return { actionCreator: 'doFetchOrders' }
-    }
-    return false
-  }
-)
+// bundle.reactOrdersFetch = createSelector(
+//   'selectOrdersShouldUpdate',
+//   'selectIsSignedIn',
+//   (shouldUpdate, isSignedIn) => {
+//     if (shouldUpdate && isSignedIn) {
+//       return { actionCreator: 'doFetchOrders' }
+//     }
+//     return false
+//   }
+// )
 
 export default bundle

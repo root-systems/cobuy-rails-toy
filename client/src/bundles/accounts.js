@@ -198,6 +198,7 @@ const actionCreators = {
             }
             setObject(credentialsWithCurrentUserId)
             dispatch({ type: 'SIGN_UP_SUCCESS', payload: { user: user.data, credentials: credentialsWithCurrentUserId } })
+            dispatch({ actionCreator: 'doUpdateHash', args: ['#'] })
           })
       })
       .catch((error) => {
