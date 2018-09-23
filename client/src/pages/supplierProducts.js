@@ -5,16 +5,19 @@ import { isNil } from 'lodash'
 import ProductsList from '../components/productsList'
 
 const SupplierProducts = ({
-  products
+  products,
+  thisSupplier
 }) => {
   return (
     <ProductsList
       products={products}
+      supplier={thisSupplier}
     />
   )
 }
 
 export default connect(
   'doSelectThisSupplierProducts',
+  'selectThisSupplier',
   SupplierProducts
 )

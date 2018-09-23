@@ -1,5 +1,5 @@
 import React from 'react'
-import { isEmpty } from 'lodash'
+import { isEmpty, isNil } from 'lodash'
 import { Card, CardContent, CardActions, Button, CardActionArea, Typography } from '@material-ui/core'
 
 const containerStyle = {
@@ -20,7 +20,8 @@ const innerContainerStyle = {
 }
 
 const ProductsList = (props) => {
-  const { products } = props
+  const { products, supplier } = props
+  if (isNil(supplier)) return null
   const renderProduct = (product) => {
     return (
       <Card key={product.id} style={innerContainerStyle}>
@@ -40,7 +41,7 @@ const ProductsList = (props) => {
   }
   return (
     <div style={containerStyle}>
-      <h1>Supplier Products</h1>
+      <h1>{supplier.name} Products</h1>
       {renderProducts(products)}
     </div>
   )
