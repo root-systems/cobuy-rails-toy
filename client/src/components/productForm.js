@@ -29,7 +29,8 @@ const ProductForm = (props) => {
     doUpdateNewProductDescription,
     doUpdateNewProductUnit,
     doCreateProduct,
-    supplier
+    supplier,
+    doUpdateHash
   } = props
 
   if (isNil(supplier)) return null
@@ -81,6 +82,7 @@ const ProductForm = (props) => {
         />
       </form>
       <Button style={removeButtonStyle} variant='outlined' type='button' onClick={() => { handleSaveNewProduct() }}>Save</Button>
+      <Button style={removeButtonStyle} variant='outlined' type='button' onClick={() => { doUpdateHash(`suppliers/${supplier.id}/products`) }}>Cancel</Button>
     </div>
   )
 }

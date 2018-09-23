@@ -11,7 +11,8 @@ const NewProduct = ({
   doUpdateNewProductName,
   doUpdateNewProductDescription,
   doUpdateNewProductUnit,
-  doCreateProduct
+  doCreateProduct,
+  doUpdateHash
 }) => {
   return (
     <ProductForm
@@ -23,6 +24,7 @@ const NewProduct = ({
       doUpdateNewProductDescription={doUpdateNewProductDescription}
       doUpdateNewProductUnit={doUpdateNewProductUnit}
       doCreateProduct={doCreateProduct}
+      doUpdateHash={doUpdateHash}
     />
   )
 }
@@ -36,5 +38,6 @@ export default connect(
   'doUpdateNewProductDescription',
   'doUpdateNewProductUnit',
   'doCreateProduct',
+  'doUpdateHash',
   NewProduct
 )
