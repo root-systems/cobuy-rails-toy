@@ -95,6 +95,18 @@ bundle.reducer = (state = initialState, action) => {
     }
   }
 
+  if (action.type === 'UPDATE_PRODUCT_SUCCESS') {
+    return {
+      ...state,
+      productFormData: {
+        name: '',
+        description: '',
+        unit: ''
+      },
+      data: concat(filter(state.data, (product) => { return product.id !== action.payload.id }), action.payload)
+    }
+  }
+
   if (action.type === 'SIGN_OUT_SUCCESS') {
     return initialState
   }
@@ -122,15 +134,15 @@ bundle.selectThisProductId = createSelector(
     return Number(productId)
   }
 )
-// bundle.selectThisSupplier = createSelector(
-//   'selectThisSupplierId',
-//   'selectSuppliers',
-//   (supplierId, suppliers) => {
-//     if (isNil(supplierId) || isNil(suppliers)) return null
-//     const supplier = find(suppliers, { 'id': supplierId })
-//     return supplier
-//   }
-// )
+bundle.selectThisProduct = createSelector(
+  'selectThisProductId',
+  'selectProducts',
+  (productId, products) => {
+    if (isNil(productId) || isNil(products)) return null
+    const product = find(products, { 'id': productId })
+    return product
+  }
+)
 
 bundle.doUpdateProductFormData = (formData) => ({ dispatch }) => {
   dispatch({ type: 'UPDATE_PRODUCT_FORM_DATA', payload: formData })
@@ -184,7 +196,6 @@ bundle.doCreateProduct = (formData) => ({ dispatch, apiFetch, getState }) => {
 
 bundle.doUpdateProduct = (formData) => ({ dispatch, apiFetch, getState }) => {
   const credentials = getState().accounts.credentials
-  const supplierId = formData.supplier_id
   const sanitizedCredentials = {
     'access-token': credentials.accessToken,
     'token-type': credentials.tokenType,
@@ -209,7 +220,7 @@ bundle.doUpdateProduct = (formData) => ({ dispatch, apiFetch, getState }) => {
         type: 'UPDATE_PRODUCT_SUCCESS',
         payload: data
       })
-      dispatch({ actionCreator: 'doUpdateHash', args: [`suppliers/${supplierId}/products`] })
+      dispatch({ actionCreator: 'doUpdateHash', args: [`suppliers/${data.supplier_id}/products`] })
     })
     .catch((error) => {
       dispatch({ type: 'UPDATE_PRODUCT_ERROR', payload: error })

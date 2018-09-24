@@ -1,26 +1,28 @@
 import React from 'react'
 import { connect } from 'redux-bundler-react'
+import { isNil } from 'lodash'
 
 import EditProductForm from '../components/editProductForm'
 
 const EditProduct = ({
-  thisSupplier,
+  thisProduct,
   productFormData,
   doUpdateProductFormDataName,
   doUpdateProductFormDataDescription,
   doUpdateProductFormDataUnit,
-  doCreateProduct,
+  doUpdateProduct,
   doUpdateHash,
   doUpdateProductFormData
 }) => {
+  if (isNil(thisProduct)) return null
   return (
     <EditProductForm
-      supplier={thisSupplier}
+      product={thisProduct}
       productFormData={productFormData}
       doUpdateProductFormDataName={doUpdateProductFormDataName}
       doUpdateProductFormDataDescription={doUpdateProductFormDataDescription}
       doUpdateProductFormDataUnit={doUpdateProductFormDataUnit}
-      doCreateProduct={doCreateProduct}
+      doUpdateProduct={doUpdateProduct}
       doUpdateHash={doUpdateHash}
       doUpdateProductFormData={doUpdateProductFormData}
     />
@@ -28,13 +30,13 @@ const EditProduct = ({
 }
 
 export default connect(
-  'selectThisSupplier',
   'selectProductFormData',
   'doUpdateProductFormDataName',
   'doUpdateProductFormDataDescription',
   'doUpdateProductFormDataUnit',
-  'doCreateProduct',
+  'doUpdateProduct',
   'doUpdateHash',
   'doUpdateProductFormData',
+  'selectThisProduct',
   EditProduct
 )

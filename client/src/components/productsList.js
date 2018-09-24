@@ -33,7 +33,7 @@ const ProductsList = (props) => {
   const renderProduct = (product) => {
     return (
       <Card key={product.id} style={innerContainerStyle}>
-        <CardActionArea>
+        <CardActionArea onClick={() => { doUpdateHash(`products/${product.id}`) }}>
           <CardContent>
             <Typography variant='headline'>
               {product.name}

@@ -24,60 +24,71 @@ const removeButtonStyle = {
   marginTop: 10
 }
 
-const EditProductForm = (props) => {
-  const {
-    supplier,
-    productFormData,
-    doUpdateProductFormDataName,
-    doUpdateProductFormDataDescription,
-    doUpdateProductFormDataUnit,
-    doCreateProduct,
-    doUpdateHash,
-    doUpdateProductFormData
-  } = props
-
-  if (isNil(supplier)) return null
-
-  const handleNewProductNameChange = event => {
-    const name = event.target.value
-    doUpdateProductFormDataName(name)
+class EditProductForm extends React.Component {
+  componentDidMount () {
+    const {
+      doUpdateProductFormData,
+      product
+    } = this.props
+    doUpdateProductFormData(product)
   }
 
-  const handleNewProductDescriptionChange = event => {
-    const description = event.target.value
-    doUpdateProductFormDataDescription(description)
-  }
+  render () {
+    const {
+      product,
+      productFormData,
+      doUpdateProductFormDataName,
+      doUpdateProductFormDataDescription,
+      doUpdateProductFormDataUnit,
+      doUpdateProduct,
+      doUpdateHash
+    } = this.props
 
-  const handleNewProductUnitChange = event => {
-    const unit = event.target.value
-    doUpdateProductFormDataUnit(unit)
-  }
+    if (isNil(product)) return null
 
-  const handleSaveNewProduct = () => {
-    const formData = {
-      ...productFormData,
-      supplier_id: supplier.id
+    const supplier = product.supplier_id
+
+    const handleProductNameChange = event => {
+      const name = event.target.value
+      doUpdateProductFormDataName(name)
     }
-    doCreateProduct(formData)
-  }
 
-  const handleCancel = () => {
-    doUpdateHash(`suppliers/${supplier.id}/products`)
-  }
+    const handleProductDescriptionChange = event => {
+      const description = event.target.value
+      doUpdateProductFormDataDescription(description)
+    }
 
-  return (
-    <div style={containerStyle}>
-      <h1>New Product for {supplier.name}</h1>
-      <ProductForm
-        product={productFormData}
-        handleProductNameChange={handleNewProductNameChange}
-        handleProductDescriptionChange={handleNewProductDescriptionChange}
-        handleProductUnitChange={handleNewProductUnitChange}
-        handleSubmit={handleSaveNewProduct}
-        handleCancel={handleCancel}
-      />
-    </div>
-  )
+    const handleProductUnitChange = event => {
+      const unit = event.target.value
+      doUpdateProductFormDataUnit(unit)
+    }
+
+    const handleSaveUpdatedProduct = () => {
+      const formData = {
+        ...productFormData,
+        supplier_id: supplier.id
+      }
+      doUpdateProduct(formData)
+    }
+
+    const handleCancel = () => {
+      doUpdateHash(`suppliers/${product.supplier_id}/products`)
+    }
+
+    return (
+      <div style={containerStyle}>
+        <h1>{product.name}</h1>
+        <ProductForm
+          product={productFormData}
+          handleProductNameChange={handleProductNameChange}
+          handleProductDescriptionChange={handleProductDescriptionChange}
+          handleProductUnitChange={handleProductUnitChange}
+          handleSubmit={handleSaveUpdatedProduct}
+          handleCancel={handleCancel}
+        />
+      </div>
+    )
+  }
 }
 
 export default EditProductForm
