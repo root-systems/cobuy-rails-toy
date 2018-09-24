@@ -28,7 +28,7 @@ const bundle = createAsyncResourceBundle({
 })
 
 const initialState = {
-  newProduct: {
+  productFormData: {
     name: '',
     description: '',
     unit: ''
@@ -46,32 +46,38 @@ const initialState = {
 
 const baseReducer = bundle.reducer
 bundle.reducer = (state = initialState, action) => {
-
-  if (action.type === 'UPDATE_NEW_PRODUCT_NAME') {
+  if (action.type === 'UPDATE_PRODUCT_FORM_DATA') {
     return {
       ...state,
-      newProduct: {
-        ...state.newProduct,
+      productFormData: action.payload
+    }
+  }
+
+  if (action.type === 'UPDATE_PRODUCT_FORM_DATA_NAME') {
+    return {
+      ...state,
+      productFormData: {
+        ...state.productFormData,
         name: action.payload
       }
     }
   }
 
-  if (action.type === 'UPDATE_NEW_PRODUCT_DESCRIPTION') {
+  if (action.type === 'UPDATE_PRODUCT_FORM_DATA_DESCRIPTION') {
     return {
       ...state,
-      newProduct: {
-        ...state.newProduct,
+      productFormData: {
+        ...state.productFormData,
         description: action.payload
       }
     }
   }
 
-  if (action.type === 'UPDATE_NEW_PRODUCT_UNIT') {
+  if (action.type === 'UPDATE_PRODUCT_FORM_DATA_UNIT') {
     return {
       ...state,
-      newProduct: {
-        ...state.newProduct,
+      productFormData: {
+        ...state.productFormData,
         unit: action.payload
       }
     }
@@ -80,7 +86,7 @@ bundle.reducer = (state = initialState, action) => {
   if (action.type === 'CREATE_PRODUCT_SUCCESS') {
     return {
       ...state,
-      newProduct: {
+      productFormData: {
         name: '',
         description: '',
         unit: ''
@@ -97,7 +103,7 @@ bundle.reducer = (state = initialState, action) => {
 }
 
 bundle.selectProducts = state => state.products.data
-bundle.selectNewProduct = state => state.products.newProduct
+bundle.selectProductFormData = state => state.products.productFormData
 bundle.selectThisSupplierProducts = createSelector(
   'selectThisSupplierId',
   'selectProducts',
@@ -106,17 +112,40 @@ bundle.selectThisSupplierProducts = createSelector(
     return filter(products, (product) => { return supplierId === product.supplier_id })
   }
 )
+bundle.selectThisProductId = createSelector(
+  'selectHash',
+  (urlHash) => {
+    const urlHashArray = urlHash.split('/')
+    const path = urlHashArray[0]
+    if (path !== 'products') return null
+    const productId = urlHashArray[1]
+    return Number(productId)
+  }
+)
+// bundle.selectThisSupplier = createSelector(
+//   'selectThisSupplierId',
+//   'selectSuppliers',
+//   (supplierId, suppliers) => {
+//     if (isNil(supplierId) || isNil(suppliers)) return null
+//     const supplier = find(suppliers, { 'id': supplierId })
+//     return supplier
+//   }
+// )
 
-bundle.doUpdateNewProductName = (name) => ({ dispatch }) => {
-  dispatch({ type: 'UPDATE_NEW_PRODUCT_NAME', payload: name })
+bundle.doUpdateProductFormData = (formData) => ({ dispatch }) => {
+  dispatch({ type: 'UPDATE_PRODUCT_FORM_DATA', payload: formData })
 }
 
-bundle.doUpdateNewProductDescription = (description) => ({ dispatch }) => {
-  dispatch({ type: 'UPDATE_NEW_PRODUCT_DESCRIPTION', payload: description })
+bundle.doUpdateProductFormDataName = (name) => ({ dispatch }) => {
+  dispatch({ type: 'UPDATE_PRODUCT_FORM_DATA_NAME', payload: name })
 }
 
-bundle.doUpdateNewProductUnit = (unit) => ({ dispatch }) => {
-  dispatch({ type: 'UPDATE_NEW_PRODUCT_UNIT', payload: unit })
+bundle.doUpdateProductFormDataDescription = (description) => ({ dispatch }) => {
+  dispatch({ type: 'UPDATE_PRODUCT_FORM_DATA_DESCRIPTION', payload: description })
+}
+
+bundle.doUpdateProductFormDataUnit = (unit) => ({ dispatch }) => {
+  dispatch({ type: 'UPDATE_PRODUCT_FORM_DATA_UNIT', payload: unit })
 }
 
 bundle.doCreateProduct = (formData) => ({ dispatch, apiFetch, getState }) => {
@@ -153,12 +182,45 @@ bundle.doCreateProduct = (formData) => ({ dispatch, apiFetch, getState }) => {
     })
 }
 
+bundle.doUpdateProduct = (formData) => ({ dispatch, apiFetch, getState }) => {
+  const credentials = getState().accounts.credentials
+  const supplierId = formData.supplier_id
+  const sanitizedCredentials = {
+    'access-token': credentials.accessToken,
+    'token-type': credentials.tokenType,
+    client: credentials.client,
+    uid: credentials.uid,
+    expiry: credentials.expiry
+  }
+  dispatch({ type: 'UPDATE_PRODUCT_START' })
+  apiFetch(`api/v1/products/${formData.id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(formData),
+    headers: sanitizedCredentials
+  })
+    .then(response => {
+      if (!response.ok) {
+        return Promise.reject(new Error(`${response.status} ${response.statusText}`))
+      }
+      return response.json()
+    })
+    .then((data) => {
+      dispatch({
+        type: 'UPDATE_PRODUCT_SUCCESS',
+        payload: data
+      })
+      dispatch({ actionCreator: 'doUpdateHash', args: [`suppliers/${supplierId}/products`] })
+    })
+    .catch((error) => {
+      dispatch({ type: 'UPDATE_PRODUCT_ERROR', payload: error })
+    })
+}
+
 bundle.reactProductsFetch = createSelector(
   'selectProductsShouldUpdate',
   'selectIsSignedIn',
   'selectGroup',
   (shouldUpdate, isSignedIn, group) => {
-    console.log('reactProductsFetch', shouldUpdate, isSignedIn, group)
     if (shouldUpdate && isSignedIn && !isNil(group)) {
       return { actionCreator: 'doFetchProducts' }
     }

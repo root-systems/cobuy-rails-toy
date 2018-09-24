@@ -1,19 +1,20 @@
 import React from 'react'
 import { connect } from 'redux-bundler-react'
 
-import NewProductForm from '../components/newProductForm'
+import EditProductForm from '../components/editProductForm'
 
-const NewProduct = ({
+const EditProduct = ({
   thisSupplier,
   productFormData,
   doUpdateProductFormDataName,
   doUpdateProductFormDataDescription,
   doUpdateProductFormDataUnit,
   doCreateProduct,
-  doUpdateHash
+  doUpdateHash,
+  doUpdateProductFormData
 }) => {
   return (
-    <NewProductForm
+    <EditProductForm
       supplier={thisSupplier}
       productFormData={productFormData}
       doUpdateProductFormDataName={doUpdateProductFormDataName}
@@ -21,6 +22,7 @@ const NewProduct = ({
       doUpdateProductFormDataUnit={doUpdateProductFormDataUnit}
       doCreateProduct={doCreateProduct}
       doUpdateHash={doUpdateHash}
+      doUpdateProductFormData={doUpdateProductFormData}
     />
   )
 }
@@ -33,5 +35,6 @@ export default connect(
   'doUpdateProductFormDataUnit',
   'doCreateProduct',
   'doUpdateHash',
-  NewProduct
+  'doUpdateProductFormData',
+  EditProduct
 )

@@ -24,7 +24,7 @@ const removeButtonStyle = {
   marginTop: 10
 }
 
-const NewProductForm = (props) => {
+const EditProductForm = (props) => {
   const {
     supplier,
     productFormData,
@@ -32,7 +32,8 @@ const NewProductForm = (props) => {
     doUpdateProductFormDataDescription,
     doUpdateProductFormDataUnit,
     doCreateProduct,
-    doUpdateHash
+    doUpdateHash,
+    doUpdateProductFormData
   } = props
 
   if (isNil(supplier)) return null
@@ -79,4 +80,4 @@ const NewProductForm = (props) => {
   )
 }
 
-export default NewProductForm
+export default EditProductForm
