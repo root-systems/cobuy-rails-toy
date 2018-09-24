@@ -103,6 +103,7 @@ const NewProductForm = (props) => {
         handlePriceSpecPriceChange={handlePriceSpecPriceChange}
         handlePriceSpecMinimumChange={handlePriceSpecMinimumChange}
         handleRemovePriceSpec={handleRemovePriceSpec}
+        priceSpecsFormData={priceSpecsFormData}
       />
     </div>
   )

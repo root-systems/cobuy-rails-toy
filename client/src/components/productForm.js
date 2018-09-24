@@ -29,8 +29,33 @@ const ProductForm = (props) => {
     handleAddPriceSpec,
     handlePriceSpecPriceChange,
     handlePriceSpecMinimumChange,
-    handleRemovePriceSpec
+    handleRemovePriceSpec,
+    priceSpecsFormData
   } = props
+
+  const renderPriceSpecs = () => {
+    return Object.keys(priceSpecsFormData).map(renderPriceSpec)
+  }
+
+  const renderPriceSpec = (priceSpecKey) => {
+    return (
+      <FormGroup key={priceSpecKey}>
+        <TextField
+          label={'Price'}
+          type='number'
+          value={priceSpecsFormData[priceSpecKey].price}
+          onChange={handlePriceSpecPriceChange(priceSpecKey)}
+        />
+        <TextField
+          label={'Minimum Quantity'}
+          type='number'
+          value={priceSpecsFormData[priceSpecKey].minimum}
+          onChange={handlePriceSpecMinimumChange(priceSpecKey)}
+        />
+        <Button style={removeButtonStyle} variant='outlined' type='button' onClick={() => { handleRemovePriceSpec(priceSpecKey) }}>Remove</Button>
+      </FormGroup>
+    )
+  }
 
   return (
     <div>
@@ -53,6 +78,7 @@ const ProductForm = (props) => {
           value={product.unit}
           onChange={handleProductUnitChange}
         />
+        {renderPriceSpecs()}
         <Button style={removeButtonStyle} variant='outlined' type='button' onClick={handleAddPriceSpec}>Add Price Spec</Button>
       </form>
       <Button style={removeButtonStyle} variant='outlined' type='button' onClick={handleSubmit}>Save</Button>
