@@ -33,6 +33,7 @@ const initialState = {
     description: '',
     unit: ''
   },
+  priceSpecsFormData: {},
   // needed by createAsyncResourceBundle
   data: null,
   errorTimes: [],
@@ -107,6 +108,51 @@ bundle.reducer = (state = initialState, action) => {
     }
   }
 
+  if (action.type === 'ADD_PRICE_SPEC') {
+    const nextId = cuid()
+    return {
+      ...state,
+      priceSpecsFormData: {
+        ...state.priceSpecsFormData,
+        [nextId]: {
+          price: '',
+          minimum: ''
+        }
+      }
+    }
+  }
+
+  if (action.type === 'UPDATE_PRICE_SPEC_PRICE') {
+    return {
+      ...state,
+      priceSpecsFormData: {
+        ...state.priceSpecsFormData,
+        [action.payload.priceSpecKey]: {
+          price: action.payload.price,
+          minimum: state.priceSpecsFormData[action.payload.priceSpecKey].minimum
+        }
+      }
+    }
+  }
+  if (action.type === 'UPDATE_PRICE_SPEC_MINIMUM') {
+    return {
+      ...state,
+      priceSpecsFormData: {
+        ...state.priceSpecsFormData,
+        [action.payload.priceSpecKey]: {
+          price: state.priceSpecsFormData[action.payload.priceSpecKey].price,
+          minimum: action.payload.minimum
+        }
+      }
+    }
+  }
+  if (action.type === 'REMOVE_PRICE_SPEC') {
+    return {
+      ...state,
+      priceSpecsFormData: omit(state.priceSpecsFormData, action.payload)
+    }
+  }
+
   if (action.type === 'SIGN_OUT_SUCCESS') {
     return initialState
   }
@@ -116,6 +162,7 @@ bundle.reducer = (state = initialState, action) => {
 
 bundle.selectProducts = state => state.products.data
 bundle.selectProductFormData = state => state.products.productFormData
+bundle.selectPriceSpecsFormData = state => state.products.priceSpecsFormData
 bundle.selectThisSupplierProducts = createSelector(
   'selectThisSupplierId',
   'selectProducts',
@@ -158,6 +205,22 @@ bundle.doUpdateProductFormDataDescription = (description) => ({ dispatch }) => {
 
 bundle.doUpdateProductFormDataUnit = (unit) => ({ dispatch }) => {
   dispatch({ type: 'UPDATE_PRODUCT_FORM_DATA_UNIT', payload: unit })
+}
+
+bundle.doAddPriceSpec = () => ({ dispatch }) => {
+  dispatch({ type: 'ADD_PRICE_SPEC' })
+}
+
+bundle.doUpdatePriceSpecMinimum = (priceSpecKeyAndValue) => ({ dispatch }) => {
+  dispatch({ type: 'UPDATE_PRICE_SPEC_MINIMUM', payload: priceSpecKeyAndValue })
+}
+
+bundle.doUpdatePriceSpecPrice = (priceSpecKeyAndValue) => ({ dispatch }) => {
+  dispatch({ type: 'UPDATE_PRICE_SPEC_PRICE', payload: priceSpecKeyAndValue })
+}
+
+bundle.doRemovePriceSpec = (priceSpecKey) => ({ dispatch }) => {
+  dispatch({ type: 'REMOVE_PRICE_SPEC', payload: priceSpecKey })
 }
 
 bundle.doCreateProduct = (formData) => ({ dispatch, apiFetch, getState }) => {
