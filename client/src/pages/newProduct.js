@@ -6,8 +6,6 @@ import ProductForm from '../components/productForm'
 const NewProduct = ({
   thisSupplier,
   newProduct,
-  doAddNewProduct,
-  doRemoveNewProduct,
   doUpdateNewProductName,
   doUpdateNewProductDescription,
   doUpdateNewProductUnit,
@@ -18,8 +16,6 @@ const NewProduct = ({
     <ProductForm
       supplier={thisSupplier}
       newProduct={newProduct}
-      doAddNewProduct={doAddNewProduct}
-      doRemoveNewProduct={doRemoveNewProduct}
       doUpdateNewProductName={doUpdateNewProductName}
       doUpdateNewProductDescription={doUpdateNewProductDescription}
       doUpdateNewProductUnit={doUpdateNewProductUnit}
@@ -32,8 +28,6 @@ const NewProduct = ({
 export default connect(
   'selectThisSupplier',
   'selectNewProduct',
-  'doAddNewProduct',
-  'doRemoveNewProduct',
   'doUpdateNewProductName',
   'doUpdateNewProductDescription',
   'doUpdateNewProductUnit',

@@ -23,40 +23,6 @@ const headerStyle = {
   textAlign: 'center'
 }
 
-// const EditGroupForm = (props) => {
-//   const {
-//     doUpdateGroup,
-//     doUpdateGroupNameField,
-//     groupNameField,
-//     currentUser,
-//     group
-//   } = props
-//
-//   const handleNameChange = (e) => {
-//     return doUpdateGroupNameField(e.target.value)
-//   }
-//
-//   const handleSubmit = () => {
-//     const formData = {
-//       name: groupNameField,
-//       id: group.id
-//     }
-//     return doUpdateGroup(formData)
-//   }
-//
-//   return (
-//     <div style={containerStyle}>
-//       <h1 style={headerStyle}>Edit Group</h1>
-//       <GroupForm
-//         submitAction={doUpdateGroup}
-//         handleNameChange={handleNameChange}
-//         handleSubmit={handleSubmit}
-//         currentUser={currentUser}
-//       />
-//     </div>
-//   )
-// }
-
 class EditGroupForm extends React.Component {
   componentDidMount () {
     const { doUpdateGroupNameField, group } = this.props
@@ -68,7 +34,8 @@ class EditGroupForm extends React.Component {
       doUpdateGroup,
       doUpdateGroupNameField,
       groupNameField,
-      group
+      group,
+      doUpdateHash
     } = this.props
 
     const handleNameChange = (e) => {
@@ -91,6 +58,12 @@ class EditGroupForm extends React.Component {
           handleSubmit={handleSubmit}
           nameFieldValue={groupNameField}
         />
+        <Button
+          variant='outlined'
+          style={buttonStyle}
+          type='button'
+          onClick={() => { doUpdateHash('create-invitation') }}
+        >Invite New Members</Button>
       </div>
     )
   }

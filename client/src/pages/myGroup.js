@@ -11,7 +11,8 @@ const MyGroup = ({
   doUpdateGroupNameField,
   groupNameField,
   currentUser,
-  group
+  group,
+  doUpdateHash
  }) => {
   if (isNil(currentUser)) return null
   if (isNil(currentUser.group_id)) {
@@ -33,6 +34,7 @@ const MyGroup = ({
         groupNameField={groupNameField}
         currentUser={currentUser}
         group={group}
+        doUpdateHash={doUpdateHash}
       />
     )
   }
@@ -45,5 +47,6 @@ export default connect(
   'selectGroupNameField',
   'selectCurrentUser',
   'selectGroup',
+  'doUpdateHash',
   MyGroup
 )
