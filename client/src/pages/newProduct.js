@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'redux-bundler-react'
 
-import ProductForm from '../components/productForm'
+import NewProductForm from '../components/newProductForm'
 
 const NewProduct = ({
   thisSupplier,
@@ -13,7 +13,7 @@ const NewProduct = ({
   doUpdateHash
 }) => {
   return (
-    <ProductForm
+    <NewProductForm
       supplier={thisSupplier}
       newProduct={newProduct}
       doUpdateNewProductName={doUpdateNewProductName}
