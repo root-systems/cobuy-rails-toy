@@ -25,7 +25,11 @@ const ProductForm = (props) => {
     handleProductDescriptionChange,
     handleProductUnitChange,
     handleSubmit,
-    handleCancel
+    handleCancel,
+    handleAddPriceSpec,
+    handlePriceSpecPriceChange,
+    handlePriceSpecMinimumChange,
+    handleRemovePriceSpec
   } = props
 
   return (
@@ -49,6 +53,7 @@ const ProductForm = (props) => {
           value={product.unit}
           onChange={handleProductUnitChange}
         />
+        <Button style={removeButtonStyle} variant='outlined' type='button' onClick={handleAddPriceSpec}>Add Price Spec</Button>
       </form>
       <Button style={removeButtonStyle} variant='outlined' type='button' onClick={handleSubmit}>Save</Button>
       <Button style={removeButtonStyle} variant='outlined' type='button' onClick={handleCancel}>Cancel</Button>

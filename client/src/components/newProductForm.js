@@ -32,10 +32,17 @@ const NewProductForm = (props) => {
     doUpdateProductFormDataDescription,
     doUpdateProductFormDataUnit,
     doCreateProduct,
-    doUpdateHash
+    doUpdateHash,
+    doAddPriceSpec,
+    doRemovePriceSpec,
+    doUpdatePriceSpecPrice,
+    doUpdatePriceSpecMinimum,
+    priceSpecsFormData
   } = props
 
   if (isNil(supplier)) return null
+
+  console.log('productFormData', productFormData)
 
   const handleNewProductNameChange = event => {
     const name = event.target.value
@@ -60,6 +67,24 @@ const NewProductForm = (props) => {
     doCreateProduct(formData)
   }
 
+  const handleAddPriceSpec = () => {
+    doAddPriceSpec()
+  }
+
+  const handleRemovePriceSpec = (priceSpecKey) => {
+    doRemovePriceSpec(priceSpecKey)
+  }
+
+  const handlePriceSpecPriceChange = priceSpecKey => event => {
+    const price = event.target.value
+    doUpdatePriceSpecPrice({ priceSpecKey, price })
+  }
+
+  const handlePriceSpecMinimumChange = priceSpecKey => event => {
+    const minimum = event.target.value
+    doUpdatePriceSpecMinimum({ priceSpecKey, minimum })
+  }
+
   const handleCancel = () => {
     doUpdateHash(`suppliers/${supplier.id}/products`)
   }
@@ -74,6 +99,10 @@ const NewProductForm = (props) => {
         handleProductUnitChange={handleNewProductUnitChange}
         handleSubmit={handleSaveNewProduct}
         handleCancel={handleCancel}
+        handleAddPriceSpec={handleAddPriceSpec}
+        handlePriceSpecPriceChange={handlePriceSpecPriceChange}
+        handlePriceSpecMinimumChange={handlePriceSpecMinimumChange}
+        handleRemovePriceSpec={handleRemovePriceSpec}
       />
     </div>
   )

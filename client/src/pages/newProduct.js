@@ -10,7 +10,12 @@ const NewProduct = ({
   doUpdateProductFormDataDescription,
   doUpdateProductFormDataUnit,
   doCreateProduct,
-  doUpdateHash
+  doUpdateHash,
+  doAddPriceSpec,
+  doRemovePriceSpec,
+  doUpdatePriceSpecPrice,
+  doUpdatePriceSpecMinimum,
+  priceSpecsFormData
 }) => {
   return (
     <NewProductForm
@@ -21,6 +26,11 @@ const NewProduct = ({
       doUpdateProductFormDataUnit={doUpdateProductFormDataUnit}
       doCreateProduct={doCreateProduct}
       doUpdateHash={doUpdateHash}
+      doAddPriceSpec={doAddPriceSpec}
+      doRemovePriceSpec={doRemovePriceSpec}
+      doUpdatePriceSpecPrice={doUpdatePriceSpecPrice}
+      doUpdatePriceSpecMinimum={doUpdatePriceSpecMinimum}
+      priceSpecsFormData={priceSpecsFormData}
     />
   )
 }
@@ -33,5 +43,10 @@ export default connect(
   'doUpdateProductFormDataUnit',
   'doCreateProduct',
   'doUpdateHash',
+  'doAddPriceSpec',
+  'doRemovePriceSpec',
+  'doUpdatePriceSpecPrice',
+  'doUpdatePriceSpecMinimum',
+  'selectPriceSpecsFormData',
   NewProduct
 )
