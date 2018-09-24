@@ -92,6 +92,7 @@ bundle.reducer = (state = initialState, action) => {
         description: '',
         unit: ''
       },
+      priceSpecsFormData: {},
       data: concat(state.data, action.payload)
     }
   }

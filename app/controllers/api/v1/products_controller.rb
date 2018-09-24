@@ -18,7 +18,7 @@ module Api::V1
     def create
       @product = Product.create!(product_params)
       if @product.errors.empty?
-        render json: @product, status: :ok
+        render json: @product.to_json( :include => [:price_specs] ), status: :ok
       else
         render json: { errors: @product.errors.full_messages },
                status: :unprocessable_entity
