@@ -45,7 +45,7 @@ module Api::V1
     private
 
     def product_params
-      params.permit(:name, :description, :image, :supplier_id, :unit, :price_specs => [:price, :minimum, :currency, :product_id])
+      params.permit(:name, :description, :image, :supplier_id, :unit, :price_specs_attributes => [:price, :minimum, :currency, :product_id])
     end
 
     def set_product

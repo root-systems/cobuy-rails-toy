@@ -1,5 +1,5 @@
 import React from 'react'
-import { isEmpty, isNil } from 'lodash'
+import { isEmpty, isNil, values } from 'lodash'
 import { Card, CardContent, CardActions, Button, CardActionArea, Typography, FormGroup, FormControl, TextField, InputLabel } from '@material-ui/core'
 
 import ProductForm from './productForm'
@@ -43,6 +43,7 @@ const NewProductForm = (props) => {
   if (isNil(supplier)) return null
 
   console.log('productFormData', productFormData)
+  console.log('priceSpecsFormData', priceSpecsFormData)
 
   const handleNewProductNameChange = event => {
     const name = event.target.value
@@ -62,7 +63,8 @@ const NewProductForm = (props) => {
   const handleSaveNewProduct = () => {
     const formData = {
       ...productFormData,
-      supplier_id: supplier.id
+      supplier_id: supplier.id,
+      price_specs_attributes: values(priceSpecsFormData)
     }
     doCreateProduct(formData)
   }
