@@ -93,7 +93,7 @@ bundle.reducer = (state = initialState, action) => {
         unit: ''
       },
       priceSpecsFormData: {},
-      data: concat(state.data, action.payload)
+      data: concat(filter(state.data, (product) => { return product.id !== action.payload.previous_version_id }), action.payload)
     }
   }
 
