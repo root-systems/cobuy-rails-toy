@@ -109,6 +109,13 @@ bundle.reducer = (state = initialState, action) => {
     }
   }
 
+  if (action.type === 'UPDATE_PRICE_SPECS_FORM_DATA') {
+    return {
+      ...state,
+      priceSpecsFormData: action.payload
+    }
+  }
+
   if (action.type === 'ADD_PRICE_SPEC') {
     const nextId = cuid()
     return {
@@ -191,6 +198,10 @@ bundle.selectThisProduct = createSelector(
     return product
   }
 )
+
+bundle.doUpdatePriceSpecsFormData = (formData) => ({ dispatch }) => {
+  dispatch({ type: 'UPDATE_PRICE_SPECS_FORM_DATA', payload: formData })
+}
 
 bundle.doUpdateProductFormData = (formData) => ({ dispatch }) => {
   dispatch({ type: 'UPDATE_PRODUCT_FORM_DATA', payload: formData })

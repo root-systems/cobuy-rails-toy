@@ -6,7 +6,7 @@ module Api::V1
     def index
       related_supplier_ids = Supplier.where(group_id: current_user.group_id).map(&:id)
       @products = Product.where(supplier_id: related_supplier_ids)
-      render :json => @products
+      render :json => @products.to_json( :include => [:price_specs] )
     end
 
     # GET /products/:id

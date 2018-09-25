@@ -1,5 +1,5 @@
 import React from 'react'
-import { isEmpty, isNil } from 'lodash'
+import { isEmpty, isNil, keyBy } from 'lodash'
 import { Card, CardContent, CardActions, Button, CardActionArea, Typography, FormGroup, FormControl, TextField, InputLabel } from '@material-ui/core'
 
 import ProductForm from './productForm'
@@ -28,9 +28,14 @@ class EditProductForm extends React.Component {
   componentDidMount () {
     const {
       doUpdateProductFormData,
+      doUpdatePriceSpecsFormData,
       product
     } = this.props
+    const priceSpecs = product.price_specs
     doUpdateProductFormData(product)
+    if (isNil(priceSpecs)) return
+    const priceSpecsById = keyBy(product.price_specs, 'id')
+    doUpdatePriceSpecsFormData(priceSpecsById)
   }
 
   render () {
@@ -42,7 +47,11 @@ class EditProductForm extends React.Component {
       doUpdateProductFormDataUnit,
       doUpdateProduct,
       doUpdateHash,
-      priceSpecsFormData
+      priceSpecsFormData,
+      doAddPriceSpec,
+      doRemovePriceSpec,
+      doUpdatePriceSpecPrice,
+      doUpdatePriceSpecMinimum
     } = this.props
 
     if (isNil(product)) return null
@@ -76,6 +85,24 @@ class EditProductForm extends React.Component {
       doUpdateHash(`suppliers/${product.supplier_id}/products`)
     }
 
+    const handleAddPriceSpec = () => {
+      doAddPriceSpec()
+    }
+
+    const handleRemovePriceSpec = (priceSpecKey) => {
+      doRemovePriceSpec(priceSpecKey)
+    }
+
+    const handlePriceSpecPriceChange = priceSpecKey => event => {
+      const price = event.target.value
+      doUpdatePriceSpecPrice({ priceSpecKey, price })
+    }
+
+    const handlePriceSpecMinimumChange = priceSpecKey => event => {
+      const minimum = event.target.value
+      doUpdatePriceSpecMinimum({ priceSpecKey, minimum })
+    }
+
     return (
       <div style={containerStyle}>
         <h1>{product.name}</h1>
@@ -87,6 +114,10 @@ class EditProductForm extends React.Component {
           handleSubmit={handleSaveUpdatedProduct}
           handleCancel={handleCancel}
           priceSpecsFormData={priceSpecsFormData}
+          handleAddPriceSpec={handleAddPriceSpec}
+          handlePriceSpecPriceChange={handlePriceSpecPriceChange}
+          handlePriceSpecMinimumChange={handlePriceSpecMinimumChange}
+          handleRemovePriceSpec={handleRemovePriceSpec}
         />
       </div>
     )
