@@ -37,7 +37,7 @@ const Landing = (props) => {
           isSignedIn
           ? <div style={containerStyle}>
               <div style={navStyle}>
-                <Button onClick={() => { doUpdateHash('orders/new') }}>Create Order</Button>
+                <Button onClick={() => { doUpdateHash('#') }}>Home</Button>
                 <Button onClick={() => { doUpdateHash('orders') }}>My Orders</Button>
                 <Button onClick={() => { doUpdateHash('my-profile') }}>My Profile</Button>
                 <Button onClick={() => { doUpdateHash('my-group') }}>My Group</Button>

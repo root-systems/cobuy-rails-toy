@@ -15,14 +15,15 @@ import SignUp from '../pages/signUp'
 import SupplierProducts from '../pages/supplierProducts'
 import NewProduct from '../pages/newProduct'
 import EditProduct from '../pages/editProduct'
+import Home from '../pages/home'
 
 const routes = {
   '': {
-    component: CreateOrder,
+    component: Home,
     protected: true
   },
   '/': {
-    component: CreateOrder,
+    component: Home,
     protected: true
   },
   'sign-in': {
@@ -82,7 +83,7 @@ const routes = {
     protected: true
   },
   '*': {
-    component: CreateOrder,
+    component: Home,
     protected: false
   }
 
