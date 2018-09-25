@@ -18,7 +18,7 @@ module Api::V1
     def create
       @product = Product.create!(product_params)
       if @product.errors.empty?
-        render json: @product, status: :ok
+        render json: @product.to_json( :include => [:price_specs] ), status: :ok
       else
         render json: { errors: @product.errors.full_messages },
                status: :unprocessable_entity
@@ -45,7 +45,7 @@ module Api::V1
     private
 
     def product_params
-      params.permit(:name, :description, :image, :supplier_id, :unit, :price_specs => [:price, :minimum, :currency, :product_id])
+      params.permit(:name, :description, :image, :supplier_id, :unit, :price_specs_attributes => [:price, :minimum, :currency, :product_id])
     end
 
     def set_product

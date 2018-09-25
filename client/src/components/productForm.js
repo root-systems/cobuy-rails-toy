@@ -14,75 +14,75 @@ const formStyle = {
   width: 300
 }
 
-const lineItemContainerStyle = {
-  marginTop: 20
-}
-
 const removeButtonStyle = {
   marginTop: 10
 }
 
 const ProductForm = (props) => {
   const {
-    newProduct,
-    doUpdateNewProductName,
-    doUpdateNewProductDescription,
-    doUpdateNewProductUnit,
-    doCreateProduct,
-    supplier,
-    doUpdateHash
+    product,
+    handleProductNameChange,
+    handleProductDescriptionChange,
+    handleProductUnitChange,
+    handleSubmit,
+    handleCancel,
+    handleAddPriceSpec,
+    handlePriceSpecPriceChange,
+    handlePriceSpecMinimumChange,
+    handleRemovePriceSpec,
+    priceSpecsFormData
   } = props
 
-  if (isNil(supplier)) return null
-
-  const handleNewProductNameChange = event => {
-    const name = event.target.value
-    doUpdateNewProductName(name)
+  const renderPriceSpecs = () => {
+    return Object.keys(priceSpecsFormData).map(renderPriceSpec)
   }
 
-  const handleNewProductDescriptionChange = event => {
-    const description = event.target.value
-    doUpdateNewProductDescription(description)
-  }
-
-  const handleNewProductUnitChange = event => {
-    const unit = event.target.value
-    doUpdateNewProductUnit(unit)
-  }
-
-  const handleSaveNewProduct = () => {
-    const formData = {
-      ...newProduct,
-      supplier_id: supplier.id
-    }
-    doCreateProduct(formData)
+  const renderPriceSpec = (priceSpecKey) => {
+    return (
+      <FormGroup key={priceSpecKey}>
+        <TextField
+          label={'Price'}
+          type='number'
+          value={priceSpecsFormData[priceSpecKey].price}
+          onChange={handlePriceSpecPriceChange(priceSpecKey)}
+        />
+        <TextField
+          label={'Minimum Quantity'}
+          type='number'
+          value={priceSpecsFormData[priceSpecKey].minimum}
+          onChange={handlePriceSpecMinimumChange(priceSpecKey)}
+        />
+        <Button style={removeButtonStyle} variant='outlined' type='button' onClick={() => { handleRemovePriceSpec(priceSpecKey) }}>Remove</Button>
+      </FormGroup>
+    )
   }
 
   return (
-    <div style={containerStyle}>
-      <h1>New Product for {supplier.name}</h1>
+    <div>
       <form style={formStyle}>
         <TextField
           label={'Name'}
           type='text'
-          value={newProduct.name}
-          onChange={handleNewProductNameChange}
+          value={product.name}
+          onChange={handleProductNameChange}
         />
         <TextField
           label={'Description'}
           type='text'
-          value={newProduct.description}
-          onChange={handleNewProductDescriptionChange}
+          value={product.description}
+          onChange={handleProductDescriptionChange}
         />
         <TextField
           label={'Base Unit'}
           type='text'
-          value={newProduct.unit}
-          onChange={handleNewProductUnitChange}
+          value={product.unit}
+          onChange={handleProductUnitChange}
         />
+        {renderPriceSpecs()}
+        <Button style={removeButtonStyle} variant='outlined' type='button' onClick={handleAddPriceSpec}>Add Price Spec</Button>
       </form>
-      <Button style={removeButtonStyle} variant='outlined' type='button' onClick={() => { handleSaveNewProduct() }}>Save</Button>
-      <Button style={removeButtonStyle} variant='outlined' type='button' onClick={() => { doUpdateHash(`suppliers/${supplier.id}/products`) }}>Cancel</Button>
+      <Button style={removeButtonStyle} variant='outlined' type='button' onClick={handleSubmit}>Save</Button>
+      <Button style={removeButtonStyle} variant='outlined' type='button' onClick={handleCancel}>Cancel</Button>
     </div>
   )
 }

@@ -44,7 +44,6 @@ const Landing = (props) => {
                 <Button onClick={() => { doUpdateHash('my-profile') }}>My Profile</Button>
                 <Button onClick={() => { doUpdateHash('my-group') }}>My Group</Button>
                 <Button onClick={() => { doUpdateHash('suppliers') }}>My Suppliers</Button>
-                <Button onClick={() => { doUpdateHash('create-invitation') }}>Create Invitation</Button>
                 <Button onClick={() => { doSignOut() }}>Sign Out</Button>
               </div>
               <Page {...props} />

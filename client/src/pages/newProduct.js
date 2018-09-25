@@ -1,43 +1,52 @@
 import React from 'react'
 import { connect } from 'redux-bundler-react'
 
-import ProductForm from '../components/productForm'
+import NewProductForm from '../components/newProductForm'
 
 const NewProduct = ({
   thisSupplier,
-  newProduct,
-  doAddNewProduct,
-  doRemoveNewProduct,
-  doUpdateNewProductName,
-  doUpdateNewProductDescription,
-  doUpdateNewProductUnit,
+  productFormData,
+  doUpdateProductFormDataName,
+  doUpdateProductFormDataDescription,
+  doUpdateProductFormDataUnit,
   doCreateProduct,
-  doUpdateHash
+  doUpdateHash,
+  doAddPriceSpec,
+  doRemovePriceSpec,
+  doUpdatePriceSpecPrice,
+  doUpdatePriceSpecMinimum,
+  priceSpecsFormData
 }) => {
   return (
-    <ProductForm
+    <NewProductForm
       supplier={thisSupplier}
-      newProduct={newProduct}
-      doAddNewProduct={doAddNewProduct}
-      doRemoveNewProduct={doRemoveNewProduct}
-      doUpdateNewProductName={doUpdateNewProductName}
-      doUpdateNewProductDescription={doUpdateNewProductDescription}
-      doUpdateNewProductUnit={doUpdateNewProductUnit}
+      productFormData={productFormData}
+      doUpdateProductFormDataName={doUpdateProductFormDataName}
+      doUpdateProductFormDataDescription={doUpdateProductFormDataDescription}
+      doUpdateProductFormDataUnit={doUpdateProductFormDataUnit}
       doCreateProduct={doCreateProduct}
       doUpdateHash={doUpdateHash}
+      doAddPriceSpec={doAddPriceSpec}
+      doRemovePriceSpec={doRemovePriceSpec}
+      doUpdatePriceSpecPrice={doUpdatePriceSpecPrice}
+      doUpdatePriceSpecMinimum={doUpdatePriceSpecMinimum}
+      priceSpecsFormData={priceSpecsFormData}
     />
   )
 }
 
 export default connect(
   'selectThisSupplier',
-  'selectNewProduct',
-  'doAddNewProduct',
-  'doRemoveNewProduct',
-  'doUpdateNewProductName',
-  'doUpdateNewProductDescription',
-  'doUpdateNewProductUnit',
+  'selectProductFormData',
+  'doUpdateProductFormDataName',
+  'doUpdateProductFormDataDescription',
+  'doUpdateProductFormDataUnit',
   'doCreateProduct',
   'doUpdateHash',
+  'doAddPriceSpec',
+  'doRemovePriceSpec',
+  'doUpdatePriceSpecPrice',
+  'doUpdatePriceSpecMinimum',
+  'selectPriceSpecsFormData',
   NewProduct
 )
