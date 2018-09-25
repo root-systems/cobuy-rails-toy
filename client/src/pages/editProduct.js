@@ -10,7 +10,6 @@ const EditProduct = ({
   doUpdateProductFormDataName,
   doUpdateProductFormDataDescription,
   doUpdateProductFormDataUnit,
-  doUpdateProduct,
   doUpdateHash,
   doUpdateProductFormData,
   priceSpecsFormData,
@@ -18,7 +17,8 @@ const EditProduct = ({
   doAddPriceSpec,
   doRemovePriceSpec,
   doUpdatePriceSpecPrice,
-  doUpdatePriceSpecMinimum
+  doUpdatePriceSpecMinimum,
+  doCreateProduct
 }) => {
   if (isNil(thisProduct)) return null
   return (
@@ -28,7 +28,6 @@ const EditProduct = ({
       doUpdateProductFormDataName={doUpdateProductFormDataName}
       doUpdateProductFormDataDescription={doUpdateProductFormDataDescription}
       doUpdateProductFormDataUnit={doUpdateProductFormDataUnit}
-      doUpdateProduct={doUpdateProduct}
       doUpdateHash={doUpdateHash}
       doUpdateProductFormData={doUpdateProductFormData}
       priceSpecsFormData={priceSpecsFormData}
@@ -37,6 +36,7 @@ const EditProduct = ({
       doRemovePriceSpec={doRemovePriceSpec}
       doUpdatePriceSpecPrice={doUpdatePriceSpecPrice}
       doUpdatePriceSpecMinimum={doUpdatePriceSpecMinimum}
+      doCreateProduct={doCreateProduct}
     />
   )
 }
@@ -46,7 +46,6 @@ export default connect(
   'doUpdateProductFormDataName',
   'doUpdateProductFormDataDescription',
   'doUpdateProductFormDataUnit',
-  'doUpdateProduct',
   'doUpdateHash',
   'doUpdateProductFormData',
   'selectThisProduct',
@@ -56,5 +55,6 @@ export default connect(
   'doRemovePriceSpec',
   'doUpdatePriceSpecPrice',
   'doUpdatePriceSpecMinimum',
+  'doCreateProduct',
   EditProduct
 )

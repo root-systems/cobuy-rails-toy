@@ -42,9 +42,6 @@ const NewProductForm = (props) => {
 
   if (isNil(supplier)) return null
 
-  console.log('productFormData', productFormData)
-  console.log('priceSpecsFormData', priceSpecsFormData)
-
   const handleNewProductNameChange = event => {
     const name = event.target.value
     doUpdateProductFormDataName(name)

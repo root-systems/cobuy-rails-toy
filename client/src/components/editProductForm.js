@@ -1,5 +1,5 @@
 import React from 'react'
-import { isEmpty, isNil, keyBy } from 'lodash'
+import { isEmpty, isNil, keyBy, values } from 'lodash'
 import { Card, CardContent, CardActions, Button, CardActionArea, Typography, FormGroup, FormControl, TextField, InputLabel } from '@material-ui/core'
 
 import ProductForm from './productForm'
@@ -45,18 +45,16 @@ class EditProductForm extends React.Component {
       doUpdateProductFormDataName,
       doUpdateProductFormDataDescription,
       doUpdateProductFormDataUnit,
-      doUpdateProduct,
       doUpdateHash,
       priceSpecsFormData,
       doAddPriceSpec,
       doRemovePriceSpec,
       doUpdatePriceSpecPrice,
-      doUpdatePriceSpecMinimum
+      doUpdatePriceSpecMinimum,
+      doCreateProduct
     } = this.props
 
     if (isNil(product)) return null
-
-    const supplier = product.supplier_id
 
     const handleProductNameChange = event => {
       const name = event.target.value
@@ -76,9 +74,10 @@ class EditProductForm extends React.Component {
     const handleSaveUpdatedProduct = () => {
       const formData = {
         ...productFormData,
-        supplier_id: supplier.id
+        previous_version_id: product.id,
+        price_specs_attributes: values(priceSpecsFormData)
       }
-      doUpdateProduct(formData)
+      doCreateProduct(formData)
     }
 
     const handleCancel = () => {
