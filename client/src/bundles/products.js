@@ -93,7 +93,7 @@ bundle.reducer = (state = initialState, action) => {
         unit: ''
       },
       priceSpecsFormData: {},
-      data: concat(state.data, action.payload)
+      data: concat(filter(state.data, (product) => { return product.id !== action.payload.previous_version_id }), action.payload)
     }
   }
 
@@ -106,6 +106,13 @@ bundle.reducer = (state = initialState, action) => {
         unit: ''
       },
       data: concat(filter(state.data, (product) => { return product.id !== action.payload.id }), action.payload)
+    }
+  }
+
+  if (action.type === 'UPDATE_PRICE_SPECS_FORM_DATA') {
+    return {
+      ...state,
+      priceSpecsFormData: action.payload
     }
   }
 
@@ -191,6 +198,10 @@ bundle.selectThisProduct = createSelector(
     return product
   }
 )
+
+bundle.doUpdatePriceSpecsFormData = (formData) => ({ dispatch }) => {
+  dispatch({ type: 'UPDATE_PRICE_SPECS_FORM_DATA', payload: formData })
+}
 
 bundle.doUpdateProductFormData = (formData) => ({ dispatch }) => {
   dispatch({ type: 'UPDATE_PRODUCT_FORM_DATA', payload: formData })

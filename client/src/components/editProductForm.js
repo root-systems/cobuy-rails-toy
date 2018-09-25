@@ -1,5 +1,5 @@
 import React from 'react'
-import { isEmpty, isNil } from 'lodash'
+import { isEmpty, isNil, keyBy, values } from 'lodash'
 import { Card, CardContent, CardActions, Button, CardActionArea, Typography, FormGroup, FormControl, TextField, InputLabel } from '@material-ui/core'
 
 import ProductForm from './productForm'
@@ -28,9 +28,14 @@ class EditProductForm extends React.Component {
   componentDidMount () {
     const {
       doUpdateProductFormData,
+      doUpdatePriceSpecsFormData,
       product
     } = this.props
+    const priceSpecs = product.price_specs
     doUpdateProductFormData(product)
+    if (isNil(priceSpecs)) return
+    const priceSpecsById = keyBy(product.price_specs, 'id')
+    doUpdatePriceSpecsFormData(priceSpecsById)
   }
 
   render () {
@@ -40,13 +45,16 @@ class EditProductForm extends React.Component {
       doUpdateProductFormDataName,
       doUpdateProductFormDataDescription,
       doUpdateProductFormDataUnit,
-      doUpdateProduct,
-      doUpdateHash
+      doUpdateHash,
+      priceSpecsFormData,
+      doAddPriceSpec,
+      doRemovePriceSpec,
+      doUpdatePriceSpecPrice,
+      doUpdatePriceSpecMinimum,
+      doCreateProduct
     } = this.props
 
     if (isNil(product)) return null
-
-    const supplier = product.supplier_id
 
     const handleProductNameChange = event => {
       const name = event.target.value
@@ -66,13 +74,32 @@ class EditProductForm extends React.Component {
     const handleSaveUpdatedProduct = () => {
       const formData = {
         ...productFormData,
-        supplier_id: supplier.id
+        previous_version_id: product.id,
+        price_specs_attributes: values(priceSpecsFormData)
       }
-      doUpdateProduct(formData)
+      doCreateProduct(formData)
     }
 
     const handleCancel = () => {
       doUpdateHash(`suppliers/${product.supplier_id}/products`)
+    }
+
+    const handleAddPriceSpec = () => {
+      doAddPriceSpec()
+    }
+
+    const handleRemovePriceSpec = (priceSpecKey) => {
+      doRemovePriceSpec(priceSpecKey)
+    }
+
+    const handlePriceSpecPriceChange = priceSpecKey => event => {
+      const price = event.target.value
+      doUpdatePriceSpecPrice({ priceSpecKey, price })
+    }
+
+    const handlePriceSpecMinimumChange = priceSpecKey => event => {
+      const minimum = event.target.value
+      doUpdatePriceSpecMinimum({ priceSpecKey, minimum })
     }
 
     return (
@@ -85,6 +112,11 @@ class EditProductForm extends React.Component {
           handleProductUnitChange={handleProductUnitChange}
           handleSubmit={handleSaveUpdatedProduct}
           handleCancel={handleCancel}
+          priceSpecsFormData={priceSpecsFormData}
+          handleAddPriceSpec={handleAddPriceSpec}
+          handlePriceSpecPriceChange={handlePriceSpecPriceChange}
+          handlePriceSpecMinimumChange={handlePriceSpecMinimumChange}
+          handleRemovePriceSpec={handleRemovePriceSpec}
         />
       </div>
     )

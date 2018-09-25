@@ -5,8 +5,8 @@ module Api::V1
     # GET /products
     def index
       related_supplier_ids = Supplier.where(group_id: current_user.group_id).map(&:id)
-      @products = Product.where(supplier_id: related_supplier_ids)
-      render :json => @products
+      @products = Product.where(supplier_id: related_supplier_ids, disabled: false)
+      render :json => @products.to_json( :include => [:price_specs] )
     end
 
     # GET /products/:id
@@ -16,6 +16,11 @@ module Api::V1
 
     # POST /products
     def create
+      if product_params[:previous_version_id]
+        old_product = Product.find(product_params[:previous_version_id])
+        old_product.disabled = true
+        old_product.save!
+      end
       @product = Product.create!(product_params)
       if @product.errors.empty?
         render json: @product.to_json( :include => [:price_specs] ), status: :ok
@@ -45,7 +50,7 @@ module Api::V1
     private
 
     def product_params
-      params.permit(:name, :description, :image, :supplier_id, :unit, :price_specs_attributes => [:price, :minimum, :currency, :product_id])
+      params.permit(:name, :description, :image, :supplier_id, :unit, :previous_version_id, :price_specs_attributes => [:price, :minimum, :currency, :product_id])
     end
 
     def set_product

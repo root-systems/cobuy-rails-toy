@@ -19,6 +19,10 @@ const innerContainerStyle = {
   marginTop: 10
 }
 
+const buttonStyle = {
+  marginTop: 20
+}
+
 const SuppliersList = (props) => {
   const { suppliers, doUpdateHash } = props
   if (isEmpty(suppliers)) return null
@@ -43,6 +47,12 @@ const SuppliersList = (props) => {
   return (
     <div style={containerStyle}>
       <h1>My Suppliers</h1>
+      <Button
+        variant='outlined'
+        style={buttonStyle}
+        type='button'
+        onClick={() => { doUpdateHash(`create-supplier`) }}
+      >Create a new supplier</Button>
       {renderSuppliers(suppliers)}
     </div>
   )
