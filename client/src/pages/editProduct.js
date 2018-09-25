@@ -12,7 +12,8 @@ const EditProduct = ({
   doUpdateProductFormDataUnit,
   doUpdateProduct,
   doUpdateHash,
-  doUpdateProductFormData
+  doUpdateProductFormData,
+  priceSpecsFormData
 }) => {
   if (isNil(thisProduct)) return null
   return (
@@ -25,6 +26,7 @@ const EditProduct = ({
       doUpdateProduct={doUpdateProduct}
       doUpdateHash={doUpdateHash}
       doUpdateProductFormData={doUpdateProductFormData}
+      priceSpecsFormData={priceSpecsFormData}
     />
   )
 }
@@ -38,5 +40,6 @@ export default connect(
   'doUpdateHash',
   'doUpdateProductFormData',
   'selectThisProduct',
+  'selectPriceSpecsFormData',
   EditProduct
 )

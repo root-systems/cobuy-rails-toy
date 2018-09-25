@@ -41,7 +41,8 @@ class EditProductForm extends React.Component {
       doUpdateProductFormDataDescription,
       doUpdateProductFormDataUnit,
       doUpdateProduct,
-      doUpdateHash
+      doUpdateHash,
+      priceSpecsFormData
     } = this.props
 
     if (isNil(product)) return null
@@ -85,6 +86,7 @@ class EditProductForm extends React.Component {
           handleProductUnitChange={handleProductUnitChange}
           handleSubmit={handleSaveUpdatedProduct}
           handleCancel={handleCancel}
+          priceSpecsFormData={priceSpecsFormData}
         />
       </div>
     )
