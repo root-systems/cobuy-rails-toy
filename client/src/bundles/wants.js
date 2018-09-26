@@ -57,8 +57,7 @@ bundle.reducer = (state = initialState, action) => {
   }
 
   if (action.type === 'UPDATE_WANTS_CONTAINER_PRODUCT_ID') {
-    const products = action.payload.products
-    const productId = action.payload.productId
+    const { products, productId } = action.payload
     const product = find(products, { 'id': productId })
     const priceSpecs = product.price_specs
     return {
@@ -87,6 +86,26 @@ bundle.reducer = (state = initialState, action) => {
     }
   }
 
+  if (action.type === 'UPDATE_WANT_QUANTITY') {
+    const { wantsContainerKey, wantId, quantity } = action.payload
+    return {
+      ...state,
+      wantsFormData: {
+        ...state.wantsFormData,
+        [wantsContainerKey]: {
+          ...state.wantsFormData[wantsContainerKey],
+          wants: {
+            ...state.wantsFormData[wantsContainerKey].wants,
+            [wantId]: {
+              ...state.wantsFormData[wantsContainerKey].wants[wantId],
+              quantity: quantity
+            }
+          }
+        }
+      }
+    }
+  }
+
   return baseReducer(state, action)
 }
 
@@ -99,6 +118,10 @@ bundle.doAddWantsContainer = (data) => ({ dispatch }) => {
 
 bundle.doUpdateWantsContainerProductId = (wantsContainerKey, productId, products, orderId) => ({ dispatch }) => {
   dispatch({ type: 'UPDATE_WANTS_CONTAINER_PRODUCT_ID', payload: { wantsContainerKey, productId, products, orderId } })
+}
+
+bundle.doUpdateWantQuantity = (wantsContainerKey, wantId, quantity) => ({ dispatch }) => {
+  dispatch({ type: 'UPDATE_WANT_QUANTITY', payload: { wantsContainerKey, wantId, quantity } })
 }
 
 bundle.doCreateGroup = (formData) => ({ dispatch, apiFetch, getState }) => {

@@ -28,7 +28,8 @@ const AddWantsForm = (props) => {
     products,
     doAddWantsContainer,
     wantsFormData,
-    doUpdateWantsContainerProductId
+    doUpdateWantsContainerProductId,
+    doUpdateWantQuantity
   } = props
   if (isNil(order) || isNil(products)) return null
 
@@ -58,6 +59,10 @@ const AddWantsForm = (props) => {
     )
   }
 
+  const handleWantQuantityChange = (wantsContainerKey, wantId) => (e) => {
+    doUpdateWantQuantity(wantsContainerKey, wantId, e.target.value)
+  }
+
   const renderWantsFields = (wantsContainerKey) => {
     const wantsContainerData = wantsFormData[wantsContainerKey]
     const unit = wantsContainerData.unit
@@ -74,6 +79,8 @@ const AddWantsForm = (props) => {
             key={wantId}
             label={`At $${priceSpec.price} per ${unit} (minimum ${priceSpec.minimum}), I want`}
             value={wantData.quantity}
+            type='number'
+            onChange={handleWantQuantityChange(wantsContainerKey, wantId)}
           />
         </div>
       )

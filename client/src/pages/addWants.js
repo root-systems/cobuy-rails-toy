@@ -8,7 +8,8 @@ const AddWants = ({
   thisOrderProducts,
   doAddWantsContainer,
   wantsFormData,
-  doUpdateWantsContainerProductId
+  doUpdateWantsContainerProductId,
+  doUpdateWantQuantity
  }) => {
   return (
     <AddWantsForm
@@ -17,6 +18,7 @@ const AddWants = ({
       doAddWantsContainer={doAddWantsContainer}
       wantsFormData={wantsFormData}
       doUpdateWantsContainerProductId={doUpdateWantsContainerProductId}
+      doUpdateWantQuantity={doUpdateWantQuantity}
     />
   )
 }
@@ -27,5 +29,6 @@ export default connect(
   'doAddWantsContainer',
   'selectWantsFormData',
   'doUpdateWantsContainerProductId',
+  'doUpdateWantQuantity',
   AddWants
 )
