@@ -24,6 +24,17 @@ module Api::V1
       end
     end
 
+    def batch_create
+      wants_params = want_params[:wants]
+      @new_wants = []
+      wants_params.each do |want_params|
+        want_params[:user_id] = current_user.id
+        want = Want.create!(want_params)
+        @new_wants << want
+      end
+      render json: @new_wants, status: :ok
+    end
+
     # PUT /wants/:id
     def update
       @want.update(want_params)
@@ -44,7 +55,7 @@ module Api::V1
     private
 
     def want_params
-      params.permit(:user_id, :product_id, :order_id, :price_spec_id, :product_name, :quantity)
+      params.permit(:user_id, :product_id, :order_id, :price_spec_id, :product_name, :quantity, :wants => [ :product_id, :order_id, :price_spec_id, :product_name, :quantity ])
     end
 
     def set_want

@@ -124,7 +124,7 @@ bundle.doUpdateWantQuantity = (wantsContainerKey, wantId, quantity) => ({ dispat
   dispatch({ type: 'UPDATE_WANT_QUANTITY', payload: { wantsContainerKey, wantId, quantity } })
 }
 
-bundle.doCreateGroup = (formData) => ({ dispatch, apiFetch, getState }) => {
+bundle.doCreateWants = (formData) => ({ dispatch, apiFetch, getState }) => {
   const credentials = getState().accounts.credentials
   const sanitizedCredentials = {
     'access-token': credentials.accessToken,
@@ -133,8 +133,8 @@ bundle.doCreateGroup = (formData) => ({ dispatch, apiFetch, getState }) => {
     uid: credentials.uid,
     expiry: credentials.expiry
   }
-  dispatch({ type: 'CREATE_GROUP_START' })
-  apiFetch('api/v1/groups', {
+  dispatch({ type: 'CREATE_WANTS_START' })
+  apiFetch('api/v1/wants/batch', {
     method: 'POST',
     body: JSON.stringify(formData),
     headers: sanitizedCredentials
@@ -146,11 +146,11 @@ bundle.doCreateGroup = (formData) => ({ dispatch, apiFetch, getState }) => {
       return response.json()
     })
     .then((data) => {
-      dispatch({ type: 'CREATE_GROUP_SUCCESS', payload: data })
+      dispatch({ type: 'CREATE_WANTS_SUCCESS', payload: data })
       dispatch({ actionCreator: 'doUpdateHash', args: ['my-group'] })
     })
     .catch((error) => {
-      dispatch({ type: 'CREATE_GROUP_ERROR', payload: error })
+      dispatch({ type: 'CREATE_WANTS_ERROR', payload: error })
     })
 }
 

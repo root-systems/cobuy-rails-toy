@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, TextField, FormGroup, Select, MenuItem, InputLabel } from '@material-ui/core'
-import { isNil, isEmpty, map, find } from 'lodash'
+import { isNil, isEmpty, map, find, flatten } from 'lodash'
 
 const containerStyle = {
   display: 'flex',
@@ -29,7 +29,8 @@ const AddWantsForm = (props) => {
     doAddWantsContainer,
     wantsFormData,
     doUpdateWantsContainerProductId,
-    doUpdateWantQuantity
+    doUpdateWantQuantity,
+    doCreateWants
   } = props
   if (isNil(order) || isNil(products)) return null
 
@@ -105,6 +106,26 @@ const AddWantsForm = (props) => {
     doUpdateWantsContainerProductId(wantsContainerKey, Number(e.target.value), products, orderId)
   }
 
+  const handleSubmit = () => {
+    const serializedWants = Object.keys(wantsFormData).map((wantsContainerId) => {
+      const wantsContainer = wantsFormData[wantsContainerId]
+      return Object.keys(wantsContainer.wants).map((wantId) => {
+        const wantData = wantsContainer.wants[wantId]
+        return {
+          product_id: wantData.product_id,
+          price_spec_id: wantData.price_spec_id,
+          order_id: wantData.order_id,
+          quantity: wantData.quantity
+        }
+      })
+    })
+    const formData = {
+      wants: flatten(serializedWants)
+    }
+    console.log('formData', formData)
+    doCreateWants(formData)
+  }
+
   return (
     <div style={containerStyle}>
       <h1 style={headerStyle}>Add Wants to Order: {order.name}</h1>
@@ -117,6 +138,12 @@ const AddWantsForm = (props) => {
         type='button'
         onClick={handleAddWant}
       >Add Want</Button>
+      <Button
+        variant='outlined'
+        style={buttonStyle}
+        type='button'
+        onClick={handleSubmit}
+      >Save Wants to Order</Button>
     </div>
   )
 }
