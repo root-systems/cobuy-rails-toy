@@ -61,8 +61,6 @@ bundle.reducer = (state = initialState, action) => {
     const productId = action.payload.productId
     const product = find(products, { 'id': productId })
     const priceSpecs = product.price_specs
-    // GK: todo: map through priceSpecs and create a new cuid key per priceSpec
-    // under that key, provide the priceSpec data: price, minimum
     return {
       ...state,
       wantsFormData: {
