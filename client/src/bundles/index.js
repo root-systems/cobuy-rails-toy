@@ -8,6 +8,7 @@ import invitationsBundle from './invitations'
 import suppliersBundle from './suppliers'
 import groupsBundle from './groups'
 import productsBundle from './products'
+import wantsBundle from './wants'
 
 import routes from './routes'
 
@@ -22,6 +23,7 @@ export default composeBundles(
   suppliersBundle,
   groupsBundle,
   productsBundle,
+  wantsBundle,
   createUrlBundle(),
   debugBundle,
   extraArgs,

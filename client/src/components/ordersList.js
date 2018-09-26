@@ -24,22 +24,15 @@ const OrdersList = (props) => {
     orders,
     doUpdateHash
   } = props
-  
+
   const renderOrder = (order) => {
     return (
       <Card key={order.id} style={innerContainerStyle}>
-        <CardActionArea href={`${order.order_status_url}`}>
+        <CardActionArea onClick={() => { doUpdateHash(`orders/${order.id}/wants`) }}>
           <CardContent>
             <Typography variant='headline'>
-              {`Order ${order.order_number}`}
+              {`Order ${order.id}`}
             </Typography>
-            {
-              order.fulfillment_status ?
-                <Typography color='textSecondary'>
-                  {order.fulfillment_status}
-                </Typography>
-                : null
-            }
           </CardContent>
         </CardActionArea>
       </Card>
