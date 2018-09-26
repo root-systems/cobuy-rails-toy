@@ -5,7 +5,7 @@ module Api::V1
     # GET /groups
     def index
       @group = Group.where(id: current_user.group_id).first || nil
-      render :json => @group
+      render :json => @group.to_json( :include => [:suppliers] )
     end
 
     # GET /groups/:id
