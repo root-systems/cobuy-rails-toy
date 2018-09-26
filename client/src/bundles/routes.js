@@ -2,7 +2,7 @@ import { createRouteBundle } from 'redux-bundler'
 
 import Landing from '../pages/landing'
 import SignIn from '../pages/signIn'
-import Order from '../pages/order'
+import CreateOrder from '../pages/createOrder'
 import MyOrders from '../pages/myOrders'
 import Profile from '../pages/profile'
 import AcceptInvitation from '../pages/acceptInvitation'
@@ -15,14 +15,15 @@ import SignUp from '../pages/signUp'
 import SupplierProducts from '../pages/supplierProducts'
 import NewProduct from '../pages/newProduct'
 import EditProduct from '../pages/editProduct'
+import Home from '../pages/home'
 
 const routes = {
   '': {
-    component: Order,
+    component: Home,
     protected: true
   },
   '/': {
-    component: Order,
+    component: Home,
     protected: true
   },
   'sign-in': {
@@ -33,8 +34,8 @@ const routes = {
     component: SignUp,
     protected: false
   },
-  'order': {
-    component: Order,
+  'orders/new': {
+    component: CreateOrder,
     protected: true
   },
   'orders': {
@@ -82,7 +83,7 @@ const routes = {
     protected: true
   },
   '*': {
-    component: Order,
+    component: Home,
     protected: false
   }
 

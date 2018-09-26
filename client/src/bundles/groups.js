@@ -1,6 +1,6 @@
 import { createAsyncResourceBundle, createSelector } from 'redux-bundler'
 import cuid from 'cuid'
-import { omit, concat, isNil, find, filter } from 'lodash'
+import { omit, concat, isNil, find, filter, isEmpty } from 'lodash'
 import ms from 'milliseconds'
 
 const bundle = createAsyncResourceBundle({
@@ -167,10 +167,9 @@ bundle.doUpdateGroup = (formData) => ({ dispatch, apiFetch, getState }) => {
 bundle.reactGroupsFetch = createSelector(
   'selectGroupsShouldUpdate',
   'selectIsSignedIn',
-  'selectCurrentUser',
-  (shouldUpdate, isSignedIn, currentUser) => {
-    if (isNil(currentUser)) return false
-    if (shouldUpdate && isSignedIn && !isNil(currentUser.group_id)) {
+  'selectCurrentUserHasGroup',
+  (shouldUpdate, isSignedIn, currentUserHasGroup) => {
+    if (shouldUpdate && isSignedIn && currentUserHasGroup) {
       return { actionCreator: 'doFetchGroups' }
     }
     return false

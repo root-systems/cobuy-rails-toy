@@ -14,7 +14,7 @@ const bundle = createAsyncResourceBundle({
       uid: credentials.uid,
       expiry: credentials.expiry
     }
-    return apiFetch(`/orders?shop=${window.location.hostname}`, {
+    return apiFetch(`api/v1/orders`, {
       headers: sanitizedCredentials
     })
       .then(response => response.json())
@@ -28,7 +28,10 @@ const bundle = createAsyncResourceBundle({
 })
 
 const initialState = {
-  lineItems: {},
+  orderFormData: {
+    supplier_id: null,
+    name: ''
+  },
   // needed by createAsyncResourceBundle
   data: null,
   errorTimes: [],
@@ -42,54 +45,31 @@ const initialState = {
 
 const baseReducer = bundle.reducer
 bundle.reducer = (state = initialState, action) => {
-  if (action.type === 'ADD_LINE_ITEM') {
-    const nextId = cuid()
+
+  if (action.type === 'UPDATE_ORDER_FORM_DATA_SUPPLIER_ID') {
     return {
       ...state,
-      lineItems: {
-        ...state.lineItems,
-        [nextId]: {
-          variantId: '',
-          quantity: ''
-        }
+      orderFormData: {
+        ...state.orderFormData,
+        supplier_id: action.payload
       }
     }
   }
 
-  if (action.type === 'UPDATE_LINE_ITEM_VARIANT_ID') {
+  if (action.type === 'UPDATE_ORDER_FORM_DATA_NAME') {
     return {
       ...state,
-      lineItems: {
-        ...state.lineItems,
-        [action.payload.lineItemKey]: {
-          variantId: action.payload.variantId,
-          quantity: state.lineItems[action.payload.lineItemKey].quantity
-        }
+      orderFormData: {
+        ...state.orderFormData,
+        name: action.payload
       }
     }
   }
-  if (action.type === 'UPDATE_LINE_ITEM_QUANTITY') {
-    return {
-      ...state,
-      lineItems: {
-        ...state.lineItems,
-        [action.payload.lineItemKey]: {
-          variantId: state.lineItems[action.payload.lineItemKey].variantId,
-          quantity: action.payload.quantity
-        }
-      }
-    }
-  }
-  if (action.type === 'REMOVE_LINE_ITEM') {
-    return {
-      ...state,
-      lineItems: omit(state.lineItems, action.payload)
-    }
-  }
+
   if (action.type === 'CREATE_ORDER_SUCCESS') {
     return {
       ...state,
-      lineItems: {},
+      orderFormData: {},
       data: concat(state.data, action.payload)
     }
   }
@@ -97,27 +77,24 @@ bundle.reducer = (state = initialState, action) => {
   return baseReducer(state, action)
 }
 
-bundle.selectLineItems = state => state.orders.lineItems
-
+bundle.selectOrderFormData = state => state.orders.orderFormData
 bundle.selectOrders = (state) => state.orders.data
+bundle.selectIsCreateOrderRoute = createSelector(
+  'selectHash',
+  (urlHash) => {
+    return urlHash === 'orders/new'
+  }
+)
 
-bundle.doAddLineItem = () => ({ dispatch }) => {
-  dispatch({ type: 'ADD_LINE_ITEM' })
+bundle.doUpdateOrderFormDataSupplierId = (supplierId) => ({ dispatch }) => {
+  dispatch({ type: 'UPDATE_ORDER_FORM_DATA_SUPPLIER_ID', payload: supplierId })
 }
 
-bundle.doUpdateLineItemVariantId = (lineItemKeyAndValue) => ({ dispatch }) => {
-  dispatch({ type: 'UPDATE_LINE_ITEM_VARIANT_ID', payload: lineItemKeyAndValue })
+bundle.doUpdateOrderFormDataName = (name) => ({ dispatch }) => {
+  dispatch({ type: 'UPDATE_ORDER_FORM_DATA_NAME', payload: name })
 }
 
-bundle.doUpdateLineItemQuantity = (lineItemKeyAndValue) => ({ dispatch }) => {
-  dispatch({ type: 'UPDATE_LINE_ITEM_QUANTITY', payload: lineItemKeyAndValue })
-}
-
-bundle.doRemoveLineItem = (lineItemKey) => ({ dispatch }) => {
-  dispatch({ type: 'REMOVE_LINE_ITEM', payload: lineItemKey })
-}
-
-bundle.doCreateOrder = ({ lineItems }) => ({ dispatch, apiFetch, getState }) => {
+bundle.doCreateOrder = (formData) => ({ dispatch, apiFetch, getState }) => {
   const credentials = getState().accounts.credentials
   const sanitizedCredentials = {
     'access-token': credentials.accessToken,
@@ -126,16 +103,10 @@ bundle.doCreateOrder = ({ lineItems }) => ({ dispatch, apiFetch, getState }) => 
     uid: credentials.uid,
     expiry: credentials.expiry
   }
-  const shopifyDomain = window.location.hostname
-  const lineItemsArray = Object.keys(lineItems).map(lineItemKey => lineItems[lineItemKey])
-  const order = {
-    order: lineItemsArray,
-    shop: shopifyDomain
-  }
   dispatch({ type: 'CREATE_ORDER_START' })
-  apiFetch('/orders/create', {
+  apiFetch('api/v1/orders', {
     method: 'POST',
-    body: JSON.stringify(order),
+    body: JSON.stringify(formData),
     headers: sanitizedCredentials
   })
     .then(response => {
@@ -152,12 +123,67 @@ bundle.doCreateOrder = ({ lineItems }) => ({ dispatch, apiFetch, getState }) => 
     })
 }
 
-// bundle.reactOrdersFetch = createSelector(
-//   'selectOrdersShouldUpdate',
-//   'selectIsSignedIn',
-//   (shouldUpdate, isSignedIn) => {
-//     if (shouldUpdate && isSignedIn) {
-//       return { actionCreator: 'doFetchOrders' }
+bundle.reactOrdersFetch = createSelector(
+  'selectOrdersShouldUpdate',
+  'selectIsSignedIn',
+  (shouldUpdate, isSignedIn) => {
+    if (shouldUpdate && isSignedIn) {
+      return { actionCreator: 'doFetchOrders' }
+    }
+    return false
+  }
+)
+
+bundle.reactTryingtoCreateOrderButHasNoGroupSoRedirect = createSelector(
+  'selectIsSignedIn', // should be true
+  'selectIsCreateOrderRoute', // should be true
+  'selectMyProfileShouldUpdate', // should be false
+  'selectHasCurrentUser', // should be true
+  'selectCurrentUserHasGroup', // should be false
+  (isSignedIn, isCreateOrderRoute, myProfileShouldUpdate, hasCurrentUser, currentUserHasGroup) => {
+    if (isSignedIn && isCreateOrderRoute && !myProfileShouldUpdate && hasCurrentUser && !currentUserHasGroup) {
+      return { actionCreator: 'doUpdateHash', args: ['my-group'] }
+    }
+    return false
+  }
+)
+
+bundle.reactTryingtoCreateOrderButHasNoSupplierSoRedirect = createSelector(
+  'selectIsSignedIn', // should be true
+  'selectIsCreateOrderRoute', // should be true
+  'selectGroupsShouldUpdate', // should be false
+  'selectSuppliersShouldUpdate', // should be false
+  'selectGroupHasSuppliers', // should be false
+  (isSignedIn, isCreateOrderRoute, groupsShouldUpdate, suppliersShouldUpdate, groupHasSuppliers) => {
+    if (isSignedIn && isCreateOrderRoute && !groupsShouldUpdate && !suppliersShouldUpdate && !groupHasSuppliers) {
+      return { actionCreator: 'doUpdateHash', args: ['suppliers'] }
+    }
+    return false
+  }
+)
+// bundle.reactTryingtoCreateOrderButHasNoGroupSoNotify = createSelector(
+//   'selectIsSignedIn', // should be true
+//   'selectIsCreateOrderRoute', // should be true
+//   'selectMyProfileShouldUpdate', // should be false
+//   'selectHasCurrentUser', // should be true
+//   'selectCurrentUserHasGroup', // should be false
+//   (isSignedIn, isCreateOrderRoute, myProfileShouldUpdate, hasCurrentUser, currentUserHasGroup) => {
+//     if (isSignedIn && isCreateOrderRoute && !myProfileShouldUpdate && hasCurrentUser && !currentUserHasGroup) {
+//       return { actionCreator: 'doAddNotification', args: ['no group'] }
+//     }
+//     return false
+//   }
+// )
+//
+// bundle.reactTryingtoCreateOrderButHasNoSupplierSoNotify = createSelector(
+//   'selectIsSignedIn', // should be true
+//   'selectIsCreateOrderRoute', // should be true
+//   'selectGroupsShouldUpdate', // should be false
+//   'selectSuppliersShouldUpdate', // should be false
+//   'selectGroupHasSuppliers', // should be false
+//   (isSignedIn, isCreateOrderRoute, groupsShouldUpdate, suppliersShouldUpdate, groupHasSuppliers) => {
+//     if (isSignedIn && isCreateOrderRoute && !groupsShouldUpdate && !suppliersShouldUpdate && !groupHasSuppliers) {
+//       return { actionCreator: 'doAddNotification', args: ['no supplier'] }
 //     }
 //     return false
 //   }

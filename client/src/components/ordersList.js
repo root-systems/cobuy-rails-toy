@@ -20,8 +20,11 @@ const innerContainerStyle = {
 }
 
 const OrdersList = (props) => {
-  const { orders } = props
-  if (isEmpty(orders)) return null
+  const {
+    orders,
+    doUpdateHash
+  } = props
+  
   const renderOrder = (order) => {
     return (
       <Card key={order.id} style={innerContainerStyle}>
@@ -43,11 +46,13 @@ const OrdersList = (props) => {
     )
   }
   const renderOrders = (orders) => {
+    if (isEmpty(orders)) return null
     return orders.map(renderOrder)
   }
   return (
     <div style={containerStyle}>
       <h1>My Orders</h1>
+      <Button variant='outlined' onClick={() => { doUpdateHash('orders/new') }}>Start a New Order</Button>
       {renderOrders(orders)}
     </div>
   )

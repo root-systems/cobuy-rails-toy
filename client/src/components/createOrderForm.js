@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button, TextField, Select, MenuItem, FormControl, InputLabel, FormGroup } from '@material-ui/core'
+import { isNil } from 'lodash'
 
 const containerStyle = {
   display: 'flex',
@@ -35,74 +36,61 @@ const lineItemContainerStyle = {
 
 const CreateOrderForm = props => {
   const {
-    lineItems,
-    products,
-    doAddLineItem,
-    doUpdateLineItemVariantId,
-    doUpdateLineItemQuantity,
-    doRemoveLineItem,
-    doCreateOrder
+    suppliers,
+    doCreateOrder,
+    doUpdateOrderFormDataSupplierId,
+    orderFormData,
+    doUpdateOrderFormDataName,
+    currentUser
    } = props
 
-  const renderProductMenuItems = () => {
-    const renderMenuItem = (product) => {
+  if (isNil(suppliers)) return null
+  if (isNil(currentUser.group_id)) return null
+
+  const renderSupplierMenuItems = () => {
+    const renderMenuItem = (supplier) => {
       return (
-        <MenuItem key={product.id} value={product.variants[0].id}>
-          {product.title}
+        <MenuItem key={supplier.id} value={supplier.id}>
+          {supplier.name}
         </MenuItem>
       )
     }
-    return products.map(renderMenuItem)
+    return suppliers.map(renderMenuItem)
   }
 
-  const handleAddLineItem = () => {
-    doAddLineItem()
+  const handleSupplierIdChange = (e) => {
+    doUpdateOrderFormDataSupplierId(e.target.value)
   }
 
-  const handleLineItemVariantIdChange = lineItemKey => event => {
-    const variantId = event.target.value
-    doUpdateLineItemVariantId({ lineItemKey, variantId })
-  }
-
-  const handleLineItemQuantityChange = lineItemKey => event => {
-    const quantity = event.target.value
-    doUpdateLineItemQuantity({ lineItemKey, quantity })
-  }
-
-  const removeLineItem = (lineItemKey) => {
-    doRemoveLineItem(lineItemKey)
-  }
-
-  const renderLineItem = (lineItemKey) => {
-    return (
-      <FormGroup style={lineItemContainerStyle} key={lineItemKey}>
-        <FormControl>
-          <InputLabel>Product</InputLabel>
-          <Select value={lineItems[lineItemKey].variantId} onChange={handleLineItemVariantIdChange(lineItemKey)}>
-            {renderProductMenuItems()}
-          </Select>
-        </FormControl>
-        <TextField label={'Quantity'} type='number' value={lineItems[lineItemKey].quantity} onChange={handleLineItemQuantityChange(lineItemKey)} />
-        <Button style={removeButtonStyle} variant='outlined' type='button' onClick={() => { removeLineItem(lineItemKey) }}>Remove</Button>
-      </FormGroup>
-    )
-  }
-
-  const renderLineItemFields = () => {
-    return Object.keys(lineItems).map(renderLineItem)
+  const handleNameChange = (e) => {
+    doUpdateOrderFormDataName(e.target.value)
   }
 
   const handleSubmit = () => {
-    doCreateOrder({ lineItems })
+    const formData = {
+      ...orderFormData,
+      group_id: currentUser.group_id
+    }
+    doCreateOrder(formData)
   }
 
   return (
     <div style={containerStyle}>
       <h1 style={headerStyle}>New Order</h1>
       <form style={formStyle}>
-        {renderLineItemFields()}
-        <Button style={addButtonStyle} variant='outlined' type='button' onClick={handleAddLineItem}>Add a line item to your order</Button>
-        <Button style={submitButtonStyle} variant='outlined' type='button' onClick={handleSubmit}>Submit your order</Button>
+        <TextField
+          label={'Order Name'}
+          type='text'
+          value={orderFormData.name}
+          onChange={handleNameChange}
+        />
+        <FormControl>
+          <InputLabel shrink={orderFormData.supplier_id}>Supplier</InputLabel>
+          <Select value={orderFormData.supplier_id} onChange={handleSupplierIdChange}>
+            {renderSupplierMenuItems()}
+          </Select>
+        </FormControl>
+        <Button style={submitButtonStyle} variant='outlined' type='button' onClick={handleSubmit}>Start your order</Button>
       </form>
     </div>
   )

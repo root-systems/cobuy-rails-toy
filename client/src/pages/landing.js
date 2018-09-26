@@ -2,10 +2,8 @@ import React from 'react'
 import { connect } from 'redux-bundler-react'
 import { Button } from '@material-ui/core'
 
-import SignOutButton from '../components/signOutButton'
 import NotificationCard from '../components/notificationCard'
 
-import Order from './order'
 import SignIn from './signIn'
 
 const containerStyle = {
@@ -39,7 +37,7 @@ const Landing = (props) => {
           isSignedIn
           ? <div style={containerStyle}>
               <div style={navStyle}>
-                <Button onClick={() => { doUpdateHash('order') }}>Create Order</Button>
+                <Button onClick={() => { doUpdateHash('#') }}>Home</Button>
                 <Button onClick={() => { doUpdateHash('orders') }}>My Orders</Button>
                 <Button onClick={() => { doUpdateHash('my-profile') }}>My Profile</Button>
                 <Button onClick={() => { doUpdateHash('my-group') }}>My Group</Button>

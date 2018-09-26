@@ -1,6 +1,6 @@
 import { createAsyncResourceBundle, createSelector } from 'redux-bundler'
 import cuid from 'cuid'
-import { omit, concat, isNil, find, filter } from 'lodash'
+import { omit, concat, isNil, find, filter, isEmpty } from 'lodash'
 import ms from 'milliseconds'
 
 const bundle = createAsyncResourceBundle({
@@ -43,7 +43,15 @@ const initialState = {
 }
 
 const baseReducer = bundle.reducer
+
 bundle.reducer = (state = initialState, action) => {
+  if (action.type === 'GROUPS_FETCH_FINISHED' || action.type === 'CREATE_GROUP_SUCCESS') {
+    return {
+      ...state,
+      data: action.payload.suppliers
+    }
+  }
+
   if (action.type === 'UPDATE_SUPPLIER_NAME_FIELD') {
     return {
       ...state,
@@ -98,6 +106,13 @@ bundle.reducer = (state = initialState, action) => {
 }
 
 bundle.selectSuppliers = state => state.suppliers.data
+bundle.selectGroupHasSuppliers = createSelector(
+  'selectSuppliers',
+  (suppliers) => {
+    if (isNil(suppliers)) return false
+    return !isEmpty(suppliers)
+  }
+)
 bundle.selectSupplierNameField = state => state.suppliers.nameField
 bundle.selectThisSupplierId = createSelector(
   'selectHash',
@@ -183,16 +198,16 @@ bundle.doUpdateSupplier = (formData) => ({ dispatch, apiFetch, getState }) => {
     })
 }
 
-bundle.reactSuppliersFetch = createSelector(
-  'selectSuppliersShouldUpdate',
-  'selectIsSignedIn',
-  'selectGroup',
-  (shouldUpdate, isSignedIn, group) => {
-    if (shouldUpdate && isSignedIn && !isNil(group)) {
-      return { actionCreator: 'doFetchSuppliers' }
-    }
-    return false
-  }
-)
+// bundle.reactSuppliersFetch = createSelector(
+//   'selectSuppliersShouldUpdate',
+//   'selectIsSignedIn',
+//   'selectCurrentUserHasGroup',
+//   (shouldUpdate, isSignedIn, currentUserHasGroup) => {
+//     if (shouldUpdate && isSignedIn && currentUserHasGroup) {
+//       return { actionCreator: 'doFetchSuppliers' }
+//     }
+//     return false
+//   }
+// )
 
 export default bundle

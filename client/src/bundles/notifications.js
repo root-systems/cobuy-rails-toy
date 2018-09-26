@@ -14,7 +14,8 @@ const reducer = (state = initialState, action) => {
     action.type === 'UPDATE_PROFILE_ERROR' ||
     action.type === 'ACCEPT_INVITATION_ERROR' ||
     action.type === 'ACCEPT_INVITATION_SUCCESS' ||
-    action.type === 'SIGN_UP_ERROR'
+    action.type === 'SIGN_UP_ERROR' ||
+    action.type === 'ADD_NOTIFICATION'
   ) {
     const nextId = cuid()
     return {
@@ -56,6 +57,9 @@ const selectors = {
 const actionCreators = {
   doRemoveErrorNotification: (id) => ({ dispatch }) => {
     dispatch({ type: 'REMOVE_ERROR_NOTIFICATION', payload: id })
+  },
+  doAddNotification: (message) => ({ dispatch }) => {
+    dispatch({ type: 'ADD_NOTIFICATION', payload: message })
   }
 }
 
