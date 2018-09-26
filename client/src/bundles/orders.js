@@ -78,8 +78,13 @@ bundle.reducer = (state = initialState, action) => {
 }
 
 bundle.selectOrderFormData = state => state.orders.orderFormData
-
 bundle.selectOrders = (state) => state.orders.data
+bundle.selectIsCreateOrderRoute = createSelector(
+  'selectHash',
+  (urlHash) => {
+    return urlHash === 'orders/new'
+  }
+)
 
 bundle.doUpdateOrderFormDataSupplierId = (supplierId) => ({ dispatch }) => {
   dispatch({ type: 'UPDATE_ORDER_FORM_DATA_SUPPLIER_ID', payload: supplierId })
