@@ -25,7 +25,6 @@ const buttonStyle = {
 
 const SuppliersList = (props) => {
   const { suppliers, doUpdateHash } = props
-  if (isEmpty(suppliers)) return null
   const renderSupplier = (supplier) => {
     return (
       <Card key={supplier.id} style={innerContainerStyle}>
@@ -42,6 +41,7 @@ const SuppliersList = (props) => {
     )
   }
   const renderSuppliers = (suppliers) => {
+    if (isEmpty(suppliers)) return null
     return suppliers.map(renderSupplier)
   }
   return (
