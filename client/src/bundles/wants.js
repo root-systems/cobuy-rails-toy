@@ -56,6 +56,20 @@ bundle.reducer = (state = initialState, action) => {
     }
   }
 
+  if (action.type === 'UPDATE_WANTS_CONTAINER_PRODUCT_ID') {
+    return {
+      ...state,
+      wantsFormData: {
+        ...state.wantsFormData,
+        [action.payload.wantsContainerKey]: {
+          ...state.wantsFormData[action.payload.wantsContainerKey],
+          product_id: action.payload.productId,
+          wants: {}
+        }
+      }
+    }
+  }
+
   return baseReducer(state, action)
 }
 
@@ -64,6 +78,10 @@ bundle.selectWantsFormData = state => state.wants.wantsFormData
 
 bundle.doAddWantsContainer = (data) => ({ dispatch }) => {
   dispatch({ type: 'ADD_WANTS_CONTAINER' })
+}
+
+bundle.doUpdateWantsContainerProductId = (wantsContainerKey, productId) => ({ dispatch }) => {
+  dispatch({ type: 'UPDATE_WANTS_CONTAINER_PRODUCT_ID', payload: { wantsContainerKey, productId } })
 }
 
 bundle.doCreateGroup = (formData) => ({ dispatch, apiFetch, getState }) => {

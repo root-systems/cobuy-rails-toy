@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, TextField, FormGroup, Select, MenuItem } from '@material-ui/core'
+import { Button, TextField, FormGroup, Select, MenuItem, InputLabel } from '@material-ui/core'
 import { isNil, isEmpty, map } from 'lodash'
 
 const containerStyle = {
@@ -27,7 +27,8 @@ const AddWantsForm = (props) => {
     order,
     products,
     doAddWantsContainer,
-    wantsFormData
+    wantsFormData,
+    doUpdateWantsContainerProductId
   } = props
   if (isNil(order) || isNil(products)) return null
 
@@ -50,24 +51,29 @@ const AddWantsForm = (props) => {
     })
   }
 
-  const renderProductSelect = (wantKey) => {
+  const renderProductSelect = (wantsContainerKey) => {
+    const productId = wantsFormData[wantsContainerKey].product_id
     return (
-      <Select value={wantsFormData[wantKey].product_id} onChange={handleProductSelectChange}>
-        {renderMenuItems()}
-      </Select>
+      <div style={containerStyle}>
+        <InputLabel shrink={!isNil(productId)}>Product</InputLabel>
+        <Select value={productId} onChange={handleProductSelectChange(wantsContainerKey)}>
+          {renderMenuItems()}
+        </Select>
+      </div>
     )
   }
 
-  const renderWantsContainer = (wantKey) => {
+  const renderWantsContainer = (wantsContainerKey) => {
     return (
-      <FormGroup key={wantKey}>
-        {renderProductSelect(wantKey)}
+      <FormGroup key={wantsContainerKey}>
+        {renderProductSelect(wantsContainerKey)}
       </FormGroup>
     )
   }
 
-  const handleProductSelectChange = (e) => {
-    console.log('product id', e.target.value)
+  const handleProductSelectChange = wantsContainerKey => (e) => {
+    doUpdateWantsContainerProductId(wantsContainerKey, Number(e.target.value))
+    // console.log('product id', e.target.value)
   }
 
   return (
@@ -79,7 +85,7 @@ const AddWantsForm = (props) => {
         type='button'
         onClick={handleAddWant}
       >Add Want</Button>
-      <form>
+      <form style={formStyle}>
         {renderWantsContainers()}
       </form>
     </div>
