@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, TextField, FormGroup, Select, MenuItem, InputLabel } from '@material-ui/core'
-import { isNil, isEmpty, map } from 'lodash'
+import { isNil, isEmpty, map, find } from 'lodash'
 
 const containerStyle = {
   display: 'flex',
@@ -36,11 +36,6 @@ const AddWantsForm = (props) => {
     doAddWantsContainer()
   }
 
-  const renderWantsContainers = () => {
-    if (isEmpty(wantsFormData)) return null
-    return Object.keys(wantsFormData).map(renderWantsContainer)
-  }
-
   const renderMenuItems = () => {
     return map(products, (product) => {
       return (
@@ -56,24 +51,51 @@ const AddWantsForm = (props) => {
     return (
       <div style={containerStyle}>
         <InputLabel shrink={!isNil(productId)}>Product</InputLabel>
-        <Select value={productId} onChange={handleProductSelectChange(wantsContainerKey)}>
+        <Select value={productId} onChange={handleProductSelectChange(wantsContainerKey, products, order.id)}>
           {renderMenuItems()}
         </Select>
       </div>
     )
   }
 
+  const renderWantsFields = (wantsContainerKey) => {
+    const wantsContainerData = wantsFormData[wantsContainerKey]
+    const unit = wantsContainerData.unit
+    // GK: TODO: put this description somewhere
+    const productDescription = wantsContainerData.description
+    return Object.keys(wantsContainerData.wants).map((wantId) => {
+      const wantData = wantsContainerData.wants[wantId]
+      if (isNil(wantData)) return null
+      const priceSpec = wantData.priceSpec
+      if (isNil(priceSpec)) return null
+      return (
+        <div>
+          <TextField
+            key={wantId}
+            label={`At $${priceSpec.price} per ${unit} (minimum ${priceSpec.minimum}), I want`}
+            value={wantData.quantity}
+          />
+        </div>
+      )
+    })
+  }
+
+  const renderWantsContainers = () => {
+    if (isEmpty(wantsFormData)) return null
+    return Object.keys(wantsFormData).map(renderWantsContainer)
+  }
+
   const renderWantsContainer = (wantsContainerKey) => {
     return (
       <FormGroup key={wantsContainerKey}>
         {renderProductSelect(wantsContainerKey)}
+        {renderWantsFields(wantsContainerKey)}
       </FormGroup>
     )
   }
 
-  const handleProductSelectChange = wantsContainerKey => (e) => {
-    doUpdateWantsContainerProductId(wantsContainerKey, Number(e.target.value))
-    // console.log('product id', e.target.value)
+  const handleProductSelectChange = (wantsContainerKey, products, orderId) => (e) => {
+    doUpdateWantsContainerProductId(wantsContainerKey, Number(e.target.value), products, orderId)
   }
 
   return (

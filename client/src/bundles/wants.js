@@ -1,6 +1,6 @@
 import { createAsyncResourceBundle, createSelector } from 'redux-bundler'
 import cuid from 'cuid'
-import { omit, concat, isNil, find, filter, isEmpty } from 'lodash'
+import { omit, concat, isNil, find, filter, isEmpty, reduce } from 'lodash'
 import ms from 'milliseconds'
 
 const bundle = createAsyncResourceBundle({
@@ -57,14 +57,33 @@ bundle.reducer = (state = initialState, action) => {
   }
 
   if (action.type === 'UPDATE_WANTS_CONTAINER_PRODUCT_ID') {
+    const products = action.payload.products
+    const productId = action.payload.productId
+    const product = find(products, { 'id': productId })
+    const priceSpecs = product.price_specs
+    // GK: todo: map through priceSpecs and create a new cuid key per priceSpec
+    // under that key, provide the priceSpec data: price, minimum
     return {
       ...state,
       wantsFormData: {
         ...state.wantsFormData,
         [action.payload.wantsContainerKey]: {
           ...state.wantsFormData[action.payload.wantsContainerKey],
-          product_id: action.payload.productId,
-          wants: {}
+          product_id: productId,
+          unit: product.unit,
+          description: product.description,
+          wants: reduce(priceSpecs, (sofar, priceSpec) => {
+            return {
+              ...sofar,
+              [cuid()]: {
+                quantity: '',
+                price_spec_id: priceSpec.id,
+                product_id: productId,
+                order_id: action.payload.orderId,
+                priceSpec: priceSpec
+              }
+            }
+          }, {})
         }
       }
     }
@@ -80,8 +99,8 @@ bundle.doAddWantsContainer = (data) => ({ dispatch }) => {
   dispatch({ type: 'ADD_WANTS_CONTAINER' })
 }
 
-bundle.doUpdateWantsContainerProductId = (wantsContainerKey, productId) => ({ dispatch }) => {
-  dispatch({ type: 'UPDATE_WANTS_CONTAINER_PRODUCT_ID', payload: { wantsContainerKey, productId } })
+bundle.doUpdateWantsContainerProductId = (wantsContainerKey, productId, products, orderId) => ({ dispatch }) => {
+  dispatch({ type: 'UPDATE_WANTS_CONTAINER_PRODUCT_ID', payload: { wantsContainerKey, productId, products, orderId } })
 }
 
 bundle.doCreateGroup = (formData) => ({ dispatch, apiFetch, getState }) => {
