@@ -101,15 +101,15 @@ const AddWantsForm = (props) => {
   return (
     <div style={containerStyle}>
       <h1 style={headerStyle}>Add Wants to Order: {order.name}</h1>
+      <form style={formStyle}>
+        {renderWantsContainers()}
+      </form>
       <Button
         variant='outlined'
         style={buttonStyle}
         type='button'
         onClick={handleAddWant}
       >Add Want</Button>
-      <form style={formStyle}>
-        {renderWantsContainers()}
-      </form>
     </div>
   )
 }
