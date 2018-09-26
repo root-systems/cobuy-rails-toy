@@ -24,6 +24,7 @@ module Api::V1
       end
     end
 
+    # POST /wants/batch
     def batch_create
       wants_params = want_params[:wants]
       @new_wants = []
