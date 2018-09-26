@@ -1,6 +1,6 @@
 import { createAsyncResourceBundle, createSelector } from 'redux-bundler'
 import cuid from 'cuid'
-import { omit, concat, isNil, find, filter } from 'lodash'
+import { omit, concat, isNil, find, filter, isEmpty } from 'lodash'
 import ms from 'milliseconds'
 
 const bundle = createAsyncResourceBundle({
@@ -99,6 +99,13 @@ bundle.reducer = (state = initialState, action) => {
 
 bundle.selectGroup = state => state.groups.data
 bundle.selectGroupNameField = state => state.groups.nameField
+bundle.selectGroupHasSuppliers = createSelector(
+  'selectGroup',
+  (group) => {
+    if (isNil(group)) return false
+    return isEmpty(group.suppliers)
+  }
+)
 
 bundle.doUpdateGroupNameField = (name) => ({ dispatch }) => {
   dispatch({ type: 'UPDATE_GROUP_NAME_FIELD', payload: name })
