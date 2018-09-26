@@ -104,6 +104,7 @@ bundle.reducer = (state = initialState, action) => {
     return {
       ...state,
       data: {
+        ...state.data,
         group_id: action.payload.id
       }
     }
@@ -112,6 +113,12 @@ bundle.reducer = (state = initialState, action) => {
 }
 
 bundle.selectCurrentUser = state => state.myProfile.data
+bundle.selectHasCurrentUser = createSelector(
+  'selectCurrentUser',
+  (currentUser) => {
+    return !isNil(currentUser)
+  }
+)
 bundle.selectCurrentUserHasGroup = createSelector(
   'selectCurrentUser',
   (currentUser) => {

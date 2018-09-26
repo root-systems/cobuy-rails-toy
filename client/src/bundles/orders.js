@@ -134,4 +134,34 @@ bundle.reactOrdersFetch = createSelector(
   }
 )
 
+bundle.reactTryingtoCreateOrderButHasNoGroupSoRedirect = createSelector(
+  'selectIsSignedIn', // should be true
+  'selectIsCreateOrderRoute', // should be true
+  'selectMyProfileShouldUpdate', // should be false
+  'selectHasCurrentUser', // should be true
+  'selectCurrentUserHasGroup', // should be false
+  (isSignedIn, isCreateOrderRoute, myProfileShouldUpdate, hasCurrentUser, currentUserHasGroup) => {
+    if (isSignedIn && isCreateOrderRoute && !myProfileShouldUpdate && hasCurrentUser && !currentUserHasGroup) {
+      return { actionCreator: 'doUpdateHash', args: ['my-group'] }
+    }
+    return false
+  }
+)
+
+
+bundle.reactTryingtoCreateOrderButHasNoSupplierSoRedirect = createSelector(
+  'selectIsSignedIn', // should be true
+  'selectIsCreateOrderRoute', // should be true
+  'selectGroupsShouldUpdate', // should be false
+  'selectSuppliersShouldUpdate', // should be false
+  'selectGroupHasSuppliers', // should be false
+  (isSignedIn, isCreateOrderRoute, groupsShouldUpdate, suppliersShouldUpdate, groupHasSuppliers) => {
+    if (isSignedIn && isCreateOrderRoute && !groupsShouldUpdate && !suppliersShouldUpdate && !groupHasSuppliers) {
+      return { actionCreator: 'doUpdateHash', args: ['suppliers'] }
+    }
+    return false
+  }
+)
+
+
 export default bundle

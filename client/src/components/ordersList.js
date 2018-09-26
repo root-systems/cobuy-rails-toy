@@ -24,7 +24,7 @@ const OrdersList = (props) => {
     orders,
     doUpdateHash
   } = props
-  if (isEmpty(orders)) return null
+  
   const renderOrder = (order) => {
     return (
       <Card key={order.id} style={innerContainerStyle}>
@@ -46,6 +46,7 @@ const OrdersList = (props) => {
     )
   }
   const renderOrders = (orders) => {
+    if (isEmpty(orders)) return null
     return orders.map(renderOrder)
   }
   return (

@@ -1,6 +1,6 @@
 import { createAsyncResourceBundle, createSelector } from 'redux-bundler'
 import cuid from 'cuid'
-import { omit, concat, isNil, find, filter } from 'lodash'
+import { omit, concat, isNil, find, filter, isEmpty } from 'lodash'
 import ms from 'milliseconds'
 
 const bundle = createAsyncResourceBundle({
@@ -106,6 +106,13 @@ bundle.reducer = (state = initialState, action) => {
 }
 
 bundle.selectSuppliers = state => state.suppliers.data
+bundle.selectGroupHasSuppliers = createSelector(
+  'selectSuppliers',
+  (suppliers) => {
+    if (isNil(suppliers)) return false
+    return !isEmpty(suppliers)
+  }
+)
 bundle.selectSupplierNameField = state => state.suppliers.nameField
 bundle.selectThisSupplierId = createSelector(
   'selectHash',
