@@ -1,6 +1,6 @@
 import { createAsyncResourceBundle, createSelector } from 'redux-bundler'
 import cuid from 'cuid'
-import { omit } from 'lodash'
+import { omit, isNil } from 'lodash'
 import ms from 'milliseconds'
 
 const bundle = createAsyncResourceBundle({
@@ -112,6 +112,13 @@ bundle.reducer = (state = initialState, action) => {
 }
 
 bundle.selectCurrentUser = state => state.myProfile.data
+bundle.selectCurrentUserHasGroup = createSelector(
+  'selectCurrentUser',
+  (currentUser) => {
+    if (isNil(currentUser)) return false
+    return !isNil(currentUser.group_id)
+  }
+)
 bundle.selectNameField = state => state.myProfile.nameField
 bundle.selectPhoneField = state => state.myProfile.phoneField
 bundle.selectShippingAddressField = state => state.myProfile.shippingAddressField
