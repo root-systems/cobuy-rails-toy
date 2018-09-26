@@ -148,7 +148,6 @@ bundle.reactTryingtoCreateOrderButHasNoGroupSoRedirect = createSelector(
   }
 )
 
-
 bundle.reactTryingtoCreateOrderButHasNoSupplierSoRedirect = createSelector(
   'selectIsSignedIn', // should be true
   'selectIsCreateOrderRoute', // should be true
@@ -162,6 +161,32 @@ bundle.reactTryingtoCreateOrderButHasNoSupplierSoRedirect = createSelector(
     return false
   }
 )
-
+// bundle.reactTryingtoCreateOrderButHasNoGroupSoNotify = createSelector(
+//   'selectIsSignedIn', // should be true
+//   'selectIsCreateOrderRoute', // should be true
+//   'selectMyProfileShouldUpdate', // should be false
+//   'selectHasCurrentUser', // should be true
+//   'selectCurrentUserHasGroup', // should be false
+//   (isSignedIn, isCreateOrderRoute, myProfileShouldUpdate, hasCurrentUser, currentUserHasGroup) => {
+//     if (isSignedIn && isCreateOrderRoute && !myProfileShouldUpdate && hasCurrentUser && !currentUserHasGroup) {
+//       return { actionCreator: 'doAddNotification', args: ['no group'] }
+//     }
+//     return false
+//   }
+// )
+//
+// bundle.reactTryingtoCreateOrderButHasNoSupplierSoNotify = createSelector(
+//   'selectIsSignedIn', // should be true
+//   'selectIsCreateOrderRoute', // should be true
+//   'selectGroupsShouldUpdate', // should be false
+//   'selectSuppliersShouldUpdate', // should be false
+//   'selectGroupHasSuppliers', // should be false
+//   (isSignedIn, isCreateOrderRoute, groupsShouldUpdate, suppliersShouldUpdate, groupHasSuppliers) => {
+//     if (isSignedIn && isCreateOrderRoute && !groupsShouldUpdate && !suppliersShouldUpdate && !groupHasSuppliers) {
+//       return { actionCreator: 'doAddNotification', args: ['no supplier'] }
+//     }
+//     return false
+//   }
+// )
 
 export default bundle
