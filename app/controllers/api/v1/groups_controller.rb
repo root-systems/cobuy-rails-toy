@@ -10,7 +10,7 @@ module Api::V1
 
     # GET /groups/:id
     def show
-      render :json => @group
+      render :json => @group.to_json( :include => [:suppliers] )
     end
 
     # POST /groups
@@ -20,7 +20,7 @@ module Api::V1
       if @group.errors.empty?
         current_user.group = @group
         current_user.save!
-        render json: @group, status: :ok
+        render json: @group.to_json( :include => [:suppliers] ), status: :ok
       else
         render json: { errors: @group.errors.full_messages },
                status: :unprocessable_entity
@@ -31,7 +31,7 @@ module Api::V1
     def update
       @group.update(group_params)
       if @group.errors.empty?
-        render json: @group, status: :ok
+        render json: @group.to_json( :include => [:suppliers] ), status: :ok
       else
         render json: { errors: @group.errors.full_messages },
                status: :unprocessable_entity
