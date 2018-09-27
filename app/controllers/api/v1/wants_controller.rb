@@ -29,10 +29,12 @@ module Api::V1
       wants_params = want_params[:wants]
       old_want_ids = want_params[:old_want_ids]
       order_id = nil
+      product_ids = []
       if (old_want_ids.present?) && (old_want_ids.any?)
         old_want_ids.each do |old_want_id|
           old_want = Want.find(old_want_id)
           order_id = old_want.order_id
+          product_ids << old_want.product_id
           old_want.disabled = true
           old_want.save!
         end
@@ -40,11 +42,15 @@ module Api::V1
       @new_wants = []
       if wants_params.any?
         wants_params.each do |want_params|
+          order_id = want_params[:order_id]
+          product_ids << want_params[:product_id]
           want_params[:user_id] = current_user.id
           want = Want.create!(want_params)
           @new_wants << want
         end
       end
+      # GK: TODO: this is where we can trigger a recomputation of line items
+      LineItem.recompute(order_id, product_ids.uniq)
       if @new_wants.any?
         render json: @new_wants, status: :ok
       else
