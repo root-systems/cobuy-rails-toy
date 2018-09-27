@@ -10,6 +10,7 @@ Rails.application.routes.draw do
       resources :products
       resources :price_specs
       resources :wants
+      post '/wants/batch', to: 'wants#batch_create'
       resources :orders
       resources :users
     end

@@ -16,6 +16,7 @@ import SupplierProducts from '../pages/supplierProducts'
 import NewProduct from '../pages/newProduct'
 import EditProduct from '../pages/editProduct'
 import Home from '../pages/home'
+import AddWants from '../pages/addWants'
 
 const routes = {
   '': {
@@ -80,6 +81,10 @@ const routes = {
   },
   'products/:productId': {
     component: EditProduct,
+    protected: true
+  },
+  'orders/:orderId/wants': {
+    component: AddWants,
     protected: true
   },
   '*': {

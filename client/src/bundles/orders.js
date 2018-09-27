@@ -1,6 +1,6 @@
 import { createAsyncResourceBundle, createSelector } from 'redux-bundler'
 import cuid from 'cuid'
-import { omit, concat } from 'lodash'
+import { omit, concat, isNil, find, filter } from 'lodash'
 import ms from 'milliseconds'
 
 const bundle = createAsyncResourceBundle({
@@ -69,7 +69,10 @@ bundle.reducer = (state = initialState, action) => {
   if (action.type === 'CREATE_ORDER_SUCCESS') {
     return {
       ...state,
-      orderFormData: {},
+      orderFormData: {
+        supplier_id: null,
+        name: ''
+      },
       data: concat(state.data, action.payload)
     }
   }
@@ -83,6 +86,34 @@ bundle.selectIsCreateOrderRoute = createSelector(
   'selectHash',
   (urlHash) => {
     return urlHash === 'orders/new'
+  }
+)
+
+bundle.selectThisOrderId = createSelector(
+  'selectHash',
+  (urlHash) => {
+    const urlHashArray = urlHash.split('/')
+    const path = urlHashArray[0]
+    if (path !== 'orders') return null
+    const orderId = urlHashArray[1]
+    return Number(orderId)
+  }
+)
+bundle.selectThisOrder = createSelector(
+  'selectThisOrderId',
+  'selectOrders',
+  (orderId, orders) => {
+    if (isNil(orderId) || isNil(orders)) return null
+    const order = find(orders, { 'id': orderId })
+    return order
+  }
+)
+bundle.selectThisOrderProducts = createSelector(
+  'selectThisOrder',
+  'selectProducts',
+  (order, products) => {
+    if (isNil(order) || isNil(products)) return null
+    return filter(products, (product) => { return product.supplier_id === order.supplier_id })
   }
 )
 
@@ -117,6 +148,7 @@ bundle.doCreateOrder = (formData) => ({ dispatch, apiFetch, getState }) => {
     })
     .then((data) => {
       dispatch({ type: 'CREATE_ORDER_SUCCESS', payload: data })
+      dispatch({ actionCreator: 'doUpdateHash', args: [`orders`] })
     })
     .catch((error) => {
       dispatch({ type: 'CREATE_ORDER_ERROR', payload: error })
