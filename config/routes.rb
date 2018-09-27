@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       post '/wants/batch', to: 'wants#batch_create'
       resources :orders
       resources :users
+      resources :line_items
     end
   end
   root 'tests#hello'
