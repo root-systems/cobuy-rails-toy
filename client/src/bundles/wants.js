@@ -85,6 +85,7 @@ bundle.reducer = (state = initialState, action) => {
       return {
         ...sofar,
         [productId]: {
+          old_want_ids: Object.keys(wantsObject),
           wants: wantsObject,
           product_id: Number(productId),
           unit: product.unit,
@@ -92,7 +93,6 @@ bundle.reducer = (state = initialState, action) => {
         }
       }
     }, {})
-    console.log('wantsFormData', wantsFormData)
     return {
       ...state,
       wantsFormData

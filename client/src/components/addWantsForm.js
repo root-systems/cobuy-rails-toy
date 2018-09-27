@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button, TextField, FormGroup, Select, MenuItem, InputLabel } from '@material-ui/core'
-import { isNil, isEmpty, map, find, flatten } from 'lodash'
+import { isNil, isEmpty, map, find, flattenDeep } from 'lodash'
 
 const containerStyle = {
   display: 'flex',
@@ -134,10 +134,14 @@ class AddWantsForm extends React.Component {
           }
         })
       })
+      const oldWantIds = Object.keys(wantsFormData).map((wantsContainerId) => {
+        const wantsContainer = wantsFormData[wantsContainerId]
+        return wantsContainer.old_want_ids
+      })
       const formData = {
-        wants: flatten(serializedWants)
+        wants: flattenDeep(serializedWants),
+        old_want_ids: flattenDeep(oldWantIds)
       }
-      console.log('formData', formData)
       doCreateWants(formData)
     }
 
