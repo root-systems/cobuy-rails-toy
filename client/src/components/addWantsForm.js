@@ -45,12 +45,17 @@ class AddWantsForm extends React.Component {
       wantsFormData,
       doUpdateWantsContainerProductId,
       doUpdateWantQuantity,
-      doCreateWants
+      doCreateWants,
+      doRemoveWantsContainer
     } = this.props
     if (isNil(order) || isNil(products)) return null
 
     const handleAddWant = () => {
       doAddWantsContainer()
+    }
+
+    const handleRemoveWant = (wantsContainerId) => () => {
+      doRemoveWantsContainer(wantsContainerId)
     }
 
     const renderMenuItems = () => {
@@ -80,6 +85,7 @@ class AddWantsForm extends React.Component {
     }
 
     const renderWantsFields = (wantsContainerKey) => {
+      if (wantsContainerKey === 'old_want_ids') return null
       const wantsContainerData = wantsFormData[wantsContainerKey]
       const unit = wantsContainerData.unit
       // GK: TODO: put this description somewhere
@@ -109,10 +115,17 @@ class AddWantsForm extends React.Component {
     }
 
     const renderWantsContainer = (wantsContainerKey) => {
+      if (wantsContainerKey === 'old_want_ids') return null
       return (
         <FormGroup key={wantsContainerKey}>
           {renderProductSelect(wantsContainerKey)}
           {renderWantsFields(wantsContainerKey)}
+          <Button
+            variant='outlined'
+            style={buttonStyle}
+            type='button'
+            onClick={handleRemoveWant(wantsContainerKey)}
+          >Remove Want</Button>
         </FormGroup>
       )
     }
@@ -134,13 +147,9 @@ class AddWantsForm extends React.Component {
           }
         })
       })
-      const oldWantIds = Object.keys(wantsFormData).map((wantsContainerId) => {
-        const wantsContainer = wantsFormData[wantsContainerId]
-        return wantsContainer.old_want_ids
-      })
       const formData = {
         wants: flattenDeep(serializedWants),
-        old_want_ids: flattenDeep(oldWantIds)
+        old_want_ids: wantsFormData.old_want_ids
       }
       doCreateWants(formData)
     }

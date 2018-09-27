@@ -1,6 +1,6 @@
 import { createAsyncResourceBundle, createSelector } from 'redux-bundler'
 import cuid from 'cuid'
-import { omit, concat, isNil, find, filter, isEmpty, reduce, groupBy } from 'lodash'
+import { omit, concat, isNil, find, filter, isEmpty, reduce, groupBy, compact } from 'lodash'
 import ms from 'milliseconds'
 
 const bundle = createAsyncResourceBundle({
@@ -56,6 +56,13 @@ bundle.reducer = (state = initialState, action) => {
     }
   }
 
+  if (action.type === 'REMOVE_WANTS_CONTAINER') {
+    return {
+      ...state,
+      wantsFormData: omit(state.wantsFormData, action.payload)
+    }
+  }
+
   if (action.type === 'CLEAR_WANTS_FORM_DATA') {
     return {
       ...state,
@@ -84,8 +91,8 @@ bundle.reducer = (state = initialState, action) => {
       }, {})
       return {
         ...sofar,
+        old_want_ids: compact(concat(sofar.old_want_ids, Object.keys(wantsObject))),
         [productId]: {
-          old_want_ids: Object.keys(wantsObject),
           wants: wantsObject,
           product_id: Number(productId),
           unit: product.unit,
@@ -179,8 +186,12 @@ bundle.selectWantsForThisOrderForCurrentUser = createSelector(
   }
 )
 
-bundle.doAddWantsContainer = (data) => ({ dispatch }) => {
+bundle.doAddWantsContainer = () => ({ dispatch }) => {
   dispatch({ type: 'ADD_WANTS_CONTAINER' })
+}
+
+bundle.doRemoveWantsContainer = (wantsContainerId) => ({ dispatch }) => {
+  dispatch({ type: 'REMOVE_WANTS_CONTAINER', payload: wantsContainerId })
 }
 
 bundle.doUpdateWantsContainerProductId = (wantsContainerKey, productId, products, orderId) => ({ dispatch }) => {
