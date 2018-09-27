@@ -157,6 +157,15 @@ bundle.reducer = (state = initialState, action) => {
   }
 
   if (action.type === 'CREATE_WANTS_SUCCESS') {
+    if (action.payload.order_id) {
+      // GK: NB: this is an edge case where the user has removed all wants from the order
+      // should use a different action and endpoint entirely to deal with this
+      return {
+        ...state,
+        wantsFormData: {},
+        data: filter(state.data, (want) => { return want.order_id !== action.payload.order_id })
+      }
+    }
     return {
       ...state,
       wantsFormData: {},

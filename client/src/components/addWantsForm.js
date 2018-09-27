@@ -136,6 +136,7 @@ class AddWantsForm extends React.Component {
 
     const handleSubmit = () => {
       const serializedWants = Object.keys(wantsFormData).map((wantsContainerId) => {
+        if (wantsContainerId === 'old_want_ids') return null
         const wantsContainer = wantsFormData[wantsContainerId]
         return Object.keys(wantsContainer.wants).map((wantId) => {
           const wantData = wantsContainer.wants[wantId]
