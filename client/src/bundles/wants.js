@@ -1,6 +1,6 @@
 import { createAsyncResourceBundle, createSelector } from 'redux-bundler'
 import cuid from 'cuid'
-import { omit, concat, isNil, find, filter, isEmpty, reduce } from 'lodash'
+import { omit, concat, isNil, find, filter, isEmpty, reduce, groupBy } from 'lodash'
 import ms from 'milliseconds'
 
 const bundle = createAsyncResourceBundle({
@@ -56,6 +56,49 @@ bundle.reducer = (state = initialState, action) => {
     }
   }
 
+  if (action.type === 'CLEAR_WANTS_FORM_DATA') {
+    return {
+      ...state,
+      wantsFormData: {}
+    }
+  }
+
+  if (action.type === 'UPDATE_WANTS_FORM_DATA') {
+    const {
+      wantsForThisOrderForCurrentUser,
+      products
+    } = action.payload
+    const wantsByProductId = groupBy(wantsForThisOrderForCurrentUser, (want) => { return want.product_id })
+    const wantsFormData = reduce(Object.keys(wantsByProductId), (sofar, productId) => {
+      const wantsForThisProduct = wantsByProductId[productId]
+      const product = find(products, { 'id': Number(productId) })
+      const wantsObject = reduce(wantsForThisProduct, (sofar, want) => {
+        const priceSpec = find(product.price_specs, { 'id': want.price_spec_id })
+        return {
+          ...sofar,
+          [want.id]: {
+            ...want,
+            priceSpec: priceSpec
+          }
+        }
+      }, {})
+      return {
+        ...sofar,
+        [productId]: {
+          wants: wantsObject,
+          product_id: Number(productId),
+          unit: product.unit,
+          description: product.description
+        }
+      }
+    }, {})
+    console.log('wantsFormData', wantsFormData)
+    return {
+      ...state,
+      wantsFormData
+    }
+  }
+
   if (action.type === 'UPDATE_WANTS_CONTAINER_PRODUCT_ID') {
     const { products, productId } = action.payload
     const product = find(products, { 'id': productId })
@@ -106,11 +149,35 @@ bundle.reducer = (state = initialState, action) => {
     }
   }
 
+  if (action.type === 'CREATE_WANTS_SUCCESS') {
+    return {
+      ...state,
+      wantsFormData: {},
+      data: concat(filter(state.data, (want) => { return want.order_id !== action.payload[0].order_id }), action.payload)
+    }
+  }
+
   return baseReducer(state, action)
 }
 
 bundle.selectWants = state => state.wants.data
 bundle.selectWantsFormData = state => state.wants.wantsFormData
+bundle.selectWantsForThisOrder = createSelector(
+  'selectWants',
+  'selectThisOrderId',
+  (wants, orderId) => {
+    if (isNil(orderId) || isNil(wants)) return null
+    return filter(wants, { 'order_id': orderId })
+  }
+)
+bundle.selectWantsForThisOrderForCurrentUser = createSelector(
+  'selectWantsForThisOrder',
+  'selectCurrentUser',
+  (wantsForThisOrder, currentUser) => {
+    if (isNil(wantsForThisOrder) || isNil(currentUser)) return null
+    return filter(wantsForThisOrder, { 'user_id': currentUser.id })
+  }
+)
 
 bundle.doAddWantsContainer = (data) => ({ dispatch }) => {
   dispatch({ type: 'ADD_WANTS_CONTAINER' })
@@ -122,6 +189,14 @@ bundle.doUpdateWantsContainerProductId = (wantsContainerKey, productId, products
 
 bundle.doUpdateWantQuantity = (wantsContainerKey, wantId, quantity) => ({ dispatch }) => {
   dispatch({ type: 'UPDATE_WANT_QUANTITY', payload: { wantsContainerKey, wantId, quantity } })
+}
+
+bundle.doUpdateWantsFormData = (wantsAndProducts) => ({ dispatch }) => {
+  dispatch({ type: 'UPDATE_WANTS_FORM_DATA', payload: wantsAndProducts })
+}
+
+bundle.doClearWantsFormData = () => ({ dispatch }) => {
+  dispatch({ type: 'CLEAR_WANTS_FORM_DATA' })
 }
 
 bundle.doCreateWants = (formData) => ({ dispatch, apiFetch, getState }) => {
@@ -147,24 +222,22 @@ bundle.doCreateWants = (formData) => ({ dispatch, apiFetch, getState }) => {
     })
     .then((data) => {
       dispatch({ type: 'CREATE_WANTS_SUCCESS', payload: data })
-      dispatch({ actionCreator: 'doUpdateHash', args: ['my-group'] })
+      dispatch({ actionCreator: 'doUpdateHash', args: ['orders'] })
     })
     .catch((error) => {
       dispatch({ type: 'CREATE_WANTS_ERROR', payload: error })
     })
 }
 
-
-// bundle.reactGroupsFetch = createSelector(
-//   'selectGroupsShouldUpdate',
-//   'selectIsSignedIn',
-//   'selectCurrentUserHasGroup',
-//   (shouldUpdate, isSignedIn, currentUserHasGroup) => {
-//     if (shouldUpdate && isSignedIn && currentUserHasGroup) {
-//       return { actionCreator: 'doFetchGroups' }
-//     }
-//     return false
-//   }
-// )
+bundle.reactWantsFetch = createSelector(
+  'selectWantsShouldUpdate',
+  'selectIsSignedIn',
+  (shouldUpdate, isSignedIn) => {
+    if (shouldUpdate && isSignedIn) {
+      return { actionCreator: 'doFetchWants' }
+    }
+    return false
+  }
+)
 
 export default bundle

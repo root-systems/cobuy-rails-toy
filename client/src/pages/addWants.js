@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'redux-bundler-react'
+import { isNil } from 'lodash'
 
 import AddWantsForm from '../components/addWantsForm'
 
@@ -10,8 +11,13 @@ const AddWants = ({
   wantsFormData,
   doUpdateWantsContainerProductId,
   doUpdateWantQuantity,
-  doCreateWants
+  doCreateWants,
+  wantsForThisOrder,
+  doUpdateWantsFormData,
+  wantsForThisOrderForCurrentUser,
+  doClearWantsFormData
  }) => {
+  if (isNil(wantsForThisOrderForCurrentUser) || isNil(thisOrderProducts)) return null
   return (
     <AddWantsForm
       order={thisOrder}
@@ -21,6 +27,10 @@ const AddWants = ({
       doUpdateWantsContainerProductId={doUpdateWantsContainerProductId}
       doUpdateWantQuantity={doUpdateWantQuantity}
       doCreateWants={doCreateWants}
+      wantsForThisOrder={wantsForThisOrder}
+      doUpdateWantsFormData={doUpdateWantsFormData}
+      wantsForThisOrderForCurrentUser={wantsForThisOrderForCurrentUser}
+      doClearWantsFormData={doClearWantsFormData}
     />
   )
 }
@@ -33,5 +43,9 @@ export default connect(
   'doUpdateWantsContainerProductId',
   'doUpdateWantQuantity',
   'doCreateWants',
+  'selectWantsForThisOrder',
+  'doUpdateWantsFormData',
+  'selectWantsForThisOrderForCurrentUser',
+  'doClearWantsFormData',
   AddWants
 )

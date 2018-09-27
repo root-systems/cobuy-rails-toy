@@ -22,130 +22,146 @@ const headerStyle = {
   textAlign: 'center'
 }
 
-const AddWantsForm = (props) => {
-  const {
-    order,
-    products,
-    doAddWantsContainer,
-    wantsFormData,
-    doUpdateWantsContainerProductId,
-    doUpdateWantQuantity,
-    doCreateWants
-  } = props
-  if (isNil(order) || isNil(products)) return null
-
-  const handleAddWant = () => {
-    doAddWantsContainer()
+class AddWantsForm extends React.Component {
+  componentDidMount () {
+    const {
+      wantsForThisOrderForCurrentUser,
+      doUpdateWantsFormData,
+      doClearWantsFormData,
+      products
+    } = this.props
+    if (isEmpty(wantsForThisOrderForCurrentUser)) {
+      doClearWantsFormData()
+    } else {
+      doUpdateWantsFormData({wantsForThisOrderForCurrentUser, products})
+    }
   }
 
-  const renderMenuItems = () => {
-    return map(products, (product) => {
+  render () {
+    const {
+      order,
+      products,
+      doAddWantsContainer,
+      wantsFormData,
+      doUpdateWantsContainerProductId,
+      doUpdateWantQuantity,
+      doCreateWants
+    } = this.props
+    if (isNil(order) || isNil(products)) return null
+
+    const handleAddWant = () => {
+      doAddWantsContainer()
+    }
+
+    const renderMenuItems = () => {
+      return map(products, (product) => {
+        return (
+          <MenuItem value={product.id} key={product.id}>
+            {product.name}
+          </MenuItem>
+        )
+      })
+    }
+
+    const renderProductSelect = (wantsContainerKey) => {
+      const productId = wantsFormData[wantsContainerKey].product_id
       return (
-        <MenuItem value={product.id} key={product.id}>
-          {product.name}
-        </MenuItem>
+        <div style={containerStyle}>
+          <InputLabel shrink={!isNil(productId)}>Product</InputLabel>
+          <Select value={productId} onChange={handleProductSelectChange(wantsContainerKey, products, order.id)}>
+            {renderMenuItems()}
+          </Select>
+        </div>
       )
-    })
-  }
+    }
 
-  const renderProductSelect = (wantsContainerKey) => {
-    const productId = wantsFormData[wantsContainerKey].product_id
+    const handleWantQuantityChange = (wantsContainerKey, wantId) => (e) => {
+      doUpdateWantQuantity(wantsContainerKey, wantId, e.target.value)
+    }
+
+    const renderWantsFields = (wantsContainerKey) => {
+      const wantsContainerData = wantsFormData[wantsContainerKey]
+      const unit = wantsContainerData.unit
+      // GK: TODO: put this description somewhere
+      const productDescription = wantsContainerData.description
+      return Object.keys(wantsContainerData.wants).map((wantId) => {
+        const wantData = wantsContainerData.wants[wantId]
+        if (isNil(wantData)) return null
+        const priceSpec = wantData.priceSpec
+        if (isNil(priceSpec)) return null
+        return (
+          <div>
+            <TextField
+              key={wantId}
+              label={`At $${priceSpec.price} per ${unit} (minimum ${priceSpec.minimum}), I want`}
+              value={wantData.quantity}
+              type='number'
+              onChange={handleWantQuantityChange(wantsContainerKey, wantId)}
+            />
+          </div>
+        )
+      })
+    }
+
+    const renderWantsContainers = () => {
+      if (isEmpty(wantsFormData)) return null
+      return Object.keys(wantsFormData).map(renderWantsContainer)
+    }
+
+    const renderWantsContainer = (wantsContainerKey) => {
+      return (
+        <FormGroup key={wantsContainerKey}>
+          {renderProductSelect(wantsContainerKey)}
+          {renderWantsFields(wantsContainerKey)}
+        </FormGroup>
+      )
+    }
+
+    const handleProductSelectChange = (wantsContainerKey, products, orderId) => (e) => {
+      doUpdateWantsContainerProductId(wantsContainerKey, Number(e.target.value), products, orderId)
+    }
+
+    const handleSubmit = () => {
+      const serializedWants = Object.keys(wantsFormData).map((wantsContainerId) => {
+        const wantsContainer = wantsFormData[wantsContainerId]
+        return Object.keys(wantsContainer.wants).map((wantId) => {
+          const wantData = wantsContainer.wants[wantId]
+          return {
+            product_id: wantData.product_id,
+            price_spec_id: wantData.price_spec_id,
+            order_id: wantData.order_id,
+            quantity: wantData.quantity
+          }
+        })
+      })
+      const formData = {
+        wants: flatten(serializedWants)
+      }
+      console.log('formData', formData)
+      doCreateWants(formData)
+    }
+
     return (
       <div style={containerStyle}>
-        <InputLabel shrink={!isNil(productId)}>Product</InputLabel>
-        <Select value={productId} onChange={handleProductSelectChange(wantsContainerKey, products, order.id)}>
-          {renderMenuItems()}
-        </Select>
+        <h1 style={headerStyle}>Add Wants to Order: {order.name}</h1>
+        <form style={formStyle}>
+          {renderWantsContainers()}
+        </form>
+        <Button
+          variant='outlined'
+          style={buttonStyle}
+          type='button'
+          onClick={handleAddWant}
+        >Add Want</Button>
+        <Button
+          variant='outlined'
+          style={buttonStyle}
+          type='button'
+          onClick={handleSubmit}
+        >Save Wants to Order</Button>
       </div>
     )
   }
-
-  const handleWantQuantityChange = (wantsContainerKey, wantId) => (e) => {
-    doUpdateWantQuantity(wantsContainerKey, wantId, e.target.value)
-  }
-
-  const renderWantsFields = (wantsContainerKey) => {
-    const wantsContainerData = wantsFormData[wantsContainerKey]
-    const unit = wantsContainerData.unit
-    // GK: TODO: put this description somewhere
-    const productDescription = wantsContainerData.description
-    return Object.keys(wantsContainerData.wants).map((wantId) => {
-      const wantData = wantsContainerData.wants[wantId]
-      if (isNil(wantData)) return null
-      const priceSpec = wantData.priceSpec
-      if (isNil(priceSpec)) return null
-      return (
-        <div>
-          <TextField
-            key={wantId}
-            label={`At $${priceSpec.price} per ${unit} (minimum ${priceSpec.minimum}), I want`}
-            value={wantData.quantity}
-            type='number'
-            onChange={handleWantQuantityChange(wantsContainerKey, wantId)}
-          />
-        </div>
-      )
-    })
-  }
-
-  const renderWantsContainers = () => {
-    if (isEmpty(wantsFormData)) return null
-    return Object.keys(wantsFormData).map(renderWantsContainer)
-  }
-
-  const renderWantsContainer = (wantsContainerKey) => {
-    return (
-      <FormGroup key={wantsContainerKey}>
-        {renderProductSelect(wantsContainerKey)}
-        {renderWantsFields(wantsContainerKey)}
-      </FormGroup>
-    )
-  }
-
-  const handleProductSelectChange = (wantsContainerKey, products, orderId) => (e) => {
-    doUpdateWantsContainerProductId(wantsContainerKey, Number(e.target.value), products, orderId)
-  }
-
-  const handleSubmit = () => {
-    const serializedWants = Object.keys(wantsFormData).map((wantsContainerId) => {
-      const wantsContainer = wantsFormData[wantsContainerId]
-      return Object.keys(wantsContainer.wants).map((wantId) => {
-        const wantData = wantsContainer.wants[wantId]
-        return {
-          product_id: wantData.product_id,
-          price_spec_id: wantData.price_spec_id,
-          order_id: wantData.order_id,
-          quantity: wantData.quantity
-        }
-      })
-    })
-    const formData = {
-      wants: flatten(serializedWants)
-    }
-    console.log('formData', formData)
-    doCreateWants(formData)
-  }
-
-  return (
-    <div style={containerStyle}>
-      <h1 style={headerStyle}>Add Wants to Order: {order.name}</h1>
-      <form style={formStyle}>
-        {renderWantsContainers()}
-      </form>
-      <Button
-        variant='outlined'
-        style={buttonStyle}
-        type='button'
-        onClick={handleAddWant}
-      >Add Want</Button>
-      <Button
-        variant='outlined'
-        style={buttonStyle}
-        type='button'
-        onClick={handleSubmit}
-      >Save Wants to Order</Button>
-    </div>
-  )
 }
 
 export default AddWantsForm
