@@ -38,12 +38,13 @@ class LineItem < ApplicationRecord
   def self.aggregate (line_item, wants, price_specs)
     aggregated_wants_per_price_spec = price_specs.map do |price_spec|
       related_wants = wants.select { |w| w.price_spec_id == price_spec.id }
-      total_quantity_wanted = related_wants.reduce do |sofar, related_want|
+      total_quantity_wanted = related_wants.reduce(0) do |sofar, related_want|
         sofar + related_want.quantity
       end
+      minimum_achieved = total_quantity_wanted > price_spec.minimum
       { price: price_spec.price,
         total_quantity_wanted: total_quantity_wanted,
-        minimum_achieved: total_quantity_wanted > price_spec.minimum }
+        minimum_achieved: minimum_achieved }
     end
     achieved_aggregated_wants_per_price_spec = aggregated_wants_per_price_spec.select { |x| x[:minimum_achieved] == true }
     lowest_priced = achieved_aggregated_wants_per_price_spec.reduce do |last, current|
@@ -53,9 +54,10 @@ class LineItem < ApplicationRecord
         current
       end
     end
-    line_item.quantity = lowest_priced.quantity
-    line_item.price_per_unit = lowest_priced.price
-    line_item.total_price = lowest_priced.quantity * lowest_priced.price
+    puts lowest_priced
+    line_item.quantity = lowest_priced[:total_quantity_wanted]
+    line_item.price_per_unit = lowest_priced[:price]
+    line_item.total_price = lowest_priced[:total_quantity_wanted] * lowest_priced[:price]
     line_item.save!
   end
 
