@@ -16,6 +16,10 @@ class LineItem < ApplicationRecord
         end
         self.aggregate(line_item, wants, price_specs)
       else
+        if wants.none?
+          puts "no related line item exists and no wants exist so do nothing"
+          return
+        end
         puts "a line item doesn't yet exist for this product and order, creating one"
         new_line_item = LineItem.create!(order_id: order_id, product_id: product_id)
         self.aggregate(new_line_item, wants, price_specs)
