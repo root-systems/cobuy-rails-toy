@@ -36,6 +36,27 @@ class LineItem < ApplicationRecord
   end
 
   def self.aggregate (line_item, wants, price_specs)
-    # GK: TODO: aggregation logic here
+    aggregated_wants_per_price_spec = price_specs.map do |price_spec|
+      related_wants = wants.select { |w| w.price_spec_id == price_spec.id }
+      total_quantity_wanted = related_wants.reduce do |sofar, related_want|
+        sofar + related_want.quantity
+      end
+      { price: price_spec.price,
+        total_quantity_wanted: total_quantity_wanted,
+        minimum_achieved: total_quantity_wanted > price_spec.minimum }
+    end
+    achieved_aggregated_wants_per_price_spec = aggregated_wants_per_price_spec.select { |x| x[:minimum_achieved] == true }
+    lowest_priced = achieved_aggregated_wants_per_price_spec.reduce do |last, current|
+      if last[:price] < current[:price]
+        last
+      else
+        current
+      end
+    end
+    line_item.quantity = lowest_priced.quantity
+    line_item.price_per_unit = lowest_priced.price
+    line_item.total_price = lowest_priced.quantity * lowest_priced.price
+    line_item.save!
   end
+
 end
