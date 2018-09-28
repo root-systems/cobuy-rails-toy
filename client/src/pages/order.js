@@ -5,12 +5,16 @@ import OrderDetails from '../components/orderDetails'
 
 const Order = ({
   lineItemsForThisOrderByProductId,
-  products
+  thisOrderProducts,
+  thisOrderId,
+  doUpdateHash
  }) => {
   return (
     <OrderDetails
       lineItemsByProductId={lineItemsForThisOrderByProductId}
-      products={products}
+      products={thisOrderProducts}
+      doUpdateHash={doUpdateHash}
+      orderId={thisOrderId}
     />
   )
 }
@@ -18,5 +22,7 @@ const Order = ({
 export default connect(
   'selectLineItemsForThisOrderByProductId',
   'selectThisOrderProducts',
+  'doUpdateHash',
+  'selectThisOrderId',
   Order
 )

@@ -28,6 +28,7 @@ const bundle = createAsyncResourceBundle({
 })
 
 const initialState = {
+  shouldFetchLineItems: false,
   // needed by createAsyncResourceBundle
   data: null,
   errorTimes: [],
@@ -41,6 +42,21 @@ const initialState = {
 
 const baseReducer = bundle.reducer
 bundle.reducer = (state = initialState, action) => {
+  if (action.type === 'CREATE_WANTS_SUCCESS') {
+    return {
+      ...state,
+      shouldFetchLineItems: true
+    }
+  }
+
+  if (action.type === 'LINEITEMS_FETCH_FINISHED') {
+    return {
+      ...state,
+      shouldFetchLineItems: false,
+      data: action.payload
+    }
+  }
+
   return baseReducer(state, action)
 }
 
@@ -56,15 +72,27 @@ bundle.selectLineItemsForThisOrder = createSelector(
 bundle.selectLineItemsForThisOrderByProductId = createSelector(
   'selectLineItemsForThisOrder',
   (lineItems) => {
-    return groupBy(lineItems, 'productId')
+    return groupBy(lineItems, (lineItem) => { return lineItem.product_id })
   }
 )
+bundle.selectShouldFetchLineItems = state => state.lineItems.shouldFetchLineItems
 
 bundle.reactLineItemsFetch = createSelector(
   'selectLineItemsShouldUpdate',
   'selectIsSignedIn',
   (shouldUpdate, isSignedIn) => {
     if (shouldUpdate && isSignedIn) {
+      return { actionCreator: 'doFetchLineItems' }
+    }
+    return false
+  }
+)
+
+bundle.reactFetchLineItemsAfterWantsUpdate = createSelector(
+  'selectIsSignedIn',
+  'selectShouldFetchLineItems',
+  (isSignedIn, shouldFetchLineItems) => {
+    if (isSignedIn && shouldFetchLineItems) {
       return { actionCreator: 'doFetchLineItems' }
     }
     return false
