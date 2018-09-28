@@ -1,6 +1,6 @@
 import { createAsyncResourceBundle, createSelector } from 'redux-bundler'
 import cuid from 'cuid'
-import { omit, concat, isNil, find, filter } from 'lodash'
+import { omit, concat, isNil, find, filter, groupBy } from 'lodash'
 import ms from 'milliseconds'
 
 const bundle = createAsyncResourceBundle({
@@ -51,6 +51,12 @@ bundle.selectLineItemsForThisOrder = createSelector(
   (orderId, lineItems) => {
     if (isNil(orderId) || isNil(lineItems)) return null
     return filter(lineItems, (lineItem) => { return lineItem.order_id === orderId })
+  }
+)
+bundle.selectLineItemsForThisOrderByProductId = createSelector(
+  'selectLineItemsForThisOrder',
+  (lineItems) => {
+    return groupBy(lineItems, 'productId')
   }
 )
 
