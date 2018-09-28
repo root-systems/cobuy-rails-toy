@@ -9,6 +9,7 @@ import suppliersBundle from './suppliers'
 import groupsBundle from './groups'
 import productsBundle from './products'
 import wantsBundle from './wants'
+import lineItemsBundle from './lineItems'
 
 import routes from './routes'
 
@@ -24,6 +25,7 @@ export default composeBundles(
   groupsBundle,
   productsBundle,
   wantsBundle,
+  lineItemsBundle,
   createUrlBundle(),
   debugBundle,
   extraArgs,
