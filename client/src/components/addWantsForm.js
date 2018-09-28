@@ -46,7 +46,8 @@ class AddWantsForm extends React.Component {
       doUpdateWantsContainerProductId,
       doUpdateWantQuantity,
       doCreateWants,
-      doRemoveWantsContainer
+      doRemoveWantsContainer,
+      wantIdsToBeDisabled
     } = this.props
     if (isNil(order) || isNil(products)) return null
 
@@ -85,7 +86,6 @@ class AddWantsForm extends React.Component {
     }
 
     const renderWantsFields = (wantsContainerKey) => {
-      if (wantsContainerKey === 'old_want_ids') return null
       const wantsContainerData = wantsFormData[wantsContainerKey]
       const unit = wantsContainerData.unit
       // GK: TODO: put this description somewhere
@@ -96,7 +96,7 @@ class AddWantsForm extends React.Component {
         const priceSpec = wantData.priceSpec
         if (isNil(priceSpec)) return null
         return (
-          <div>
+          <div key={wantId}>
             <TextField
               key={wantId}
               label={`At $${priceSpec.price} per ${unit} (minimum ${priceSpec.minimum}), I want`}
@@ -115,7 +115,6 @@ class AddWantsForm extends React.Component {
     }
 
     const renderWantsContainer = (wantsContainerKey) => {
-      if (wantsContainerKey === 'old_want_ids') return null
       return (
         <FormGroup key={wantsContainerKey}>
           {renderProductSelect(wantsContainerKey)}
@@ -136,7 +135,6 @@ class AddWantsForm extends React.Component {
 
     const handleSubmit = () => {
       const serializedWants = Object.keys(wantsFormData).map((wantsContainerId) => {
-        if (wantsContainerId === 'old_want_ids') return null
         const wantsContainer = wantsFormData[wantsContainerId]
         return Object.keys(wantsContainer.wants).map((wantId) => {
           const wantData = wantsContainer.wants[wantId]
@@ -150,7 +148,7 @@ class AddWantsForm extends React.Component {
       })
       const formData = {
         wants: flattenDeep(serializedWants),
-        old_want_ids: wantsFormData.old_want_ids
+        old_want_ids: wantIdsToBeDisabled
       }
       doCreateWants(formData)
     }

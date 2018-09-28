@@ -16,7 +16,8 @@ const AddWants = ({
   doUpdateWantsFormData,
   wantsForThisOrderForCurrentUser,
   doClearWantsFormData,
-  doRemoveWantsContainer
+  doRemoveWantsContainer,
+  wantIdsToBeDisabled
  }) => {
   if (isNil(wantsForThisOrderForCurrentUser) || isNil(thisOrderProducts)) return null
   return (
@@ -33,6 +34,7 @@ const AddWants = ({
       wantsForThisOrderForCurrentUser={wantsForThisOrderForCurrentUser}
       doClearWantsFormData={doClearWantsFormData}
       doRemoveWantsContainer={doRemoveWantsContainer}
+      wantIdsToBeDisabled={wantIdsToBeDisabled}
     />
   )
 }
@@ -50,5 +52,6 @@ export default connect(
   'selectWantsForThisOrderForCurrentUser',
   'doClearWantsFormData',
   'doRemoveWantsContainer',
+  'selectWantIdsToBeDisabled',
   AddWants
 )
