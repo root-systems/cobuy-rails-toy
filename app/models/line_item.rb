@@ -4,7 +4,7 @@ class LineItem < ApplicationRecord
 
   def self.recompute (order_id, product_ids)
     product_ids.each do |product_id|
-      line_item = self.get_related_line_item
+      line_item = self.get_related_line_item(order_id, product_id)
       wants = self.get_related_wants(order_id, product_id)
       price_specs = self.get_related_price_specs(product_id)
       if line_item.present?
