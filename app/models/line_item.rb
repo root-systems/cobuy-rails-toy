@@ -54,7 +54,6 @@ class LineItem < ApplicationRecord
         current
       end
     end
-    puts lowest_priced
     line_item.quantity = lowest_priced[:total_quantity_wanted]
     line_item.price_per_unit = lowest_priced[:price]
     line_item.total_price = lowest_priced[:total_quantity_wanted] * lowest_priced[:price]
