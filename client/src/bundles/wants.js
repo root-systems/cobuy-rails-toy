@@ -28,6 +28,7 @@ const bundle = createAsyncResourceBundle({
 })
 
 const initialState = {
+  wantIdsToBeDisabled: [],
   wantsFormData: {},
   // needed by createAsyncResourceBundle
   data: null,
@@ -66,7 +67,8 @@ bundle.reducer = (state = initialState, action) => {
   if (action.type === 'CLEAR_WANTS_FORM_DATA') {
     return {
       ...state,
-      wantsFormData: {}
+      wantsFormData: {},
+      wantIdsToBeDisabled: []
     }
   }
 
@@ -91,7 +93,7 @@ bundle.reducer = (state = initialState, action) => {
       }, {})
       return {
         ...sofar,
-        old_want_ids: compact(concat(sofar.old_want_ids, Object.keys(wantsObject))),
+        oldWantIds: compact(concat(sofar.oldWantIds, Object.keys(wantsObject))),
         [productId]: {
           wants: wantsObject,
           product_id: Number(productId),
@@ -102,7 +104,8 @@ bundle.reducer = (state = initialState, action) => {
     }, {})
     return {
       ...state,
-      wantsFormData
+      wantIdsToBeDisabled: wantsFormData.oldWantIds,
+      wantsFormData: omit(wantsFormData, 'oldWantIds')
     }
   }
 
@@ -163,12 +166,14 @@ bundle.reducer = (state = initialState, action) => {
       return {
         ...state,
         wantsFormData: {},
+        wantIdsToBeDisabled: [],
         data: filter(state.data, (want) => { return want.order_id !== action.payload.order_id })
       }
     }
     return {
       ...state,
       wantsFormData: {},
+      wantIdsToBeDisabled: [],
       data: concat(filter(state.data, (want) => { return want.order_id !== action.payload[0].order_id }), action.payload)
     }
   }
@@ -194,6 +199,7 @@ bundle.selectWantsForThisOrderForCurrentUser = createSelector(
     return filter(wantsForThisOrder, { 'user_id': currentUser.id })
   }
 )
+bundle.selectWantIdsToBeDisabled = state => state.wants.wantIdsToBeDisabled
 
 bundle.doAddWantsContainer = () => ({ dispatch }) => {
   dispatch({ type: 'ADD_WANTS_CONTAINER' })
