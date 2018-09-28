@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_27_023811) do
+ActiveRecord::Schema.define(version: 2018_09_28_074141) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,9 @@ ActiveRecord::Schema.define(version: 2018_09_27_023811) do
     t.decimal "total_price"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "price_spec_id"
+    t.boolean "minimum_achieved", default: false
+    t.boolean "confirmed", default: false
     t.index ["order_id"], name: "index_line_items_on_order_id"
     t.index ["product_id"], name: "index_line_items_on_product_id"
   end
