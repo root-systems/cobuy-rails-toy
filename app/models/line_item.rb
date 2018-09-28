@@ -11,7 +11,7 @@ class LineItem < ApplicationRecord
         if wants.any?
           self.aggregate(line_item, wants, price_spec)
         else
-          line_item.update_attributes(quantity: 0, total_price: 0, minimum_achieved: false)
+          line_item.destroy!
         end
       end
     end
