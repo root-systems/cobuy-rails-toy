@@ -48,9 +48,11 @@ class LineItem < ApplicationRecord
       minimum_achieved = total_quantity_wanted > price_spec.minimum
       { price: price_spec.price,
         total_quantity_wanted: total_quantity_wanted,
+        price_spec_id: price_spec.id,
         minimum_achieved: minimum_achieved }
     end
     achieved_aggregated_wants_per_price_spec = aggregated_wants_per_price_spec.select { |x| x[:minimum_achieved] == true }
+    # GK: TODO: what if minimum is not achieved ?
     lowest_priced = achieved_aggregated_wants_per_price_spec.reduce do |last, current|
       if last[:price] < current[:price]
         last
@@ -61,6 +63,7 @@ class LineItem < ApplicationRecord
     line_item.quantity = lowest_priced[:total_quantity_wanted]
     line_item.price_per_unit = lowest_priced[:price]
     line_item.total_price = lowest_priced[:total_quantity_wanted] * lowest_priced[:price]
+    line_item.price_spec_id = lowest_priced[:price_spec_id]
     line_item.save!
   end
 
