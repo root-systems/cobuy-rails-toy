@@ -9,7 +9,6 @@ const OrderConfirmation = ({
   thisOrderId,
   doUpdateHash,
   thisOrder,
-  doConfirmOrder
  }) => {
   return (
     <OrderConfirmationDetails
@@ -17,7 +16,6 @@ const OrderConfirmation = ({
       products={thisOrderProducts}
       doUpdateHash={doUpdateHash}
       orderId={thisOrderId}
-      doConfirmOrder={doConfirmOrder}
       order={thisOrder}
     />
   )

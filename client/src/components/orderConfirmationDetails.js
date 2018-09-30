@@ -12,7 +12,6 @@ const OrderConfirmationDetails = ({
   products,
   orderId,
   doUpdateHash,
-  doConfirmOrder,
   order
 }) => {
   if (isNil(lineItems) || isNil(products)) return null
@@ -33,7 +32,7 @@ const OrderConfirmationDetails = ({
 
   return (
     <div style={containerStyle}>
-      <h1>Order Details: {order.name}</h1>
+      <h1>Order Confirmation: {order.name}</h1>
       {renderConfirmedLineItems()}
       <Button variant='outlined' onClick={() => { doUpdateHash(`orders/${orderId}`) }}>Back to Order Details</Button>
     </div>
