@@ -7,7 +7,9 @@ const Order = ({
   lineItemsForThisOrderByProductId,
   thisOrderProducts,
   thisOrderId,
-  doUpdateHash
+  doUpdateHash,
+  thisOrder,
+  doConfirmOrder
  }) => {
   return (
     <OrderDetails
@@ -15,6 +17,8 @@ const Order = ({
       products={thisOrderProducts}
       doUpdateHash={doUpdateHash}
       orderId={thisOrderId}
+      doConfirmOrder={doConfirmOrder}
+      order={thisOrder}
     />
   )
 }
@@ -24,5 +28,7 @@ export default connect(
   'selectThisOrderProducts',
   'doUpdateHash',
   'selectThisOrderId',
+  'selectThisOrder',
+  'doConfirmOrder',
   Order
 )
