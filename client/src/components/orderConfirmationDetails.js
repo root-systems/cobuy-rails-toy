@@ -7,33 +7,25 @@ const containerStyle = {
   flexDirection: 'column'
 }
 
-const OrderDetails = ({
-  lineItemsByProductId,
+const OrderConfirmationDetails = ({
+  lineItems,
   products,
   orderId,
   doUpdateHash,
   doConfirmOrder,
   order
 }) => {
-  if (isNil(lineItemsByProductId) || isNil(products)) return null
+  if (isNil(lineItems) || isNil(products)) return null
 
-  const renderLineItems = (lineItems, product) => {
+  const renderConfirmedLineItems = () => {
+    if (isEmpty(lineItems)) return null
     return map(lineItems, (lineItem) => {
+      const product = find(products, { 'id': lineItem.product_id })
       const priceSpec = find(product.price_specs, (priceSpec) => { return priceSpec.id === lineItem.price_spec_id })
-      return (
-        <p>{`${lineItem.quantity} ${product.unit} wanted at $${lineItem.price_per_unit} per ${product.unit} (minimum of ${priceSpec.minimum} required)`}</p>
-      )
-    })
-  }
-
-  const renderLineItemsByProduct = () => {
-    if (isEmpty(lineItemsByProductId)) return null
-    return Object.keys(lineItemsByProductId).map((productId) => {
-      const product = find(products, { 'id': Number(productId) })
       return (
         <div>
           <h3>{product.name}</h3>
-          {renderLineItems(lineItemsByProductId[productId], product)}
+          <p>{`${lineItem.quantity} ${product.unit} wanted at $${lineItem.price_per_unit} per ${product.unit} (minimum of ${priceSpec.minimum} required)`}</p>
         </div>
       )
     })
@@ -43,10 +35,10 @@ const OrderDetails = ({
     <div style={containerStyle}>
       <h1>Order Details: {order.name}</h1>
       <Button variant='outlined' onClick={() => { doUpdateHash(`orders/${orderId}/wants`) }}>Add/Edit my Wants</Button>
-      {renderLineItemsByProduct()}
+      {renderConfirmedLineItems()}
       <Button variant='outlined' onClick={() => { doConfirmOrder(orderId) }}>Confirm & Close Order</Button>
     </div>
   )
 }
 
-export default OrderDetails
+export default OrderConfirmationDetails

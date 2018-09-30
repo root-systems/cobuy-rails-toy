@@ -82,6 +82,13 @@ bundle.selectLineItemsForThisOrderByProductId = createSelector(
     return groupBy(lineItems, (lineItem) => { return lineItem.product_id })
   }
 )
+bundle.selectConfirmedLineItemsForThisOrder = createSelector(
+  'selectLineItemsForThisOrder',
+  (lineItems) => {
+    return filter(lineItems, (lineItem) => { return !isNil(lineItem.confirmed_at) })
+  }
+)
+
 bundle.selectShouldFetchLineItems = state => state.lineItems.shouldFetchLineItems
 
 bundle.reactLineItemsFetch = createSelector(

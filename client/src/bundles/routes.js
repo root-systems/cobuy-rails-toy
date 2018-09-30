@@ -18,6 +18,7 @@ import EditProduct from '../pages/editProduct'
 import Home from '../pages/home'
 import AddWants from '../pages/addWants'
 import Order from '../pages/order'
+import OrderConfirmation from '../pages/orderConfirmation'
 
 const routes = {
   '': {
@@ -90,6 +91,10 @@ const routes = {
   },
   'orders/:orderId': {
     component: Order,
+    protected: true
+  },
+  'orders/:orderId/confirmation': {
+    component: OrderConfirmation,
     protected: true
   },
   '*': {
