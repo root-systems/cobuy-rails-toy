@@ -4,7 +4,8 @@ module Api::V1
 
     # GET /line_items
     def index
-      @line_items = LineItem.all
+      current_user_group_orders = Order.where(group_id: current_user.group_id)
+      @line_items = LineItem.where(order_id: current_user_group_orders)
       render :json => @line_items
     end
 

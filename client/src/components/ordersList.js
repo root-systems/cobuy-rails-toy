@@ -28,7 +28,7 @@ const OrdersList = (props) => {
   const renderOrder = (order) => {
     return (
       <Card key={order.id} style={innerContainerStyle}>
-        <CardActionArea onClick={() => { doUpdateHash(`orders/${order.id}/wants`) }}>
+        <CardActionArea onClick={() => { doUpdateHash(`orders/${order.id}`) }}>
           <CardContent>
             <Typography variant='headline'>
               {`Order ${order.id}`}

@@ -248,7 +248,7 @@ bundle.doCreateWants = (formData) => ({ dispatch, apiFetch, getState }) => {
     })
     .then((data) => {
       dispatch({ type: 'CREATE_WANTS_SUCCESS', payload: data })
-      dispatch({ actionCreator: 'doUpdateHash', args: ['orders'] })
+      dispatch({ actionCreator: 'doUpdateHash', args: [`orders`] })
     })
     .catch((error) => {
       dispatch({ type: 'CREATE_WANTS_ERROR', payload: error })
