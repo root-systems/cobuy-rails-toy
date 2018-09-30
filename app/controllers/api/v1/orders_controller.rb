@@ -1,6 +1,6 @@
 module Api::V1
   class OrdersController < ApiController
-    before_action :set_order, only: [:show, :update, :destroy]
+    before_action :set_order, only: [:show, :update, :destroy, :confirm]
 
     # GET /orders
     def index
@@ -33,6 +33,12 @@ module Api::V1
         render json: { errors: @order.errors.full_messages },
                status: :unprocessable_entity
       end
+    end
+
+    # PATCH /orders/:id/confirm
+    def confirm
+      @order.confirmed_at = Time.now
+      LineItem.confirm(@order.id)
     end
 
     # DELETE /orders/:id
