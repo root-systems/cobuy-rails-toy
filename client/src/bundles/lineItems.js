@@ -57,6 +57,13 @@ bundle.reducer = (state = initialState, action) => {
     }
   }
 
+  if (action.type === 'CONFIRM_ORDER_SUCCESS') {
+    return {
+      ...state,
+      shouldFetchLineItems: true
+    }
+  }
+
   return baseReducer(state, action)
 }
 
