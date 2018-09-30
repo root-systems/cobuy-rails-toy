@@ -21,7 +21,7 @@ const OrderDetails = ({
     return map(lineItems, (lineItem) => {
       const priceSpec = find(product.price_specs, (priceSpec) => { return priceSpec.id === lineItem.price_spec_id })
       return (
-        <p>{`${lineItem.quantity} ${product.unit} wanted at $${lineItem.price_per_unit} per ${product.unit} (minimum of ${priceSpec.minimum} required)`}</p>
+        <p key={lineItem.id}>{`${lineItem.quantity} ${product.unit} wanted at $${lineItem.price_per_unit} per ${product.unit} (minimum of ${priceSpec.minimum} required)`}</p>
       )
     })
   }
@@ -31,7 +31,7 @@ const OrderDetails = ({
     return Object.keys(lineItemsByProductId).map((productId) => {
       const product = find(products, { 'id': Number(productId) })
       return (
-        <div>
+        <div key={productId}>
           <h3>{product.name}</h3>
           {renderLineItems(lineItemsByProductId[productId], product)}
         </div>
@@ -42,9 +42,17 @@ const OrderDetails = ({
   return (
     <div style={containerStyle}>
       <h1>Order Details: {order.name}</h1>
-      <Button variant='outlined' onClick={() => { doUpdateHash(`orders/${orderId}/wants`) }}>Add/Edit my Wants</Button>
+      {
+        isNil(order.confirmed_at)
+          ? <Button variant='outlined' onClick={() => { doUpdateHash(`orders/${orderId}/wants`) }}>Add/Edit my Wants</Button>
+          : <h2>Confirmed {order.confirmed_at}</h2>
+      }
       {renderLineItemsByProduct()}
-      <Button variant='outlined' onClick={() => { doConfirmOrder(orderId) }}>Confirm & Close Order</Button>
+      {
+        !isNil(order.confirmed_at)
+          ? <Button variant='outlined' onClick={() => { doUpdateHash(`orders/${orderId}/confirmation`) }}>View Confirmation Details</Button>
+          : <Button variant='outlined' onClick={() => { doConfirmOrder(orderId) }}>Confirm & Close Order</Button>
+      }
     </div>
   )
 }

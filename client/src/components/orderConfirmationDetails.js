@@ -23,7 +23,7 @@ const OrderConfirmationDetails = ({
       const product = find(products, { 'id': lineItem.product_id })
       const priceSpec = find(product.price_specs, (priceSpec) => { return priceSpec.id === lineItem.price_spec_id })
       return (
-        <div>
+        <div key={lineItem.id}>
           <h3>{product.name}</h3>
           <p>{`${lineItem.quantity} ${product.unit} wanted at $${lineItem.price_per_unit} per ${product.unit} (minimum of ${priceSpec.minimum} required)`}</p>
         </div>
@@ -34,9 +34,8 @@ const OrderConfirmationDetails = ({
   return (
     <div style={containerStyle}>
       <h1>Order Details: {order.name}</h1>
-      <Button variant='outlined' onClick={() => { doUpdateHash(`orders/${orderId}/wants`) }}>Add/Edit my Wants</Button>
       {renderConfirmedLineItems()}
-      <Button variant='outlined' onClick={() => { doConfirmOrder(orderId) }}>Confirm & Close Order</Button>
+      <Button variant='outlined' onClick={() => { doUpdateHash(`orders/${orderId}`) }}>Back to Order Details</Button>
     </div>
   )
 }

@@ -181,7 +181,7 @@ bundle.doConfirmOrder = (orderId) => ({ dispatch, apiFetch, getState }) => {
     })
     .then((data) => {
       dispatch({ type: 'CONFIRM_ORDER_SUCCESS', payload: data })
-      dispatch({ actionCreator: 'doUpdateHash', args: [`orders`] })
+      dispatch({ actionCreator: 'doUpdateHash', args: [`orders/${orderId}/confirmation`] })
     })
     .catch((error) => {
       dispatch({ type: 'CONFIRM_ORDER_ERROR', payload: error })
