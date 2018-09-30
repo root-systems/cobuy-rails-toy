@@ -23,7 +23,7 @@ class LineItem < ApplicationRecord
     line_items_by_product_id.each do |product_id, line_items|
       cheapest_achieved_line_item = line_items.select { |li| li.minimum_achieved == true }.sort_by { |li| li.price_per_unit }.first
       if cheapest_achieved_line_item.present?
-        cheapest_achieved_line_item.confirmed_at = Time.now
+        cheapest_achieved_line_item.confirmed = true
         cheapest_achieved_line_item.save!
       else
         return

@@ -85,7 +85,7 @@ bundle.selectLineItemsForThisOrderByProductId = createSelector(
 bundle.selectConfirmedLineItemsForThisOrder = createSelector(
   'selectLineItemsForThisOrder',
   (lineItems) => {
-    return filter(lineItems, (lineItem) => { return !isNil(lineItem.confirmed_at) })
+    return filter(lineItems, (lineItem) => { return lineItem.confirmed })
   }
 )
 
