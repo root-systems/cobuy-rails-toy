@@ -1,34 +1,32 @@
 import React from 'react'
 import { connect } from 'redux-bundler-react'
 
-import OrderDetails from '../components/orderDetails'
+import OrderConfirmationDetails from '../components/orderConfirmationDetails'
 
-const Order = ({
-  lineItemsForThisOrderByProductId,
+const OrderConfirmation = ({
+  confirmedLineItemsForThisOrder,
   thisOrderProducts,
   thisOrderId,
   doUpdateHash,
   thisOrder,
-  doConfirmOrder
  }) => {
   return (
-    <OrderDetails
-      lineItemsByProductId={lineItemsForThisOrderByProductId}
+    <OrderConfirmationDetails
+      lineItems={confirmedLineItemsForThisOrder}
       products={thisOrderProducts}
       doUpdateHash={doUpdateHash}
       orderId={thisOrderId}
-      doConfirmOrder={doConfirmOrder}
       order={thisOrder}
     />
   )
 }
 
 export default connect(
-  'selectLineItemsForThisOrderByProductId',
+  'selectConfirmedLineItemsForThisOrder',
   'selectThisOrderProducts',
   'doUpdateHash',
   'selectThisOrderId',
   'selectThisOrder',
   'doConfirmOrder',
-  Order
+  OrderConfirmation
 )

@@ -57,6 +57,13 @@ bundle.reducer = (state = initialState, action) => {
     }
   }
 
+  if (action.type === 'CONFIRM_ORDER_SUCCESS') {
+    return {
+      ...state,
+      shouldFetchLineItems: true
+    }
+  }
+
   return baseReducer(state, action)
 }
 
@@ -75,6 +82,13 @@ bundle.selectLineItemsForThisOrderByProductId = createSelector(
     return groupBy(lineItems, (lineItem) => { return lineItem.product_id })
   }
 )
+bundle.selectConfirmedLineItemsForThisOrder = createSelector(
+  'selectLineItemsForThisOrder',
+  (lineItems) => {
+    return filter(lineItems, (lineItem) => { return lineItem.confirmed })
+  }
+)
+
 bundle.selectShouldFetchLineItems = state => state.lineItems.shouldFetchLineItems
 
 bundle.reactLineItemsFetch = createSelector(

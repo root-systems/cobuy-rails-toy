@@ -155,6 +155,39 @@ bundle.doCreateOrder = (formData) => ({ dispatch, apiFetch, getState }) => {
     })
 }
 
+bundle.doConfirmOrder = (orderId) => ({ dispatch, apiFetch, getState }) => {
+  const formData = {
+    id: orderId
+  }
+  const credentials = getState().accounts.credentials
+  const sanitizedCredentials = {
+    'access-token': credentials.accessToken,
+    'token-type': credentials.tokenType,
+    client: credentials.client,
+    uid: credentials.uid,
+    expiry: credentials.expiry
+  }
+  dispatch({ type: 'CONFIRM_ORDER_START' })
+  apiFetch(`api/v1/orders/${orderId}/confirm`, {
+    method: 'PATCH',
+    body: JSON.stringify(formData),
+    headers: sanitizedCredentials
+  })
+    .then(response => {
+      if (!response.ok) {
+        return Promise.reject(new Error(`${response.status} ${response.statusText}`))
+      }
+      return response.json()
+    })
+    .then((data) => {
+      dispatch({ type: 'CONFIRM_ORDER_SUCCESS', payload: data })
+      dispatch({ actionCreator: 'doUpdateHash', args: [`orders/${orderId}/confirmation`] })
+    })
+    .catch((error) => {
+      dispatch({ type: 'CONFIRM_ORDER_ERROR', payload: error })
+    })
+}
+
 bundle.reactOrdersFetch = createSelector(
   'selectOrdersShouldUpdate',
   'selectIsSignedIn',

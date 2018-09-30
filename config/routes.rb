@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       resources :wants
       post '/wants/batch', to: 'wants#batch_create'
       resources :orders
+      patch '/orders/:id/confirm', to: 'orders#confirm'
       resources :users
       resources :line_items
     end

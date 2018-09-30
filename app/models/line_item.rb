@@ -9,10 +9,24 @@ class LineItem < ApplicationRecord
         line_item = LineItem.where(price_spec_id: price_spec.id, product_id: product_id, order_id: order_id, price_per_unit: price_spec.price).first_or_create
         wants = Want.where(price_spec_id: price_spec.id, disabled: false)
         if wants.any?
-          self.aggregate(line_item, wants, price_spec)
+          self.aggregate_and_update_line_items(line_item, wants, price_spec)
         else
           line_item.destroy!
         end
+      end
+    end
+  end
+
+  def self.confirm (order_id)
+    line_items = LineItem.where(order_id: order_id)
+    line_items_by_product_id = LineItem.where(order_id: 3).group_by { |li| li.product_id }
+    line_items_by_product_id.each do |product_id, line_items|
+      cheapest_achieved_line_item = line_items.select { |li| li.minimum_achieved == true }.sort_by { |li| li.price_per_unit }.first
+      if cheapest_achieved_line_item.present?
+        cheapest_achieved_line_item.confirmed = true
+        cheapest_achieved_line_item.save!
+      else
+        return
       end
     end
   end
@@ -21,7 +35,7 @@ class LineItem < ApplicationRecord
     PriceSpec.where(product_id: product_id)
   end
 
-  def self.aggregate (line_item, wants, price_spec)
+  def self.aggregate_and_update_line_items (line_item, wants, price_spec)
     total_quantity_wanted = wants.reduce(0) do |sofar, want|
       sofar + want.quantity
     end
